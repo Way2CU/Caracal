@@ -217,7 +217,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 	 * @param string error
 	 */
 	self.handler.content_error = function(request, status, error) {
-		self.ui.content.innerHtml(status + ': ' + error);
+		self.ui.content.innerHTML = status + ': ' + error;
 
 		// remove loading indicator
 		self.ui.container.classList.remove('loading');
