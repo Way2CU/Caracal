@@ -77,7 +77,7 @@ final class URL {
 	public static function make_query($section=null, $action=null) {
 		global $language, $default_language;
 
-		$result = self::get_base();
+		$result = self::get_base().'/';
 		$arguments = array();
 
 		// add section and action to argument list
