@@ -184,12 +184,12 @@ class page_info extends Module {
 		$ignored_section = in_array($section, array('backend', 'backend_module'));
 
 		// add base url tag
-		$head_tag->addTag('meta',
+		$head_tag->add_tag('meta',
 			array(
 				'property' => 'base-url',
 				'content'  => _BASEURL
 			));
-		$head_tag->addTag('meta',
+		$head_tag->add_tag('meta',
 			array(
 				'http-equiv' => 'X-UA-Compatible',
 				'content'    => 'IE=edge'
@@ -201,19 +201,19 @@ class page_info extends Module {
 
 		// content meta tags
 		if (!in_array('charset', $this->omit_elements)) {
-			$head_tag->addTag('meta', array('charset' => 'UTF-8'));
+			$head_tag->add_tag('meta', array('charset' => 'UTF-8'));
 		}
 
 		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION)
-			$head_tag->addTag('meta',
+			$head_tag->add_tag('meta',
 						array(
 							'name'		=> 'viewport',
 							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
 						));
 
 		// robot tags
-		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
-		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
+		$head_tag->add_tag('meta', array('name' => 'robots', 'content' => 'index, follow'));
+		$head_tag->add_tag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 
 		if (!$ignored_section && $db_type != DatabaseType::NONE) {
 			// google analytics
@@ -235,7 +235,7 @@ class page_info extends Module {
 
 			// google webmaster tools
 			if (!empty($this->settings['wm_tools']))
-				$head_tag->addTag('meta',
+				$head_tag->add_tag('meta',
 							array(
 								'name' 		=> 'google-site-verification',
 								'content' 	=> $this->settings['wm_tools']
@@ -243,7 +243,7 @@ class page_info extends Module {
 
 			// bing webmaster tools
 			if (!empty($this->settings['bing_wm_tools']))
-				$head_tag->addTag('meta',
+				$head_tag->add_tag('meta',
 							array(
 								'name' 		=> 'msvalidate.01',
 								'content' 	=> $this->settings['bing_wm_tools']
@@ -277,7 +277,7 @@ class page_info extends Module {
 		}
 
 		foreach ($icon_files as $sizes => $icon)
-			$head_tag->addTag('link',
+			$head_tag->add_tag('link',
 						array(
 							'rel'	=> 'icon',
 							'type'	=> 'image/png',
@@ -319,7 +319,7 @@ class page_info extends Module {
 			foreach ($styles as $style) {
 				// check for css files
 				if (file_exists(_BASEPATH.'/'.$style))
-					$head_tag->addTag('link',
+					$head_tag->add_tag('link',
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
@@ -329,7 +329,7 @@ class page_info extends Module {
 
 			// add main less file if it exists
 			if (file_exists(_BASEPATH.'/'.$less_style)) {
-				$head_tag->addTag('link',
+				$head_tag->add_tag('link',
 						array(
 							'rel'	=> 'stylesheet/less',
 							'type'	=> 'text/css',
@@ -339,7 +339,7 @@ class page_info extends Module {
 
 			// add main javascript
 			if (file_exists(_BASEPATH.'/'.$scripts_path.'main.js'))
-				$head_tag->addTag('script',
+				$head_tag->add_tag('script',
 						array(
 							'type'	=> 'text/javascript',
 							'src'	=> URL::from_file_path(_BASEPATH.'/'.$scripts_path.'main.js')

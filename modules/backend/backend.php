@@ -376,7 +376,7 @@ class backend extends Module {
 		$head_tag = head_tag::get_instance();
 
 		// add styles
-		$head_tag->addTag('link', array(
+		$head_tag->add_tag('link', array(
 				'href' => URL::from_file_path($this->path.'include/main.less'),
 				'rel'  => 'stylesheet/less',
 				'type' => 'text/css'
@@ -388,7 +388,7 @@ class backend extends Module {
 				'notebook.js', 'window.js', 'dialog.js'
 			);
 		foreach ($scripts as $script)
-			$head_tag->addTag('script', array(
+			$head_tag->add_tag('script', array(
 					'src'  => URL::from_file_path($this->path.'include/'.$script),
 					'type' => 'text/javascript'
 				));

@@ -169,12 +169,12 @@ class contact_form extends Module {
 
 			// add backend support script
 			$head_tag = head_tag::get_instance();
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 						array(
 							'src' 	=> URL::from_file_path($this->path.'include/backend.js'),
 							'type'	=> 'text/javascript'
 						));
-			$head_tag->addTag('link',
+			$head_tag->add_tag('link',
 						array(
 							'href'	=> URL::from_file_path($this->path.'include/backend.css'),
 							'rel'	=> 'stylesheet',
@@ -198,12 +198,12 @@ class contact_form extends Module {
 		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend') {
 			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 						array(
 							'src' 	=> URL::from_file_path($this->path.'include/contact_form.js'),
 							'type'	=> 'text/javascript'
 						));
-			$head_tag->addTag('link',
+			$head_tag->add_tag('link',
 						array(
 							'href'	=> URL::from_file_path($this->path.'include/contact_form.css'),
 							'rel'	=> 'stylesheet',

@@ -204,7 +204,7 @@ class downloads extends Module {
 			return;
 
 		$head_tag = head_tag::get_instance();
-		$head_tag->addTag('script', array(
+		$head_tag->add_tag('script', array(
 				'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
 				'type' => 'text/javascript'
 			));

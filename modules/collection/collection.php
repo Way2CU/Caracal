@@ -170,7 +170,7 @@ class collection extends Module {
 				switch (pathinfo($file_name, PATHINFO_EXTENSION)) {
 					case 'css':
 						// include css
-						$this->head_tag->addTag(
+						$this->head_tag->add_tag(
 							'link',
 							array(
 								'href'	=> URL::from_file_path($this->path.'include/'.$file_name),
@@ -183,7 +183,7 @@ class collection extends Module {
 					case 'js':
 					default:
 						// include javascript
-						$this->head_tag->addTag(
+						$this->head_tag->add_tag(
 							'script',
 							array(
 								'src'	=> URL::from_file_path($this->path.'include/'.$file_name),
@@ -196,7 +196,7 @@ class collection extends Module {
 
 		} else {
 			// include single file
-			$this->head_tag->addTag(
+			$this->head_tag->add_tag(
 						'script',
 						array(
 							'src'	=> URL::from_file_path($this->path.'include/'.$data),

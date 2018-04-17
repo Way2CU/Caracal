@@ -67,7 +67,7 @@ class youtube extends Module {
 			$head_tag = head_tag::get_instance();
 
 			// load backend files if needed
-			$head_tag->addTag('script', array(
+			$head_tag->add_tag('script', array(
 						'src'  => URL::from_file_path($this->path.'include/interactive.js'),
 						'type' => 'text/javascript'
 					));
@@ -283,7 +283,7 @@ class youtube extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
-		head_tag::get_instance()->addTag(
+		head_tag::get_instance()->add_tag(
 			'script',
 			array(
 				'src'	=> 'https://youtube.com/iframe_api',

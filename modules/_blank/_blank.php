@@ -26,8 +26,8 @@ class _blank extends Module {
 		// load module style and scripts
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::get_instance();
-			//$head_tag->addTag('link', array('href' => URL::from_file_path($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
+			//$head_tag->add_tag('link', array('href' => URL::from_file_path($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			//$head_tag->add_tag('script', array('src' => URL::from_file_path($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend

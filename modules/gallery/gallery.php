@@ -346,18 +346,18 @@ class gallery extends Module {
 
 		// load backend files if needed
 		if ($section == 'backend') {
-			$head_tag->addTag('link',
+			$head_tag->add_tag('link',
 					array(
 						'href' => URL::from_file_path($this->path.'include/gallery.css'),
 						'rel'  => 'stylesheet',
 						'type' => 'text/css'
 					));
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 					array(
 						'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
 						'type' => 'text/javascript'
 					));
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 					array(
 						'src'  => URL::from_file_path($this->path.'include/backend.js'),
 						'type' => 'text/javascript'
@@ -365,17 +365,17 @@ class gallery extends Module {
 
 		} else {
 			// load frontend scripts
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 						array(
 							'src'  => URL::from_file_path($this->path.'include/gallery.js'),
 							'type' => 'text/javascript'
 						));
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 						array(
 							'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
 							'type' => 'text/javascript'
 						));
-			$head_tag->addTag('link',
+			$head_tag->add_tag('link',
 						array(
 							'href' => URL::from_file_path($this->path.'include/lightbox.less'),
 							'rel'  => 'stylesheet/less',

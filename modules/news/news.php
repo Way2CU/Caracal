@@ -24,7 +24,7 @@ class news extends Module {
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
+			$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
@@ -945,7 +945,7 @@ class news extends Module {
 							array('language', $language)
 						);
 
-				$head->addTag(
+				$head->add_tag(
 							'link',
 							array(
 								'href'	=> $url,

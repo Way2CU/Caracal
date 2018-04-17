@@ -215,7 +215,7 @@ class page_description extends Module {
 		if (is_object($item)) {
 			// add description to head tag
 			$head_tag = head_tag::get_instance();
-			$head_tag->addTag('meta',
+			$head_tag->add_tag('meta',
 						array(
 							'name'		=> 'description',
 							'content'	=> $item->content[$language]

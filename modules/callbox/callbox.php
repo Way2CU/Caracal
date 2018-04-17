@@ -49,7 +49,7 @@ class callbox extends Module {
 			$head_tag = head_tag::get_instance();
 
 			$url = str_replace('{id}', $this->settings['account_id'], 'https://{id}.tctm.co/t.js');
-			$head_tag->addTag('script',
+			$head_tag->add_tag('script',
 						array(
 							'src'	=> $url,
 							'type'	=> 'text/javascript',

@@ -33,13 +33,13 @@ class language_menu extends Module {
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script', array(
+			$head_tag->add_tag('script', array(
 					'src'  => URL::from_file_path($this->path.'include/language.js'),
 					'type' => 'text/javascript'
 				));
 
 			if ($section == 'backend')
-				$head_tag->addTag('script', array(
+				$head_tag->add_tag('script', array(
 					'src'  => URL::from_file_path($this->path.'include/selector.js'),
 					'type' => 'text/javascript'
 				));
@@ -143,7 +143,7 @@ class language_menu extends Module {
 				$url = URL::make($link_params);
 
 			// add new tag to the head
-			$head_tag->addTag('link', array(
+			$head_tag->add_tag('link', array(
 						'rel'      => 'alternate',
 						'href'     => $url,
 						'hreflang' => $language_code == $default_language ? 'x-default' : $language_code

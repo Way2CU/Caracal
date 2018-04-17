@@ -79,7 +79,7 @@ class head_tag extends Module {
 					// skipped break on purpose, we still need to handle
 
 				case 'show':
-					$this->printTags();
+					$this->show_all_tags($params);
 					break;
 
 				case 'add_to_title':
@@ -125,7 +125,7 @@ class head_tag extends Module {
 	 * @param string $name
 	 * @param array $params
 	 */
-	public function addTag($name, $params) {
+	public function add_tag($name, $params) {
 		global $optimize_code, $section;
 
 		$name = strtolower($name);
@@ -190,16 +190,33 @@ class head_tag extends Module {
 	 *
 	 * @param object $tag
 	 */
-	private function printTag($tag, $body=null) {
-		print "<{$tag[0]}{$this->getTagParams($tag[1])}>";
+	private function print_tag($tag, $body=null) {
+		$params = $tag[1];
+		$tag_params = '';
+
+		// generate params if needed
+		if (count($params) > 0)
+			foreach ($params as $param => $value)
+				$tag_params .= ' '.$param.'="'.$value.'"';
+
+		print "<{$tag[0]}{$tag_params}>";
 		print in_array($tag[0], $this->closeable_tags) || !is_null($body) ? "{$body}</{$tag[0]}>" : "";
 	}
 
 	/**
-	 * Print previously added tags
+	 * Show tags previously added. This function also emits two events, before title and
+	 * before print giving additional opportunity for modules to add their tags.
+	 *
+	 * @param array $params
 	 */
-	private function printTags() {
+	private function show_all_tags($params=array()) {
 		global $optimize_code, $section;
+
+		// take flags from params
+		$show_title = isset($params['title']) ? $params['title'] == 1 : true;
+		$show_scripts = isset($params['scripts']) ? $params['scripts'] == 1 : true;
+		$show_styles = isset($params['styles']) ? $params['styles'] == 1 : true;
+		$show_other = isset($params['other']) ? $params['other'] == 1 : true;
 
 		// determine whether we should optimize code
 		if ($section != 'backend') {
@@ -235,16 +252,19 @@ class head_tag extends Module {
 		Events::trigger('head-tag', 'before-print');
 
 		// print title tag
-		$this->printTag(array('title', array()), $title_body);
+		if ($show_title)
+			$this->print_tag(array('title', array()), $title_body);
 
-		if ($optimize_styles || $optimize_scripts) {
-			// use code optimizer if possible
+		// get instance of code optimizer if needed
+		if (($optimize_styles && $show_styles) || ($optimize_scripts && $show_scripts))
 			$optimizer = CodeOptimizer::get_instance();
-			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
-			// add tags for compilation
+		// list of tags to show as they are
+		$unhandled_tags = array_merge($this->tags, $this->meta_tags);
+
+		if ($show_styles) {
 			if (!$optimize_styles) {
-				// skip optimizing styles
+				// show style tags as they are when specified
 				$unhandled_tags = array_merge($unhandled_tags, $this->link_tags);
 
 			} else {
@@ -260,10 +280,15 @@ class head_tag extends Module {
 				}
 			}
 
-			// add scripts for compilation
+			// print optimized code
+			$optimizer->print_style_data();
+		}
+
+		if ($show_scripts) {
 			if (!$optimize_code) {
-				// skip compiling code
-				$unhandled_tags = array_merge($unhandled_tags, $this->script_tags);
+				// show script tags as they are when specified
+				if ($show_scripts)
+					$unhandled_tags = array_merge($unhandled_tags, $this->script_tags);
 
 			} else {
 				// add each script link for compilation
@@ -274,34 +299,23 @@ class head_tag extends Module {
 						$handled_tags []= $script;  // collect scripts in case compile fails
 			}
 
-			foreach ($unhandled_tags as $tag)
-				$this->printTag($tag);
-
 			// print optimized code
 			try {
-				$optimizer->print_data();
+				$optimizer->print_script_data();
 
 			} catch (ScriptCompileError $error) {
-				// report error for debugging
+				// handle issue with compiling code
 				trigger_error($error->getMessage(), E_USER_WARNING);
-
-				// there was a problem compiling script, show tags traditional way
-				foreach ($handled_tags as $tag)
-					$this->printTag($tag);
-
-				// include only styles after failed script compilation
-				$optimizer->print_data(true, false);
+				$unhandled_tags = array_merge($unhandled_tags, $handled_tags);
 			}
-
-		} else {
-			// no optimization
-			$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
-			foreach ($tags as $tag)
-				$this->printTag($tag);
 		}
 
+		// show unhandled tags
+		foreach ($unhandled_tags as $tag)
+			$this->print_tag($tag);
+
 		// print google analytics code if needed
-		if (!is_null($this->analytics)) {
+		if (!is_null($this->analytics) && $show_other) {
 			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
 			$template->set_mapped_module($this->name);
 
@@ -316,7 +330,7 @@ class head_tag extends Module {
 		}
 
 		// print google site optimizer code if needed
-		if (!is_null($this->optimizer)) {
+		if (!is_null($this->optimizer) && $show_other) {
 			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
 			$template->set_mapped_module($this->name);
 
@@ -331,21 +345,6 @@ class head_tag extends Module {
 			$template->set_local_params($params);
 			$template->parse();
 		}
-	}
-
-	/**
-	 * Return formated parameter tags
-	 *
-	 * @param resource $params
-	 */
-	private function getTagParams($params) {
-		$result = "";
-
-		if (count($params))
-			foreach ($params as $param=>$value)
-				$result .= ' '.$param.'="'.$value.'"';
-
-		return $result;
 	}
 }
 ?>

@@ -691,7 +691,7 @@ class TemplateHandler {
 					} else if (ModuleHandler::is_loaded('head_tag')) {
 						// treat script as generic page script and pass it on to head tag
 						$head_tag = head_tag::get_instance();
-						$head_tag->addTag('script', $tag->tagAttrs);
+						$head_tag->add_tag('script', $tag->tagAttrs);
 					}
 					break;
 
@@ -709,7 +709,7 @@ class TemplateHandler {
 				case 'cms:link':
 					if (ModuleHandler::is_loaded('head_tag')) {
 						$head_tag = head_tag::get_instance();
-						$head_tag->addTag('link', $tag->tagAttrs);
+						$head_tag->add_tag('link', $tag->tagAttrs);
 					}
 					break;
 

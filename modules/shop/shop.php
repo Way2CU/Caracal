@@ -252,9 +252,9 @@ class shop extends Module {
 			// include local scripts
 			if (ModuleHandler::is_loaded('head_tag')) {
 				$head_tag = head_tag::get_instance();
-				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+				$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+				$head_tag->add_tag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 
 			$shop_menu = new backend_MenuItem(
@@ -1061,18 +1061,18 @@ class shop extends Module {
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
-		$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('link', array('href'=>URL::from_file_path($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
+		$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 
 		// add custom scripts
 		if (count($this->checkout_scripts) > 0)
 			foreach ($this->checkout_scripts as $script_url)
-				$head_tag->addTag('script', array( 'src' => $script_url, 'type' => 'text/javascript'));
+				$head_tag->add_tag('script', array( 'src' => $script_url, 'type' => 'text/javascript'));
 
 		// add custom styles
 		if (count($this->checkout_styles) > 0)
 			foreach ($this->checkout_styles as $style_url)
-				$head_tag->addTag('link', array('href' => $style_url, 'rel' => 'stylesheet', 'type' => 'text/css'));
+				$head_tag->add_tag('link', array('href' => $style_url, 'rel' => 'stylesheet', 'type' => 'text/css'));
 	}
 
 	/**
@@ -1086,7 +1086,7 @@ class shop extends Module {
 		$collection = collection::get_instance();
 
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/cart.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('script', array('src' => URL::from_file_path($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1097,7 +1097,7 @@ class shop extends Module {
 			return;
 
 		$head_tag = head_tag::get_instance();
-		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('script', array('src' => URL::from_file_path($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
