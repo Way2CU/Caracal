@@ -20,10 +20,6 @@
  * Author: Mladen Mijatov
  */
 
-// start measuring time
-$time_start = explode(" ", microtime());
-$time_start = $time_start[0] + $time_start[1];
-
 // define base constants
 define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
@@ -60,6 +56,12 @@ if (file_exists($site_path.'config.php'))
 // include remaining units
 require_once('units/doctypes.php');
 require_once('units/gravatar.php');
+
+// start measuring time
+if (defined('DEBUG')) {
+	$time_start = explode(" ", microtime());
+	$time_start = $time_start[0] + $time_start[1];
+}
 
 // make namespaces more friendly
 use Core\Cache\Manager as Cache;
@@ -137,7 +139,7 @@ if ($cache->is_cached()) {
 }
 
 // print out copyright and timing
-if (!defined('_OMIT_STATS') && !_AJAX_REQUEST) {
+if (defined('DEBUG')) {
 	$time_end = explode(" ", microtime());
 	$time_end = $time_end[0] + $time_end[1];
 	$time = round($time_end - $time_start, 3);
