@@ -28,28 +28,8 @@ class page_info extends Module {
 		parent::__construct(__FILE__);
 
 		// connect events
-		Events::connect('head-tag', 'before-print', 'add_elements', $this);
-
-		// register backend
-		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::get_instance();
-
-			$menu = $backend->getMenu($backend->name);
-
-			if (!is_null($menu))
-				$menu->insertChild(new backend_MenuItem(
-										$this->get_language_constant('menu_page_info'),
-										$this->path.'images/icon.svg',
-										window_Open( // on click open window
-													'page_settings',
-													400,
-													$this->get_language_constant('title_page_info'),
-													true, false, // disallow minimize, safety feature
-													backend_UrlMake($this->name, 'show')
-												),
-										$level=6
-									), 1);
-		}
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -120,61 +100,31 @@ class page_info extends Module {
 	}
 
 	/**
-	 * Show settings form
+	 * Add items to backend menu.
 	 */
-	private function showSettings() {
-		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->name);
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+		$menu = $backend->getMenu($backend->name);
 
-		$params = array(
-						'form_action'	=> backend_UrlMake($this->name, 'save'),
-					);
-
-		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
-
-		$template->restore_xml();
-		$template->set_local_params($params);
-		$template->parse();
-	}
-
-	/**
-	 * Save settings
-	 */
-	private function save_settings() {
-		$analytics = fix_chars($_REQUEST['analytics']);
-		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
-		$analytics_version = fix_chars($_REQUEST['analytics_version']);
-		$wm_tools = fix_chars($_REQUEST['wm_tools']);
-		$bing_wm_tools = fix_chars($_REQUEST['bing_wm_tools']);
-		$optimizer = fix_chars($_REQUEST['optimizer']);
-		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
-
-		$this->save_setting('analytics', $analytics);
-		$this->save_setting('analytics_domain', $analytics_domain);
-		$this->save_setting('analytics_version', $analytics_version);
-		$this->save_setting('wm_tools', $wm_tools);
-		$this->save_setting('bing_wm_tools', $bing_wm_tools);
-		$this->save_setting('optimizer', $optimizer);
-		$this->save_setting('optimizer_key', $optimizer_key);
-
-		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->name);
-
-		$params = array(
-					'message' => $this->get_language_constant('message_saved'),
-					'button'  => $this->get_language_constant('close'),
-					'action'  => window_Close('page_settings')
-				);
-
-		$template->restore_xml();
-		$template->set_local_params($params);
-		$template->parse();
+		if (!is_null($menu))
+			$menu->insertChild(new backend_MenuItem(
+								$this->get_language_constant('menu_page_info'),
+								$this->path.'images/icon.svg',
+								window_Open( // on click open window
+											'page_settings',
+											400,
+											$this->get_language_constant('title_page_info'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'show')
+										),
+								$level=6
+							), 1);
 	}
 
 	/**
 	 * Method called by the page module to add elements before printing
 	 */
-	public function add_elements() {
+	public function add_tags() {
 		global $section, $db_type, $styles_path, $images_path, $scripts_path;
 		global $system_styles_path, $system_images_path, $default_language;
 
@@ -345,6 +295,58 @@ class page_info extends Module {
 							'src'	=> URL::from_file_path(_BASEPATH.'/'.$scripts_path.'main.js')
 						));
 		}
+	}
+
+	/**
+	 * Show settings form
+	 */
+	private function showSettings() {
+		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'save'),
+					);
+
+		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Save settings
+	 */
+	private function save_settings() {
+		$analytics = fix_chars($_REQUEST['analytics']);
+		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
+		$analytics_version = fix_chars($_REQUEST['analytics_version']);
+		$wm_tools = fix_chars($_REQUEST['wm_tools']);
+		$bing_wm_tools = fix_chars($_REQUEST['bing_wm_tools']);
+		$optimizer = fix_chars($_REQUEST['optimizer']);
+		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
+
+		$this->save_setting('analytics', $analytics);
+		$this->save_setting('analytics_domain', $analytics_domain);
+		$this->save_setting('analytics_version', $analytics_version);
+		$this->save_setting('wm_tools', $wm_tools);
+		$this->save_setting('bing_wm_tools', $bing_wm_tools);
+		$this->save_setting('optimizer', $optimizer);
+		$this->save_setting('optimizer_key', $optimizer_key);
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+					'message' => $this->get_language_constant('message_saved'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('page_settings')
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
 	}
 
 	/**
