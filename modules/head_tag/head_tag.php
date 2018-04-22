@@ -256,12 +256,16 @@ class head_tag extends Module {
 			$this->print_tag(array('title', array()), $title_body);
 
 		// get instance of code optimizer if needed
-		if (($optimize_styles && $show_styles) || ($optimize_scripts && $show_scripts))
-			$optimizer = CodeOptimizer::get_instance();
+		$optimizer = CodeOptimizer::get_instance();
 
 		// list of tags to show as they are
-		$unhandled_tags = array_merge($this->tags, $this->meta_tags);
+		$unhandled_tags = $this->tags;
 
+		// show meta tags first
+		foreach ($this->meta_tags as $tag)
+			$this->print_tag($tag);
+
+		// show styles
 		if ($show_styles) {
 			if (!$optimize_styles) {
 				// show style tags as they are when specified
@@ -278,12 +282,13 @@ class head_tag extends Module {
 					if (!$can_be_compiled || !$added)
 						$unhandled_tags [] = $link;
 				}
-			}
 
-			// print optimized code
-			$optimizer->print_style_data();
+				// print optimized code
+				$optimizer->print_style_data();
+			}
 		}
 
+		// show scripts
 		if ($show_scripts) {
 			if (!$optimize_code) {
 				// show script tags as they are when specified
@@ -297,16 +302,16 @@ class head_tag extends Module {
 					if (!$optimizer->add_script($script[1]['src']))
 						$unhandled_tags []= $script; else
 						$handled_tags []= $script;  // collect scripts in case compile fails
-			}
 
-			// print optimized code
-			try {
-				$optimizer->print_script_data();
+				// print optimized code
+				try {
+					$optimizer->print_script_data();
 
-			} catch (ScriptCompileError $error) {
-				// handle issue with compiling code
-				trigger_error($error->getMessage(), E_USER_WARNING);
-				$unhandled_tags = array_merge($unhandled_tags, $handled_tags);
+				} catch (ScriptCompileError $error) {
+					// handle issue with compiling code
+					trigger_error($error->getMessage(), E_USER_WARNING);
+					$unhandled_tags = array_merge($unhandled_tags, $handled_tags);
+				}
 			}
 		}
 
