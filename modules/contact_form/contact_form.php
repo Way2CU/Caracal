@@ -98,118 +98,15 @@ class contact_form extends Module {
 					$this->settings['smtp_password']
 				);
 
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			// create menu
-			$contact_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_contact'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$contact_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_manage_forms'),
-								$this->path.'images/forms.svg',
-
-								window_Open( // on click open window
-											'contact_forms',
-											750,
-											$this->get_language_constant('title_forms_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'forms_manage')
-										),
-								$level=5
-							));
-			$contact_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_manage_templates'),
-								$this->path.'images/templates.svg',
-
-								window_Open( // on click open window
-											'contact_form_templates',
-											550,
-											$this->get_language_constant('title_templates_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'templates_manage')
-										),
-								$level=5
-							));
-			$contact_menu->addSeparator(6);
-			$contact_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_settings'),
-								$this->path.'images/settings.svg',
-
-								window_Open( // on click open window
-											'contact_form_settings',
-											400,
-											$this->get_language_constant('title_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'settings_show')
-										),
-								$level=6
-							));
-			$contact_menu->addSeparator(5);
-			$contact_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_submissions'),
-								$this->path.'images/submissions.svg',
-
-								window_Open( // on click open window
-											'contact_form_submissions',
-											650,
-											$this->get_language_constant('title_submissions'),
-											true, true,
-											backend_UrlMake($this->name, 'submissions')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $contact_menu);
-
-			// add backend support script
-			$head_tag = head_tag::get_instance();
-			$head_tag->add_tag('script',
-						array(
-							'src' 	=> URL::from_file_path($this->path.'include/backend.js'),
-							'type'	=> 'text/javascript'
-						));
-			$head_tag->add_tag('link',
-						array(
-							'href'	=> URL::from_file_path($this->path.'include/backend.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
-						));
-		}
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 
 		// get localized template names
-		if ($section == 'backend_module') {
+		if ($section == 'backend_module')
 			foreach ($this->form_templates as $name => $fields)
 				$this->form_template_names[$name] = $this->get_language_constant('form_'.$name);
-		}
-
-		// include required scripts
-		if (ModuleHandler::is_loaded('collection') && $section != 'backend') {
-			$collection = collection::get_instance();
-			$collection->includeScript(collection::DIALOG);
-			$collection->includeScript(collection::COMMUNICATOR);
-		}
-
-		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend') {
-			$head_tag = head_tag::get_instance();
-
-			$head_tag->add_tag('script',
-						array(
-							'src' 	=> URL::from_file_path($this->path.'include/contact_form.js'),
-							'type'	=> 'text/javascript'
-						));
-			$head_tag->add_tag('link',
-						array(
-							'href'	=> URL::from_file_path($this->path.'include/contact_form.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
-						));
-		}
 
 		// collect transfer params
 		$this->collectTransferParams();
@@ -455,6 +352,123 @@ class contact_form extends Module {
 			'contact_form_mailers'
 		);
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add frontend tags.
+	 */
+	public function add_tags() {
+		// include scripts from collection
+		if (ModuleHandler::is_loaded('collection')) {
+			$collection = collection::get_instance();
+			$collection->includeScript(collection::DIALOG);
+			$collection->includeScript(collection::COMMUNICATOR);
+		}
+
+		// add frontend scripts of our own
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/contact_form.js'),
+						'type' => 'text/javascript'
+					));
+		$head_tag->add_tag('link',
+					array(
+						'href' => URL::from_file_path($this->path.'include/contact_form.css'),
+						'rel'  => 'stylesheet',
+						'type' => 'text/css'
+					));
+	}
+
+	/**
+	 * Include tags needed for backend.
+	 */
+	public function add_backend_tags() {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_tag('script',
+						array(
+							'src' 	=> URL::from_file_path($this->path.'include/backend.js'),
+							'type'	=> 'text/javascript'
+						));
+			$head_tag->add_tag('link',
+						array(
+							'href'	=> URL::from_file_path($this->path.'include/backend.css'),
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css'
+						));
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		// create menu
+		$contact_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_contact'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$contact_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_manage_forms'),
+							$this->path.'images/forms.svg',
+
+							window_Open( // on click open window
+										'contact_forms',
+										750,
+										$this->get_language_constant('title_forms_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'forms_manage')
+									),
+							$level=5
+						));
+		$contact_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_manage_templates'),
+							$this->path.'images/templates.svg',
+
+							window_Open( // on click open window
+										'contact_form_templates',
+										550,
+										$this->get_language_constant('title_templates_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'templates_manage')
+									),
+							$level=5
+						));
+		$contact_menu->addSeparator(6);
+		$contact_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_settings'),
+							$this->path.'images/settings.svg',
+
+							window_Open( // on click open window
+										'contact_form_settings',
+										400,
+										$this->get_language_constant('title_settings'),
+										true, true,
+										backend_UrlMake($this->name, 'settings_show')
+									),
+							$level=6
+						));
+		$contact_menu->addSeparator(5);
+		$contact_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_submissions'),
+							$this->path.'images/submissions.svg',
+
+							window_Open( // on click open window
+										'contact_form_submissions',
+										650,
+										$this->get_language_constant('title_submissions'),
+										true, true,
+										backend_UrlMake($this->name, 'submissions')
+									),
+							$level=5
+						));
+
+		$backend->addMenu($this->name, $contact_menu);
+
 	}
 
 	/**
