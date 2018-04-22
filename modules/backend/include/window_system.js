@@ -255,7 +255,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 };
 
 
-$(function() {
+window.addEventListener('load', function() {
 	Caracal.window_system = new Caracal.WindowSystem.System(
 			'div#container',
 			'nav#window_list',
