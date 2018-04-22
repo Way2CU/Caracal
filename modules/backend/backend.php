@@ -63,102 +63,12 @@ class backend extends Module {
 		Events::register('backend', 'user-delete', 1);
 		Events::register('backend', 'user-password-change', 1);
 		Events::register('backend', 'sprite-include');
+		Events::register('backend', 'add-tags');
+		Events::register('backend', 'add-menu-items');
 
-		// add admin level menus
-		if ($section == 'backend') {
-			Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
-
-			$collection = collection::get_instance();
-			$collection->includeScript(collection::JQUERY);
-			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-			$collection->includeScript(collection::JQUERY_EXTENSIONS);
-			$collection->includeScript(collection::SHOWDOWN);
-			$collection->includeScript(collection::COMMUNICATOR);
-
-			$system_menu = new backend_MenuItem(
-									$this->get_language_constant('menu_system'),
-									$this->path.'images/system.svg',
-									'javascript:void(0);',
-									$level=1
-								);
-
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_modules'),
-									$this->path.'images/modules.svg',
-									window_Open( // on click open window
-												'system_modules',
-												610,
-												$this->get_language_constant('title_modules'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'modules')
-											),
-									$level=10
-								));
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_users'),
-									$this->path.'images/users.svg',
-									window_Open( // on click open window
-												'system_users',
-												690,
-												$this->get_language_constant('title_users_manager'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'users')
-											),
-									$level=10
-								));
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_clear_cache'),
-									$this->path.'images/clear_cache.svg',
-									window_Open( // on click open window
-												'system_clear_cache',
-												350,
-												$this->get_language_constant('title_clear_cache'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'clear_cache')
-											),
-									$level=10
-								));
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_exports'),
-									$this->path.'images/exports.svg',
-									window_Open( // on click open window
-												'system_exports',
-												500,
-												$this->get_language_constant('title_exports'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'exports')
-											),
-									$level=10
-								));
-
-			$system_menu->addSeparator(10);
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_change_password'),
-									$this->path.'images/change_password.svg',
-									window_Open( // on click open window
-												'change_password_window',
-												350,
-												$this->get_language_constant('title_change_password'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'change_password')
-											),
-									$level=1
-								));
-			$system_menu->addChild(null, new backend_MenuItem(
-									$this->get_language_constant('menu_logout'),
-									$this->path.'images/logout.svg',
-									window_Open( // on click open window
-												'logout_window',
-												350,
-												$this->get_language_constant('title_logout'),
-												true, false, // disallow minimize, safety feature
-												backend_UrlMake($this->name, 'logout')
-											),
-									$level=1
-								));
-
-			$this->addMenu($this->name, $system_menu);
-		}
+		// connect events
+		Events::connect('backend', 'add-tags', 'add_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -232,10 +142,6 @@ class backend extends Module {
 					$user_manager->saveRecoveredPassword($params, $children);
 					break;
 
-				case 'draw_menu':
-					$this->drawCompleteMenu();
-					break;
-
 				/**
 				 * Handle transfering flow control to other modules. As `SessionManager` by default sets action
 				 * to be `transfer_control` when `backend_module` is passed for section, this is the first piece
@@ -273,8 +179,13 @@ class backend extends Module {
 							$module->transfer_control($params, $children);
 
 						} else {
-							// enclose module content in standalone template
+							// add module name to params
 							$params['module'] = $module_name;
+
+							// call for modules to add required tags
+							Events::trigger('backend', 'add-tags');
+
+							// enclose module content in standalone template
 							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
 							$template->set_mapped_module($this->name);
 							$template->set_local_params($params);
@@ -382,10 +293,107 @@ class backend extends Module {
 	}
 
 	/**
+	 * Add backend menu items.
+	 */
+	public function add_menu_items() {
+		$system_menu = new backend_MenuItem(
+								$this->get_language_constant('menu_system'),
+								$this->path.'images/system.svg',
+								'javascript:void(0);',
+								$level=1
+							);
+
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_modules'),
+								$this->path.'images/modules.svg',
+								window_Open( // on click open window
+											'system_modules',
+											610,
+											$this->get_language_constant('title_modules'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'modules')
+										),
+								$level=10
+							));
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_users'),
+								$this->path.'images/users.svg',
+								window_Open( // on click open window
+											'system_users',
+											690,
+											$this->get_language_constant('title_users_manager'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'users')
+										),
+								$level=10
+							));
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_clear_cache'),
+								$this->path.'images/clear_cache.svg',
+								window_Open( // on click open window
+											'system_clear_cache',
+											350,
+											$this->get_language_constant('title_clear_cache'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'clear_cache')
+										),
+								$level=10
+							));
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_exports'),
+								$this->path.'images/exports.svg',
+								window_Open( // on click open window
+											'system_exports',
+											500,
+											$this->get_language_constant('title_exports'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'exports')
+										),
+								$level=10
+							));
+
+		$system_menu->addSeparator(10);
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_change_password'),
+								$this->path.'images/change_password.svg',
+								window_Open( // on click open window
+											'change_password_window',
+											350,
+											$this->get_language_constant('title_change_password'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'change_password')
+										),
+								$level=1
+							));
+		$system_menu->addChild(null, new backend_MenuItem(
+								$this->get_language_constant('menu_logout'),
+								$this->path.'images/logout.svg',
+								window_Open( // on click open window
+											'logout_window',
+											350,
+											$this->get_language_constant('title_logout'),
+											true, false, // disallow minimize, safety feature
+											backend_UrlMake($this->name, 'logout')
+										),
+								$level=1
+							));
+
+		$this->addMenu($this->name, $system_menu);
+	}
+
+	/**
 	 * Add required scripts and styles.
 	 */
-	public function add_meta_tags() {
+	public function add_tags() {
 		$head_tag = head_tag::get_instance();
+		$collection = collection::get_instance();
+
+		// include scripts from collection module
+		$collection->includeScript(collection::JQUERY);
+		$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+		$collection->includeScript(collection::JQUERY_EXTENSIONS);
+		$collection->includeScript(collection::SHOWDOWN);
+		$collection->includeScript(collection::COMMUNICATOR);
 
 		// add styles
 		$head_tag->add_tag('link', array(
@@ -421,6 +429,9 @@ class backend extends Module {
 	 * Parse main backend template.
 	 */
 	private function showBackend() {
+		// call for modules to add required tags
+		Events::trigger('backend', 'add-tags');
+
 		// create template parser
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
@@ -1130,8 +1141,11 @@ class backend extends Module {
 	 * Draws all menus for current level
 	 */
 	public function tag_MainMenu($tag_params, $children) {
-		$template = new TemplateHandler('menu_item.xml', $this->path.'templates/');
+		// call for module to add their menu items
+		Events::trigger('backend', 'add-menu-items');
 
+		// draw menu items
+		$template = new TemplateHandler('menu_item.xml', $this->path.'templates/');
 		foreach ($this->menus as $item)
 			$item->drawItem($template);
 	}
@@ -1227,7 +1241,7 @@ class backend extends Module {
 	public function tag_Sprites($tag_params, $children) {
 		print file_get_contents($this->path.'images/sprite.svg');
 		print file_get_contents($this->path.'images/system.svg');
-		Events::trigger($this->name, 'sprite-include');
+		Events::trigger('backend', 'sprite-include');
 	}
 }
 
