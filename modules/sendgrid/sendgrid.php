@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 require_once('units/mailer.php');
@@ -35,25 +36,8 @@ class sendgrid extends Module {
 			$contact_form->registerMailer('sendgrid', $mailer);
 		}
 
-		// register backend
-		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::get_instance();
-
-			$sendgrid_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_sendgrid'),
-					$this->path.'images/icon.svg',
-					window_Open( // on click open window
-								'sendgrid_settings',
-								370,
-								$this->get_language_constant('title_settings'),
-								true, true,
-								backend_UrlMake($this->name, 'settings')
-							),
-					$level=6
-				);
-
-			$backend->addMenu($this->name, $sendgrid_menu);
-		}
+		// connect events
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -100,6 +84,28 @@ class sendgrid extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function cleanup() {
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$sendgrid_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_sendgrid'),
+				$this->path.'images/icon.svg',
+				window_Open( // on click open window
+							'sendgrid_settings',
+							370,
+							$this->get_language_constant('title_settings'),
+							true, true,
+							backend_UrlMake($this->name, 'settings')
+						),
+				$level=6
+			);
+
+		$backend->addMenu($this->name, $sendgrid_menu);
 	}
 
 	/**
