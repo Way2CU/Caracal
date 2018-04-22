@@ -183,7 +183,8 @@ class backend extends Module {
 							$params['module'] = $module_name;
 
 							// call for modules to add required tags
-							Events::trigger('backend', 'add-tags');
+							if (ModuleHandler::is_loaded('head_tag'))
+								Events::trigger('backend', 'add-tags');
 
 							// enclose module content in standalone template
 							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
@@ -430,7 +431,8 @@ class backend extends Module {
 	 */
 	private function showBackend() {
 		// call for modules to add required tags
-		Events::trigger('backend', 'add-tags');
+		if (ModuleHandler::is_loaded('head_tag'))
+			Events::trigger('backend', 'add-tags');
 
 		// create template parser
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
