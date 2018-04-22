@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 use Core\Markdown;
 
@@ -27,58 +28,8 @@ class links extends Module {
 
 		parent::__construct(__FILE__);
 
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$links_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_links'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_links_manage'),
-								$this->path.'images/manage.svg',
-								window_Open( // on click open window
-											'links_list',
-											720,
-											$this->get_language_constant('title_links_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'links_list')
-										),
-								$level=5
-							));
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_links_groups'),
-								$this->path.'images/groups.svg',
-								window_Open( // on click open window
-											'groups_list',
-											500,
-											$this->get_language_constant('title_groups_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'groups_list')
-										),
-								$level=5
-							));
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_links_overview'),
-								$this->path.'images/overview.svg',
-								window_Open( // on click open window
-											'links_overview',
-											650,
-											$this->get_language_constant('title_links_overview'),
-											true, true,
-											backend_UrlMake($this->name, 'overview')
-										),
-								$level=6
-							));
-
-			$backend->addMenu($this->name, $links_menu);
-		}
+		// connect events
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -274,6 +225,61 @@ class links extends Module {
 
 		$tables = array('links', 'link_groups', 'link_membership');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$links_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_links'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$links_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_links_manage'),
+							$this->path.'images/manage.svg',
+							window_Open( // on click open window
+										'links_list',
+										720,
+										$this->get_language_constant('title_links_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'links_list')
+									),
+							$level=5
+						));
+
+		$links_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_links_groups'),
+							$this->path.'images/groups.svg',
+							window_Open( // on click open window
+										'groups_list',
+										500,
+										$this->get_language_constant('title_groups_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'groups_list')
+									),
+							$level=5
+						));
+
+		$links_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_links_overview'),
+							$this->path.'images/overview.svg',
+							window_Open( // on click open window
+										'links_overview',
+										650,
+										$this->get_language_constant('title_links_overview'),
+										true, true,
+										backend_UrlMake($this->name, 'overview')
+									),
+							$level=6
+						));
+
+		$backend->addMenu($this->name, $links_menu);
 	}
 
 	/**
