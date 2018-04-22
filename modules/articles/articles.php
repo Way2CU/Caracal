@@ -36,62 +36,7 @@ class articles extends Module {
 
 		// connect to search module
 		Events::connect('search', 'get-results', 'get_search_results', $this);
-
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$articles_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_articles'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_articles_new'),
-								$this->path.'images/new_article.svg',
-
-								window_Open( // on click open window
-											'articles_new',
-											730,
-											$this->get_language_constant('title_articles_new'),
-											true, true,
-											backend_UrlMake($this->name, 'articles_new')
-										),
-								$level=5
-							));
-			$articles_menu->addSeparator(5);
-
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_articles_manage'),
-								$this->path.'images/manage.svg',
-
-								window_Open( // on click open window
-											'articles',
-											720,
-											$this->get_language_constant('title_articles_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'articles')
-										),
-								$level=5
-							));
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_article_groups'),
-								$this->path.'images/groups.svg',
-
-								window_Open( // on click open window
-											'article_groups',
-											650,
-											$this->get_language_constant('title_article_groups'),
-											true, true,
-											backend_UrlMake($this->name, 'groups')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $articles_menu);
-		}
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -250,6 +195,64 @@ class articles extends Module {
 
 		$tables = array('articles', 'article_group', 'article_votes');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$articles_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_articles'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$articles_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_articles_new'),
+							$this->path.'images/new_article.svg',
+
+							window_Open( // on click open window
+										'articles_new',
+										730,
+										$this->get_language_constant('title_articles_new'),
+										true, true,
+										backend_UrlMake($this->name, 'articles_new')
+									),
+							$level=5
+						));
+		$articles_menu->addSeparator(5);
+
+		$articles_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_articles_manage'),
+							$this->path.'images/manage.svg',
+
+							window_Open( // on click open window
+										'articles',
+										720,
+										$this->get_language_constant('title_articles_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'articles')
+									),
+							$level=5
+						));
+		$articles_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_article_groups'),
+							$this->path.'images/groups.svg',
+
+							window_Open( // on click open window
+										'article_groups',
+										650,
+										$this->get_language_constant('title_article_groups'),
+										true, true,
+										backend_UrlMake($this->name, 'groups')
+									),
+							$level=5
+						));
+
+		$backend->addMenu($this->name, $articles_menu);
 	}
 
 	/**
