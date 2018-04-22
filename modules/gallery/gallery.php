@@ -59,61 +59,10 @@ class gallery extends Module {
 			}
 
 		// connect event for loading tags
-		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 		Events::connect('backend', 'sprite-include', 'include_sprite', $this);
-
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$gallery_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_gallery'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->get_language_constant('menu_images'),
-								$this->path.'images/images.svg',
-								window_Open( // on click open window
-											'gallery_images',
-											670,
-											$this->get_language_constant('title_images'),
-											true, true,
-											backend_UrlMake($this->name, 'images')
-										),
-								5  // level
-							));
-
-			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->get_language_constant('menu_groups'),
-								$this->path.'images/groups.svg',
-								window_Open( // on click open window
-											'gallery_groups',
-											450,
-											$this->get_language_constant('title_groups'),
-											true, true,
-											backend_UrlMake($this->name, 'groups')
-										),
-								5  // level
-							));
-
-			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->get_language_constant('menu_containers'),
-								$this->path.'images/containers.svg',
-								window_Open( // on click open window
-											'gallery_containers',
-											490,
-											$this->get_language_constant('title_containers'),
-											true, true,
-											backend_UrlMake($this->name, 'containers')
-										),
-								5  // level
-							));
-
-			$backend->addMenu($this->name, $gallery_menu);
-		}
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
 	}
 
 	/**
@@ -337,51 +286,106 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$gallery_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_gallery'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$gallery_menu->addChild(null, new backend_MenuItem(
+							$this->get_language_constant('menu_images'),
+							$this->path.'images/images.svg',
+							window_Open( // on click open window
+										'gallery_images',
+										670,
+										$this->get_language_constant('title_images'),
+										true, true,
+										backend_UrlMake($this->name, 'images')
+									),
+							5  // level
+						));
+
+		$gallery_menu->addChild(null, new backend_MenuItem(
+							$this->get_language_constant('menu_groups'),
+							$this->path.'images/groups.svg',
+							window_Open( // on click open window
+										'gallery_groups',
+										450,
+										$this->get_language_constant('title_groups'),
+										true, true,
+										backend_UrlMake($this->name, 'groups')
+									),
+							5  // level
+						));
+
+		$gallery_menu->addChild(null, new backend_MenuItem(
+							$this->get_language_constant('menu_containers'),
+							$this->path.'images/containers.svg',
+							window_Open( // on click open window
+										'gallery_containers',
+										490,
+										$this->get_language_constant('title_containers'),
+										true, true,
+										backend_UrlMake($this->name, 'containers')
+									),
+							5  // level
+						));
+
+		$backend->addMenu($this->name, $gallery_menu);
+	}
+
+	/**
+	 * Include tags needed for backend.
+	 */
+	public function add_backend_tags() {
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('link',
+				array(
+					'href' => URL::from_file_path($this->path.'include/gallery.css'),
+					'rel'  => 'stylesheet',
+					'type' => 'text/css'
+				));
+		$head_tag->add_tag('script',
+				array(
+					'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
+					'type' => 'text/javascript'
+				));
+		$head_tag->add_tag('script',
+				array(
+					'src'  => URL::from_file_path($this->path.'include/backend.js'),
+					'type' => 'text/javascript'
+				));
+	}
+
+	/**
 	 * Add required scripts and styles.
 	 */
-	public function add_meta_tags() {
-		global $section;
-
+	public function add_tags() {
 		$head_tag = head_tag::get_instance();
 
-		// load backend files if needed
-		if ($section == 'backend') {
-			$head_tag->add_tag('link',
+		// load frontend scripts
+		$head_tag->add_tag('script',
 					array(
-						'href' => URL::from_file_path($this->path.'include/gallery.css'),
-						'rel'  => 'stylesheet',
+						'src'  => URL::from_file_path($this->path.'include/gallery.js'),
+						'type' => 'text/javascript'
+					));
+		$head_tag->add_tag('script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
+						'type' => 'text/javascript'
+					));
+		$head_tag->add_tag('link',
+					array(
+						'href' => URL::from_file_path($this->path.'include/lightbox.less'),
+						'rel'  => 'stylesheet/less',
 						'type' => 'text/css'
 					));
-			$head_tag->add_tag('script',
-					array(
-						'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
-						'type' => 'text/javascript'
-					));
-			$head_tag->add_tag('script',
-					array(
-						'src'  => URL::from_file_path($this->path.'include/backend.js'),
-						'type' => 'text/javascript'
-					));
-
-		} else {
-			// load frontend scripts
-			$head_tag->add_tag('script',
-						array(
-							'src'  => URL::from_file_path($this->path.'include/gallery.js'),
-							'type' => 'text/javascript'
-						));
-			$head_tag->add_tag('script',
-						array(
-							'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
-							'type' => 'text/javascript'
-						));
-			$head_tag->add_tag('link',
-						array(
-							'href' => URL::from_file_path($this->path.'include/lightbox.less'),
-							'rel'  => 'stylesheet/less',
-							'type' => 'text/css'
-						));
-		}
 	}
 
 	/**
