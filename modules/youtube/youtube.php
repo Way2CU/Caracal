@@ -5,6 +5,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 require_once('units/video_manager.php');
@@ -23,55 +24,9 @@ class youtube extends Module {
 
 		parent::__construct(__FILE__);
 
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$youtube_menu = new backend_MenuItem(
-								$this->get_language_constant('menu_youtube'),
-								$this->path.'images/icon.svg',
-								'javascript:void(0);',
-								$level=5
-							);
-
-			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_video_list'),
-								$this->path.'images/list.svg',
-								window_Open( // on click open window
-											$this->name.'_video_list',
-											650,
-											$this->get_language_constant('title_video_list'),
-											true, true,
-											backend_UrlMake($this->name, 'video_list')
-										),
-								$level=5
-							));
-
-			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_video_groups'),
-								$this->path.'images/groups.svg',
-								window_Open( // on click open window
-											$this->name.'_group_list',
-											570,
-											$this->get_language_constant('title_video_groups'),
-											true, true,
-											backend_UrlMake($this->name, 'group_list')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $youtube_menu);
-
-		} else {
-			// add frontend scripts
-			$head_tag = head_tag::get_instance();
-
-			// load backend files if needed
-			$head_tag->add_tag('script', array(
-						'src'  => URL::from_file_path($this->path.'include/interactive.js'),
-						'type' => 'text/javascript'
-					));
-		}
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -274,6 +229,62 @@ class youtube extends Module {
 
 		$tables = array('youtube_video', 'youtube_groups', 'youtube_group_membership');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add frontend tags.
+	 */
+	public function add_tags() {
+		// add frontend scripts
+		$head_tag = head_tag::get_instance();
+
+		// load backend files if needed
+		$head_tag->add_tag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/interactive.js'),
+					'type' => 'text/javascript'
+				));
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$youtube_menu = new backend_MenuItem(
+							$this->get_language_constant('menu_youtube'),
+							$this->path.'images/icon.svg',
+							'javascript:void(0);',
+							$level=5
+						);
+
+		$youtube_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_video_list'),
+							$this->path.'images/list.svg',
+							window_Open( // on click open window
+										$this->name.'_video_list',
+										650,
+										$this->get_language_constant('title_video_list'),
+										true, true,
+										backend_UrlMake($this->name, 'video_list')
+									),
+							$level=5
+						));
+
+		$youtube_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_video_groups'),
+							$this->path.'images/groups.svg',
+							window_Open( // on click open window
+										$this->name.'_group_list',
+										570,
+										$this->get_language_constant('title_video_groups'),
+										true, true,
+										backend_UrlMake($this->name, 'group_list')
+									),
+							$level=5
+						));
+
+		$backend->addMenu($this->name, $youtube_menu);
 	}
 
 	/**
