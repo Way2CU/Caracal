@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -21,84 +22,9 @@ class news extends Module {
 
 		parent::__construct(__FILE__);
 
-		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::get_instance();
-
-			$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$news_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_news'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					5  // level
-				);
-
-			$news_menu->addChild(null, new backend_MenuItem(
-								$this->get_language_constant('menu_add_news'),
-								$this->path.'images/add_news.svg',
-								window_Open( // on click open window
-											'news_add',
-											490,
-											$this->get_language_constant('title_news_add'),
-											true, true,
-											backend_UrlMake($this->name, 'news_add')
-										),
-								5  // level
-							));
-			$news_menu->addSeparator(5);
-
-			$news_menu->addChild(null, new backend_MenuItem(
-					$this->get_language_constant('menu_manage_news'),
-					$this->path.'images/manage_news.svg',
-					window_Open( // on click open window
-								'news',
-								520,
-								$this->get_language_constant('title_manage_news'),
-								true, true,
-								backend_UrlMake($this->name, 'news')
-							),
-					5  // level
-				));
-
-			$news_menu->addChild(null, new backend_MenuItem(
-					$this->get_language_constant('menu_manage_groups'),
-					$this->path.'images/manage_groups.svg',
-					window_Open( // on click open window
-								'news_groups',
-								580,
-								$this->get_language_constant('title_manage_groups'),
-								true, true,
-								backend_UrlMake($this->name, 'groups')
-							),
-					5  // level
-				));
-
-			$news_menu->addSeparator(5);
-
-			$news_menu->addChild(null, new backend_MenuItem(
-					$this->get_language_constant('menu_news_feeds'),
-					$this->path.'images/rss.svg',
-					window_Open( // on click open window
-								'news_feeds',
-								700,
-								$this->get_language_constant('title_manage_feeds'),
-								true, true,
-								backend_UrlMake($this->name, 'feeds')
-							),
-					5  // level
-				));
-
-			$backend->addMenu($this->name, $news_menu);
-
-		} else {
-			// if we are not in backend section, create feed links
-			$this->createFeedLinks();
-		}
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -324,6 +250,86 @@ class news extends Module {
 
 		$tables = array('news', 'news_membership', 'news_groups', 'news_feeds');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Include scripts and styles.
+	 */
+	public function add_tags() {
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
+		$this->createFeedLinks();
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$news_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_news'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				5  // level
+			);
+
+		$news_menu->addChild(null, new backend_MenuItem(
+							$this->get_language_constant('menu_add_news'),
+							$this->path.'images/add_news.svg',
+							window_Open( // on click open window
+										'news_add',
+										490,
+										$this->get_language_constant('title_news_add'),
+										true, true,
+										backend_UrlMake($this->name, 'news_add')
+									),
+							5  // level
+						));
+		$news_menu->addSeparator(5);
+
+		$news_menu->addChild(null, new backend_MenuItem(
+				$this->get_language_constant('menu_manage_news'),
+				$this->path.'images/manage_news.svg',
+				window_Open( // on click open window
+							'news',
+							520,
+							$this->get_language_constant('title_manage_news'),
+							true, true,
+							backend_UrlMake($this->name, 'news')
+						),
+				5  // level
+			));
+
+		$news_menu->addChild(null, new backend_MenuItem(
+				$this->get_language_constant('menu_manage_groups'),
+				$this->path.'images/manage_groups.svg',
+				window_Open( // on click open window
+							'news_groups',
+							580,
+							$this->get_language_constant('title_manage_groups'),
+							true, true,
+							backend_UrlMake($this->name, 'groups')
+						),
+				5  // level
+			));
+
+		$news_menu->addSeparator(5);
+
+		$news_menu->addChild(null, new backend_MenuItem(
+				$this->get_language_constant('menu_news_feeds'),
+				$this->path.'images/rss.svg',
+				window_Open( // on click open window
+							'news_feeds',
+							700,
+							$this->get_language_constant('title_manage_feeds'),
+							true, true,
+							backend_UrlMake($this->name, 'feeds')
+						),
+				5  // level
+			));
+
+		$backend->addMenu($this->name, $news_menu);
 	}
 
 	/**
