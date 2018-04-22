@@ -32,26 +32,7 @@ class ontop extends Module {
 		// connect events
 		Events::connect('shop', 'transaction-completed', 'handle_shop_transaction_complete', $this);
 		Events::connect('contact_form', 'submitted', 'handle_contact_form_submit', $this);
-
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$ontop_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_ontop'),
-					$this->path.'images/icon.svg',
-					window_Open(
-						'ontop_applications',
-						450,
-						$this->get_language_constant('title_ontop'),
-						true, true,
-						backend_UrlMake($this->name, 'applications')
-					),
-					$level=5
-				);
-
-			$backend->addMenu($this->name, $ontop_menu);
-		}
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -144,6 +125,28 @@ class ontop extends Module {
 		$tables = array('ontop_applications');
 
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$ontop_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_ontop'),
+				$this->path.'images/icon.svg',
+				window_Open(
+					'ontop_applications',
+					450,
+					$this->get_language_constant('title_ontop'),
+					true, true,
+					backend_UrlMake($this->name, 'applications')
+				),
+				$level=5
+			);
+
+		$backend->addMenu($this->name, $ontop_menu);
 	}
 
 	/**
