@@ -30,26 +30,7 @@ class page_description extends Module {
 
 		// connect to events
 		Events::connect('head-tag', 'before-title-print', 'set_title_and_description', $this);
-
-		// register backend
-		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::get_instance();
-
-			$menu_item = new backend_MenuItem(
-					$this->get_language_constant('menu_page_descriptions'),
-					$this->path.'images/icon.svg',
-					window_Open(
-							'page_descriptions',
-							600,
-							$this->get_language_constant('title_manage'),
-							true, true,
-							backend_UrlMake($this->name, 'show')
-						),
-					$level=7
-				);
-
-			$backend->addMenu($this->name, $menu_item);
-		}
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -114,6 +95,28 @@ class page_description extends Module {
 
 		$tables = array('page_descriptions');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$menu_item = new backend_MenuItem(
+				$this->get_language_constant('menu_page_descriptions'),
+				$this->path.'images/icon.svg',
+				window_Open(
+						'page_descriptions',
+						600,
+						$this->get_language_constant('title_manage'),
+						true, true,
+						backend_UrlMake($this->name, 'show')
+					),
+				$level=7
+			);
+
+		$backend->addMenu($this->name, $menu_item);
 	}
 
 	/**
