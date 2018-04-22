@@ -94,7 +94,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
 		} else {
 			// window does not exist, create it
-			result = new Caracal.WindowSystem.Window(id, width, title, url, false);
+			result = new Caracal.WindowSystem.Window(id, width, title, url);
 
 			// preconfigure window
 			self.list[id] = result;
@@ -121,6 +121,29 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		}
 
 		return result;
+	};
+
+	/**
+	 * Create new window object from supplied element structure.
+	 *
+	 * @param object element
+	 */
+	self.attach_window = function(element) {
+		var id = element.getAttribute('id');
+		var url = element.dataset['url'];
+
+		result = new Caracal.WindowSystem.Window(id, null, null, url, structure);
+
+		// preconfigure window
+		self.list[id] = result;
+		result.attach_to_system(self);
+
+		// set system default icon
+		if (self._default_icon)
+			result.set_icon(self._default_icon.outerHTML);
+
+		// load content after opening the window
+		result.open(true);
 	};
 
 	/**
@@ -239,7 +262,15 @@ $(function() {
 			'svg:nth-child(2)'
 		);
 
-	// show login window is menu is not present
+	// find all predefined windows
+	var predefined_windows = Caracal.window_system.container.querySelectorAll('div.window');
+	if (predefined_windows.length > 0)
+		for (var i=0, count=predefined_windows.length; i<count; i++) {
+			var predefined_window = predefined_windows[i];
+			Caracal.window_system.attach_window(predefined_window);
+		}
+
+	// show login window if menu is not present
 	if (document.querySelector('nav#main') == null)
 		Caracal.window_system.open_login_window();
 });

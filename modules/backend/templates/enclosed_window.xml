@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<!--
+	 This template is used for loading single window content per request. Along
+	 side window content all the required scripts will be loaded as well except
+	 for styles.
+-->
+<document>
+	<html lang="$language" dir="$language_rtl ? 'rtl' : 'ltr'" cms:eval="lang,dir">
+		<head>
+			<cms:module name="head_tag" action="show" title="0" styles="0"/>
+		</head>
+
+		<body>
+			<!-- Sprite icons -->
+			<cms:sprites/>
+
+			<!-- Single window container -->
+			<div id="container" class="standalone">
+				<div class="window">
+					<!-- Title content -->
+					<div class="title">
+						<span/>
+					</div>
+
+					<!-- Window menu -->
+					<nav/>
+
+					<!-- Window content -->
+					<div class="content">
+						<cms:module
+							name="$params['module']"
+							backend_action="$params['backend_action']"
+							sub_action="isset($params['sub_action']) ? $params['sub_action'] : false"
+							cms:eval="name,backend_action"
+							cms:optional="sub_action"
+							/>
+					</div>
+				</div>
+			</div>
+		</body>
+	</html>
+</document>

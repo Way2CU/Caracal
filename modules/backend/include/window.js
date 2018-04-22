@@ -11,19 +11,25 @@ Caracal.WindowSystem = Caracal.WindowSystem || new Object();
 
 
 /**
- * Window Constructor
+ * Backend Window Constructor
+ *
+ * If optional `structure` parameter is specified window will be created
+ * from existing elements on the page and try to adopt components instead
+ * of creating new ones.
  *
  * @param string id
  * @param integer width
  * @param string title
  * @param string url
+ * @param boolean structure
  */
-Caracal.WindowSystem.Window = function(id, width, title, url) {
+Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	var self = this;
 
 	self.id = id;
 	self.url = url;
 	self.visible = false;
+	self.predefined = structure !== undefined;
 	self.stack_position = 1000;  // position of window in stack used by System
 	self.icon = null;
 
@@ -39,52 +45,91 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 	 * Finish object initialization.
 	 */
 	self._init = function() {
-		// create new window structure
-		self.ui.container = document.createElement('div');
-		with (self.ui.container) {
-			setAttribute('id', self.id);
-			classList.add('window');
-			style.width = width;
-			addEventListener('mousedown', self.handler.container_mouse_down);
+		if (!self.predefined) {
+			// create new window structure
+			self.ui.container = document.createElement('div');
+			with (self.ui.container) {
+				setAttribute('id', self.id);
+				classList.add('window');
+				style.width = width;
+				addEventListener('mousedown', self.handler.container_mouse_down);
+			}
+
+			// create window title bar
+			self.ui.title_bar = document.createElement('div');
+			with (self.ui.title_bar) {
+				classList.add('title');
+				addEventListener('mousedown', self.handler.title_drag_start);
+				addEventListener('touchstart', self.handler.title_drag_start);
+			}
+			self.ui.container.append(self.ui.title_bar);
+
+			// create window icon
+			self.icon = document.createElement('svg');
+			self.ui.title_bar.append(self.icon);
+
+			// title container
+			self.ui.title = document.createElement('span');
+			self.ui.title.innerHTML = title;
+			self.ui.title_bar.append(self.ui.title);
+
+			// window menu
+			self.ui.window_menu = document.createElement('nav');
+			self.ui.container.append(self.ui.window_menu);
+
+			// window content
+			self.ui.content = document.createElement('div');
+			self.ui.content.classList.add('content')
+			self.ui.container.append(self.ui.content);
+
+			// add close button if needed
+			self.ui.close_button = document.createElement('a');
+			with (self.ui.close_button) {
+				innerHTML = '<svg><use xlink:href="#icon-close"/></svg>';
+				classList.add('button');
+				classList.add('close');
+				addEventListener('click', self.handler.close_button_click)
+			}
+
+			self.ui.title_bar.append(self.ui.close_button);
+
+		} else {
+			// find new window structure
+			self.ui.container = structure;
+			with (self.ui.container) {
+				style.width = width;
+				addEventListener('mousedown', self.handler.container_mouse_down);
+			}
+
+			// find window title bar
+			self.ui.title_bar = self.ui.container.querySelector('div.title');
+			if (self.ui.title_bar) {
+				with (self.ui.title_bar) {
+					addEventListener('mousedown', self.handler.title_drag_start);
+					addEventListener('touchstart', self.handler.title_drag_start);
+				}
+
+				// find window icon
+				self.icon = self.ui.title_bar.querySelector('svg');
+
+				// title container
+				self.ui.title = self.ui.title_bar.querySelector('span');
+				if (title != null)
+					self.ui.title.innerHTML = title;
+
+				// add close button if needed
+				self.ui.close_button = self.ui.title_bar.querySelector('a.button.close');
+				if (self.ui.close_button)
+					with (self.ui.close_button) {
+						innerHTML = '<svg><use xlink:href="#icon-close"/></svg>';
+						addEventListener('click', self.handler.close_button_click)
+					}
+			}
+
+			// window elements
+			self.ui.window_menu = self.ui.container.querySelector('nav');
+			self.ui.content = self.ui.container.querySelector('div.content')
 		}
-
-		// create window title bar
-		self.ui.title_bar = document.createElement('div');
-		with (self.ui.title_bar) {
-			classList.add('title');
-			addEventListener('mousedown', self.handler.title_drag_start);
-			addEventListener('touchstart', self.handler.title_drag_start);
-		}
-		self.ui.container.append(self.ui.title_bar);
-
-		// create window icon
-		self.icon = document.createElement('svg');
-		self.ui.title_bar.append(self.icon);
-
-		// title container
-		self.ui.title = document.createElement('span');
-		self.ui.title.innerHTML = title;
-		self.ui.title_bar.append(self.ui.title);
-
-		// window menu
-		self.ui.window_menu = document.createElement('nav');
-		self.ui.container.append(self.ui.window_menu);
-
-		// window content
-		self.ui.content = document.createElement('div');
-		self.ui.content.classList.add('content')
-		self.ui.container.append(self.ui.content);
-
-		// add close button if needed
-		self.ui.close_button = document.createElement('a');
-		with (self.ui.close_button) {
-			innerHTML = '<svg><use xlink:href="#icon-close"/></svg>';
-			classList.add('button');
-			classList.add('close');
-			addEventListener('click', self.handler.close_button_click)
-		}
-
-		self.ui.title_bar.append(self.ui.close_button);
 
 		// empty placeholders
 		self.ui.language_selector = null;
@@ -298,17 +343,20 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 	 */
 	self.attach_to_system = function(system) {
 		// attach container to main container
-		system.container.append(self.ui.container);
+		if (!self.predefined)
+			system.container.append(self.ui.container);
 
 		// save parent for later use
 		self.parent = system.container;
 		self.system = system;
 
 		// add window list item
-		self.ui.window_list_item = document.createElement('a');
-		self.ui.window_list_item.innerHTML = self.ui.title.innerHTML;
-		self.ui.window_list_item.addEventListener('click', self.handler.window_list_item_click);
-		self.system.window_list.append(self.ui.window_list_item);
+		if (self.parent) {
+			self.ui.window_list_item = document.createElement('a');
+			self.ui.window_list_item.innerHTML = self.ui.title.innerHTML;
+			self.ui.window_list_item.addEventListener('click', self.handler.window_list_item_click);
+			self.system.window_list.append(self.ui.window_list_item);
+		}
 
 		return self;
 	};

@@ -267,8 +267,20 @@ class backend extends Module {
 
 					// transfer control to other modules
 					if (ModuleHandler::is_loaded($module_name) && $module_name != $this->name) {
-						$module = call_user_func(array($module_name, 'get_instance'));
-						$module->transfer_control($params, $children);
+						if (!(isset($_REQUEST['enclose']) && $_REQUEST['enclose'] == 1)) {
+							// transfer control to the module in regular way
+							$module = call_user_func(array($module_name, 'get_instance'));
+							$module->transfer_control($params, $children);
+
+						} else {
+							// enclose module content in standalone template
+							$params['module'] = $module_name;
+							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
+							$template->set_mapped_module($this->name);
+							$template->set_local_params($params);
+							$template->restore_xml();
+							$template->parse();
+						}
 					}
 					break;
 
