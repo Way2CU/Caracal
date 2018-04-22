@@ -4,8 +4,6 @@
  * Main Configuration File
  */
 
-use Core\Cache\Type as CacheType;
-
 // paths
 $site_path = 'site/';
 $cache_path = $site_path.'cache/';
@@ -29,6 +27,9 @@ $backup_path = $site_path.'backups/';
 $available_languages = array('en');
 $default_language = 'en';
 
+// default session options
+$session_type = Core\Session\Type::BROWSER;
+
 // database
 $db = null;
 $db_type = DatabaseType::MYSQL;
@@ -40,7 +41,7 @@ $db_config = array(
 	);
 
 // cache
-$cache_method = CacheType::NONE;
+$cache_method = Core\Cache\Type::NONE;
 $cache_expire_period = 86400;
 $memcached_config = array(
 		'host'	=> 'localhost',
