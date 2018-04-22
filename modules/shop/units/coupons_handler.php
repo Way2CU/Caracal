@@ -5,11 +5,12 @@
  */
 namespace Modules\Shop\Promotion;
 
-require_once('coupons_manager.php');
-require_once('coupon_codes_manager.php');
-
+use Core\Events;
 use URL;
 use TemplateHandler;
+
+require_once('coupons_manager.php');
+require_once('coupon_codes_manager.php');
 
 
 class CouponHandler {
@@ -30,26 +31,8 @@ class CouponHandler {
 		$this->name = $this->parent->name;
 		$this->path = $this->parent->path;
 
-		// create main menu
-		if ($section == 'backend') {
-			$backend = \backend::get_instance();
-			$method_menu = $backend->getMenu('shop_special_offers');
-
-			if (!is_null($method_menu))
-				$method_menu->addChild('', new \backend_MenuItem(
-									$this->parent->get_language_constant('menu_coupons'),
-									$this->path.'images/coupons.svg',
-
-									window_Open( // on click open window
-												'shop_coupons',
-												450,
-												$this->parent->get_language_constant('title_coupons'),
-												true, true,
-												URL::make_query($this->name, self::SUB_ACTION, 'show')
-											),
-									$level=5
-								));
-		}
+		// connect events
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -116,6 +99,29 @@ class CouponHandler {
 				$this->save_code();
 				break;
 		}
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = \backend::get_instance();
+		$method_menu = $backend->getMenu('shop_special_offers');
+
+		if (!is_null($method_menu))
+			$method_menu->addChild('', new \backend_MenuItem(
+								$this->parent->get_language_constant('menu_coupons'),
+								$this->path.'images/coupons.svg',
+
+								window_Open( // on click open window
+											'shop_coupons',
+											450,
+											$this->parent->get_language_constant('title_coupons'),
+											true, true,
+											URL::make_query($this->name, self::SUB_ACTION, 'show')
+										),
+								$level=5
+							));
 	}
 
 	/**
