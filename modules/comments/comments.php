@@ -7,6 +7,7 @@
  * Author: Mladen Mijatov
  * @todo Module is not finished.
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -21,45 +22,8 @@ class comments extends Module {
 
 		parent::__construct(__FILE__);
 
-		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$comments_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_comments'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$comments_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_administration'),
-								$this->path.'images/administration.svg',
-								window_Open( // on click open window
-											'links_list',
-											730,
-											$this->get_language_constant('title_links_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'links_list')
-										),
-								$level=5
-							));
-
-			$comments_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_settings'),
-								$this->path.'images/settings.svg',
-								window_Open( // on click open window
-											'comments_settings',
-											400,
-											$this->get_language_constant('title_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'settings')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $comments_menu);
-		}
+		// connect events
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -161,6 +125,48 @@ class comments extends Module {
 
 		$tables = array('comments');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$comments_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_comments'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$comments_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_administration'),
+							$this->path.'images/administration.svg',
+							window_Open( // on click open window
+										'links_list',
+										730,
+										$this->get_language_constant('title_links_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'links_list')
+									),
+							$level=5
+						));
+
+		$comments_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_settings'),
+							$this->path.'images/settings.svg',
+							window_Open( // on click open window
+										'comments_settings',
+										400,
+										$this->get_language_constant('title_settings'),
+										true, true,
+										backend_UrlMake($this->name, 'settings')
+									),
+							$level=5
+						));
+
+		$backend->addMenu($this->name, $comments_menu);
 	}
 
 	/**
