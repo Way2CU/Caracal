@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 require_once('units/activity_manager.php');
@@ -24,44 +25,8 @@ class activity_tracker extends Module {
 
 		parent::__construct(__FILE__);
 
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::get_instance();
-
-			$activities_menu = new backend_MenuItem(
-					$this->get_language_constant('menu_activities'),
-					$this->path.'images/icon.svg',
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$activities_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_manage'),
-								$this->path.'images/activities.svg',
-
-								window_Open( // on click open window
-											'activities',
-											730,
-											$this->get_language_constant('title_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'show')
-										),
-								$level=5
-							));
-			$activities_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_log'),
-								$this->path.'images/log.svg',
-
-								window_Open( // on click open window
-											'activities_log',
-											730,
-											$this->get_language_constant('title_log'),
-											true, true,
-											backend_UrlMake($this->name, 'show_log')
-										),
-								$level=5
-							));
-			$backend->addMenu($this->name, $activities_menu);
-		}
+		// connect events
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -155,6 +120,48 @@ class activity_tracker extends Module {
 
 		$tables = array('activities', 'activity_log');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$activities_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_activities'),
+				$this->path.'images/icon.svg',
+				'javascript:void(0);',
+				$level=5
+			);
+
+		$activities_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_manage'),
+							$this->path.'images/activities.svg',
+
+							window_Open( // on click open window
+										'activities',
+										730,
+										$this->get_language_constant('title_manage'),
+										true, true,
+										backend_UrlMake($this->name, 'show')
+									),
+							$level=5
+						));
+		$activities_menu->addChild('', new backend_MenuItem(
+							$this->get_language_constant('menu_log'),
+							$this->path.'images/log.svg',
+
+							window_Open( // on click open window
+										'activities_log',
+										730,
+										$this->get_language_constant('title_log'),
+										true, true,
+										backend_UrlMake($this->name, 'show_log')
+									),
+							$level=5
+						));
+		$backend->addMenu($this->name, $activities_menu);
 	}
 
 	/**
