@@ -40,7 +40,7 @@ class Manager {
 	const TAG_CLOSE = '}%}';
 
 	private function __construct() {
-		global $cache_path, $optimize_code, $cache_method, $section;
+		global $cache_path, $cache_method, $section;
 
 		// decide if we should cache current page
 		$this->should_cache =
@@ -50,7 +50,7 @@ class Manager {
 					!_AJAX_REQUEST;
 
 		// make sure cache directory exists
-		if (($optimize_code || $cache_method != Type::NONE) && !file_exists($cache_path))
+		if (!file_exists($cache_path))
 			if (mkdir($cache_path, 0775, true) === false)
 				trigger_error('Cache manager: Unable to create storage path.', E_USER_WARNING);
 
