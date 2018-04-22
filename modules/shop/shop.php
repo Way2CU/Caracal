@@ -238,214 +238,8 @@ class shop extends Module {
 		// connect to search module
 		Events::connect('search', 'get-results', 'get_search_results', $this);
 		Events::connect('backend', 'user-create', 'handle_user_create', $this);
-
-		// register backend
-		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::get_instance();
-
-			// include collection scripts
-			if (ModuleHandler::is_loaded('collection')) {
-				$collection = collection::get_instance();
-				$collection->includeScript(collection::PROPERTY_EDITOR);
-			}
-
-			// include local scripts
-			if (ModuleHandler::is_loaded('head_tag')) {
-				$head_tag = head_tag::get_instance();
-				$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
-				$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
-				$head_tag->add_tag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			}
-
-			$shop_menu = new backend_MenuItem(
-				$this->get_language_constant('menu_shop'),
-				$this->path.'images/icon.svg',
-				'javascript:void(0);',
-				5  // level
-			);
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_items'),
-				$this->path.'images/items.svg',
-				window_Open( // on click open window
-					'shop_items',
-					800,
-					$this->get_language_constant('title_manage_items'),
-					true, true,
-					backend_UrlMake($this->name, 'items')
-				),
-				5  // level
-			));
-
-			$recurring_plans_menu = new backend_MenuItem(
-				$this->get_language_constant('menu_recurring_plans'),
-				$this->path.'images/recurring_plans.svg',
-				'javascript: void(0);', 5
-			);
-			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
-
-			$import_menu = new backend_MenuItem(
-				$this->get_language_constant('menu_import'),
-				$this->path.'images/import.svg',
-				'javascript: void(0);', 5
-			);
-			$shop_menu->addChild('shop_import', $import_menu);
-
-			$shop_menu->addSeparator(5);
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_categories'),
-				$this->path.'images/categories.svg',
-				window_Open( // on click open window
-					'shop_categories',
-					550,
-					$this->get_language_constant('title_manage_categories'),
-					true, true,
-					backend_UrlMake($this->name, 'categories')
-				),
-				5  // level
-			));
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_item_sizes'),
-				$this->path.'images/item_sizes.svg',
-				window_Open( // on click open window
-					'shop_item_sizes',
-					400,
-					$this->get_language_constant('title_manage_item_sizes'),
-					true, true,
-					backend_UrlMake($this->name, 'sizes')
-				),
-				5  // level
-			));
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_manufacturers'),
-				$this->path.'images/manufacturers.svg',
-				window_Open( // on click open window
-					'shop_manufacturers',
-					400,
-					$this->get_language_constant('title_manufacturers'),
-					true, true,
-					backend_UrlMake($this->name, 'manufacturers')
-				),
-				5  // level
-			));
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_suppliers'),
-				$this->path.'images/suppliers.svg',
-				window_Open( // on click open window
-					'shop_suppliers',
-					400,
-					$this->get_language_constant('title_suppliers'),
-					true, true,
-					backend_UrlMake($this->name, 'suppliers')
-				),
-				5  // level
-			));
-
-			// delivery methods menu
-			$delivery_menu = new backend_MenuItem(
-				$this->get_language_constant('menu_delivery_methods'),
-				$this->path.'images/delivery.svg',
-				'javascript: void(0);', 5
-			);
-
-			$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
-			$shop_menu->addSeparator(5);
-
-			// special offers menu
-			$special_offers = new backend_MenuItem(
-				$this->get_language_constant('menu_special_offers'),
-				$this->path.'images/special_offers.svg',
-				'javascript: void(0);', 5
-			);
-
-			$shop_menu->addChild('shop_special_offers', $special_offers);
-			$shop_menu->addSeparator(5);
-
-			// payment methods menu
-			$methods_menu = new backend_MenuItem(
-				$this->get_language_constant('menu_payment_methods'),
-				$this->path.'images/payment_methods.svg',
-				'javascript: void(0);', 5
-			);
-
-			$shop_menu->addChild('shop_payment_methods', $methods_menu);
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_currencies'),
-				$this->path.'images/currencies.svg',
-				window_Open( // on click open window
-					'shop_currencies',
-					350,
-					$this->get_language_constant('title_currencies'),
-					true, true,
-					backend_UrlMake($this->name, 'currencies')
-				),
-				5  // level
-			));
-
-			$shop_menu->addSeparator(5);
-
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_transactions'),
-				$this->path.'images/transactions.svg',
-				window_Open( // on click open window
-					'shop_transactions',
-					800,
-					$this->get_language_constant('title_transactions'),
-					true, true,
-					backend_UrlMake($this->name, 'transactions')
-				),
-				5  // level
-			));
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_warehouses'),
-				$this->path.'images/warehouse.svg',
-				window_Open( // on click open window
-					'shop_warehouses',
-					490,
-					$this->get_language_constant('title_warehouses'),
-					true, true,
-					backend_UrlMake($this->name, 'warehouses')
-				),
-				5  // level
-			));
-			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->get_language_constant('menu_stocks'),
-				$this->path.'images/stock.svg',
-				window_Open( // on click open window
-					'shop_stocks',
-					490,
-					$this->get_language_constant('title_stocks'),
-					true, true,
-					backend_UrlMake($this->name, 'stocks')
-				),
-				5  // level
-			));
-
-			$shop_menu->addSeparator(5);
-			$shop_menu->addChild('', new backend_MenuItem(
-				$this->get_language_constant('menu_settings'),
-				$this->path.'images/settings.svg',
-
-				window_Open( // on click open window
-					'shop_settings',
-					400,
-					$this->get_language_constant('title_settings'),
-					true, true,
-					backend_UrlMake($this->name, 'settings')
-				),
-				$level=5
-			));
-
-			$backend->addMenu($this->name, $shop_menu);
-
-			// create custom handlers
-			$coupons_handler = \Modules\Shop\Promotion\CouponHandler::get_instance($this);
-		}
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
+		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
 	/**
@@ -989,6 +783,219 @@ class shop extends Module {
 		);
 
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add scripts and styles needed for backend operation.
+	 */
+	public function add_backend_tags() {
+		// include collection scripts
+		if (ModuleHandler::is_loaded('collection')) {
+			$collection = collection::get_instance();
+			$collection->includeScript(collection::PROPERTY_EDITOR);
+		}
+
+		// include local scripts
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+	}
+
+	/**
+	 * Add items to backend menu.
+	 */
+	public function add_menu_items() {
+		$backend = backend::get_instance();
+
+		$shop_menu = new backend_MenuItem(
+			$this->get_language_constant('menu_shop'),
+			$this->path.'images/icon.svg',
+			'javascript:void(0);',
+			5  // level
+		);
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_items'),
+			$this->path.'images/items.svg',
+			window_Open( // on click open window
+				'shop_items',
+				800,
+				$this->get_language_constant('title_manage_items'),
+				true, true,
+				backend_UrlMake($this->name, 'items')
+			),
+			5  // level
+		));
+
+		$recurring_plans_menu = new backend_MenuItem(
+			$this->get_language_constant('menu_recurring_plans'),
+			$this->path.'images/recurring_plans.svg',
+			'javascript: void(0);', 5
+		);
+		$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
+
+		$import_menu = new backend_MenuItem(
+			$this->get_language_constant('menu_import'),
+			$this->path.'images/import.svg',
+			'javascript: void(0);', 5
+		);
+		$shop_menu->addChild('shop_import', $import_menu);
+
+		$shop_menu->addSeparator(5);
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_categories'),
+			$this->path.'images/categories.svg',
+			window_Open( // on click open window
+				'shop_categories',
+				550,
+				$this->get_language_constant('title_manage_categories'),
+				true, true,
+				backend_UrlMake($this->name, 'categories')
+			),
+			5  // level
+		));
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_item_sizes'),
+			$this->path.'images/item_sizes.svg',
+			window_Open( // on click open window
+				'shop_item_sizes',
+				400,
+				$this->get_language_constant('title_manage_item_sizes'),
+				true, true,
+				backend_UrlMake($this->name, 'sizes')
+			),
+			5  // level
+		));
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_manufacturers'),
+			$this->path.'images/manufacturers.svg',
+			window_Open( // on click open window
+				'shop_manufacturers',
+				400,
+				$this->get_language_constant('title_manufacturers'),
+				true, true,
+				backend_UrlMake($this->name, 'manufacturers')
+			),
+			5  // level
+		));
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_suppliers'),
+			$this->path.'images/suppliers.svg',
+			window_Open( // on click open window
+				'shop_suppliers',
+				400,
+				$this->get_language_constant('title_suppliers'),
+				true, true,
+				backend_UrlMake($this->name, 'suppliers')
+			),
+			5  // level
+		));
+
+		// delivery methods menu
+		$delivery_menu = new backend_MenuItem(
+			$this->get_language_constant('menu_delivery_methods'),
+			$this->path.'images/delivery.svg',
+			'javascript: void(0);', 5
+		);
+
+		$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
+		$shop_menu->addSeparator(5);
+
+		// special offers menu
+		$special_offers = new backend_MenuItem(
+			$this->get_language_constant('menu_special_offers'),
+			$this->path.'images/special_offers.svg',
+			'javascript: void(0);', 5
+		);
+
+		$shop_menu->addChild('shop_special_offers', $special_offers);
+		$shop_menu->addSeparator(5);
+
+		// payment methods menu
+		$methods_menu = new backend_MenuItem(
+			$this->get_language_constant('menu_payment_methods'),
+			$this->path.'images/payment_methods.svg',
+			'javascript: void(0);', 5
+		);
+
+		$shop_menu->addChild('shop_payment_methods', $methods_menu);
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_currencies'),
+			$this->path.'images/currencies.svg',
+			window_Open( // on click open window
+				'shop_currencies',
+				350,
+				$this->get_language_constant('title_currencies'),
+				true, true,
+				backend_UrlMake($this->name, 'currencies')
+			),
+			5  // level
+		));
+
+		$shop_menu->addSeparator(5);
+
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_transactions'),
+			$this->path.'images/transactions.svg',
+			window_Open( // on click open window
+				'shop_transactions',
+				800,
+				$this->get_language_constant('title_transactions'),
+				true, true,
+				backend_UrlMake($this->name, 'transactions')
+			),
+			5  // level
+		));
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_warehouses'),
+			$this->path.'images/warehouse.svg',
+			window_Open( // on click open window
+				'shop_warehouses',
+				490,
+				$this->get_language_constant('title_warehouses'),
+				true, true,
+				backend_UrlMake($this->name, 'warehouses')
+			),
+			5  // level
+		));
+		$shop_menu->addChild(null, new backend_MenuItem(
+			$this->get_language_constant('menu_stocks'),
+			$this->path.'images/stock.svg',
+			window_Open( // on click open window
+				'shop_stocks',
+				490,
+				$this->get_language_constant('title_stocks'),
+				true, true,
+				backend_UrlMake($this->name, 'stocks')
+			),
+			5  // level
+		));
+
+		$shop_menu->addSeparator(5);
+		$shop_menu->addChild('', new backend_MenuItem(
+			$this->get_language_constant('menu_settings'),
+			$this->path.'images/settings.svg',
+
+			window_Open( // on click open window
+				'shop_settings',
+				400,
+				$this->get_language_constant('title_settings'),
+				true, true,
+				backend_UrlMake($this->name, 'settings')
+			),
+			$level=5
+		));
+
+		$backend->addMenu($this->name, $shop_menu);
+
+		// create custom handlers
+		$coupons_handler = \Modules\Shop\Promotion\CouponHandler::get_instance($this);
 	}
 
 	/**
