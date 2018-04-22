@@ -27,23 +27,8 @@ class language_menu extends Module {
 		parent::__construct(__FILE__);
 
 		// connect events
-		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
-
-		// load CSS and JScript
-		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::get_instance();
-
-			$head_tag->add_tag('script', array(
-					'src'  => URL::from_file_path($this->path.'include/language.js'),
-					'type' => 'text/javascript'
-				));
-
-			if ($section == 'backend')
-				$head_tag->add_tag('script', array(
-					'src'  => URL::from_file_path($this->path.'include/selector.js'),
-					'type' => 'text/javascript'
-				));
-		}
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
 	}
 
 	/**
@@ -100,12 +85,18 @@ class language_menu extends Module {
 	/**
 	 * Add meta and other tags to head.
 	 */
-	public function add_meta_tags() {
+	public function add_tags() {
 		global $default_language;
 
 		$head_tag = head_tag::get_instance();
 		$language_list = Language::get_languages(false);
 		$in_backend = isset($_REQUEST['section']);
+
+		// add language selector script
+		$head_tag->add_tag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/language.js'),
+				'type' => 'text/javascript'
+			));
 
 		// we don't need to do this on sites with one language
 		if (count($language_list) <= 1)
@@ -149,6 +140,17 @@ class language_menu extends Module {
 						'hreflang' => $language_code == $default_language ? 'x-default' : $language_code
 					));
 		}
+	}
+
+	/**
+	 * Include tags needed for backend.
+	 */
+	public function add_backend_tags() {
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/selector.js'),
+				'type' => 'text/javascript'
+			));
 	}
 
 	/**
