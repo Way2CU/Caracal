@@ -358,6 +358,28 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			self.system.window_list.append(self.ui.window_list_item);
 		}
 
+		// check if form contains multi-language fields
+		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
+		if (fields.length > 0)
+			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
+
+		// check if form requires notebook
+		if (self.ui.content.querySelectorAll('div.notebook').length > 0)
+			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
+
+		// integrate toolbars
+		Caracal.Toolbar.implement(self);
+
+		// attach events
+		self._attach_events();
+
+		// emit event
+		self.system.events.trigger('window-content-load', self);
+
+		// if display level is right, focus first element
+		if (self.stack_position >= 1000)
+			self._focus_input_element();
+
 		return self;
 	};
 
