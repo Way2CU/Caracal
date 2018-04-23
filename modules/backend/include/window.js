@@ -351,7 +351,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		self.system = system;
 
 		// add window list item
-		if (self.parent) {
+		if (self.system && self.system.window_list) {
 			self.ui.window_list_item = document.createElement('a');
 			self.ui.window_list_item.innerHTML = self.ui.title.innerHTML;
 			self.ui.window_list_item.addEventListener('click', self.handler.window_list_item_click);
