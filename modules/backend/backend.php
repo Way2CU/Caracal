@@ -188,6 +188,7 @@ class backend extends Module {
 
 							// enclose module content in standalone template
 							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
+							$template->register_tag_handler('cms:sprites', $this, 'tag_Sprites');
 							$template->set_mapped_module($this->name);
 							$template->set_local_params($params);
 							$template->restore_xml();
@@ -405,8 +406,8 @@ class backend extends Module {
 
 		// add scripts
 		$scripts = array(
-				'order_editor.js', 'window_system.js', 'toolbar.js', 'markdown.js',
-				'notebook.js', 'window.js', 'dialog.js'
+			'order_editor.js', 'toolbar.js', 'markdown.js', 'notebook.js',
+			'window_system.js', 'window.js', 'dialog.js'
 			);
 		foreach ($scripts as $script)
 			$head_tag->add_tag('script', array(
