@@ -399,7 +399,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		self.visible = false;
 		self.system.remove_window(self);
 		self.system.focus_top_window();
-		self.ui.window_list_item.remove();
+		if (self.ui.window_list_item)
+			self.ui.window_list_item.remove();
 		self.ui.container.remove();
 
 		// emit event
@@ -424,7 +425,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 		// update classes
 		self.ui.container.classList.add('focused');
-		self.ui.window_list_item.classList.add('active');
+		if (self.ui.window_list_item)
+			self.ui.window_list_item.classList.add('active');
 
 		// emit event
 		self.system.events.trigger('window-focus-gain', self);
@@ -439,7 +441,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 		// upodate classes
 		self.ui.container.classList.remove('focused');
-		self.ui.window_list_item.classList.remove('active');
+		if (self.ui.window_list_item)
+			self.ui.window_list_item.classList.remove('active');
 
 		// emit event
 		self.system.events.trigger('window-focus-lost', self);
@@ -478,7 +481,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	 */
 	self.set_icon = function(icon) {
 		self.icon.outerHTML = icon;
-		self.ui.window_list_item.innerHTML = icon;
+		if (self.ui.window_list_item)
+			self.ui.window_list_item.innerHTML = icon;
 	};
 
 	/**
