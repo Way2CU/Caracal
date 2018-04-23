@@ -502,7 +502,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	 * @param string icon
 	 */
 	self.set_icon = function(icon) {
-		self.icon.outerHTML = icon;
+		if (self.icon)
+			self.icon.outerHTML = icon;
+
 		if (self.ui.window_list_item)
 			self.ui.window_list_item.innerHTML = icon;
 	};
