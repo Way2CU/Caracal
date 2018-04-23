@@ -25,25 +25,9 @@
 
 var Caracal = Caracal || new Object();
 Caracal.Toolbar = Caracal.Toolbar || new Object();
-Caracal.Toolbar.extensions = new Object();
+Caracal.Toolbar.extensions = Caracal.Toolbar.extensions || new Object();
 Caracal.Toolbar.priority = ['markdown'];
 
-
-/**
- * Register extension constructor under specified name.
- *
- * @param string name
- * @param callable constructor
- */
-Caracal.Toolbar.register_extension = function(name, constructor) {
-	if (name in Caracal.Toolbar.extensions && window.console) {
-		console.log('Extension "' + name + '" already exists in the system!');
-		return;
-	}
-
-	// store for later use
-	Caracal.Toolbar.extensions[name] = constructor;
-};
 
 /**
  * Implement toolbar on all elements of specified Caracal backend window.

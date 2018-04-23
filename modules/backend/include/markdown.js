@@ -7,6 +7,7 @@
  */
 var Caracal = Caracal || new Object();
 Caracal.Toolbar = Caracal.Toolbar || new Object();
+Caracal.Toolbar.extensions = Caracal.Toolbar.extensions || new Object();
 
 
 /**
@@ -342,5 +343,5 @@ Caracal.Toolbar.Markdown = function(toolbar) {
 
 // register extension
 window.addEventListener('load', function() {
-	Caracal.Toolbar.register_extension('markdown', Caracal.Toolbar.Markdown);
+	Caracal.Toolbar.extensions['markdown'] = Caracal.Toolbar.Markdown;
 });
