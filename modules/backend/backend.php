@@ -173,14 +173,15 @@ class backend extends Module {
 
 					// transfer control to other modules
 					if (ModuleHandler::is_loaded($module_name) && $module_name != $this->name) {
-						if (!(isset($_REQUEST['enclose']) && $_REQUEST['enclose'] == 1)) {
+						if (!(isset($_REQUEST['enclose']) && !empty($_REQUEST['enclose']))) {
 							// transfer control to the module in regular way
 							$module = call_user_func(array($module_name, 'get_instance'));
 							$module->transfer_control($params, $children);
 
 						} else {
-							// add module name to params
+							// add extra parameters
 							$params['module'] = $module_name;
+							$params['source'] = parse_url($_REQUEST['enclose'], PHP_URL_HOST);
 
 							// call for modules to add required tags
 							if (ModuleHandler::is_loaded('head_tag'))

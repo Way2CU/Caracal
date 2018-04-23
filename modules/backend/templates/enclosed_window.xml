@@ -16,7 +16,12 @@
 			<cms:sprites/>
 
 			<!-- Single window container -->
-			<div id="container" class="enclosed">
+			<div
+				id="container"
+				class="enclosed"
+				data-source="$params['source']"
+				cms:eval="data-source"
+				>
 				<div class="window">
 					<!-- Title content -->
 					<div class="title">
