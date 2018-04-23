@@ -132,7 +132,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		var id = element.getAttribute('id');
 		var url = element.dataset['url'];
 
-		result = new Caracal.WindowSystem.Window(id, null, null, url, structure);
+		result = new Caracal.WindowSystem.Window(id, null, null, url, element);
 
 		// preconfigure window
 		self.list[id] = result;
