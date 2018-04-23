@@ -9,8 +9,6 @@
  */
 var Caracal = Caracal || new Object();
 Caracal.Gallery = Caracal.Gallery || new Object();
-Caracal.Toolbar = Caracal.Toolbar || new Object();
-Caracal.Toolbar.extensions = Caracal.Toolbar.extensions || new Object();
 
 
 Caracal.Gallery.Toolbar = function(toolbar) {
@@ -218,5 +216,5 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 
 // register extension
 window.addEventListener('load', function() {
-	Caracal.Toolbar.extensions['gallery'] = Caracal.Gallery.Toolbar;
+	Caracal.Toolbar.register_extension('gallery', Caracal.Gallery.Toolbar);
 });
