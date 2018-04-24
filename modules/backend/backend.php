@@ -189,6 +189,7 @@ class backend extends Module {
 
 							// enclose module content in standalone template
 							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
+							$template->set_top_level(true);
 							$template->register_tag_handler('cms:sprites', $this, 'tag_Sprites');
 							$template->set_mapped_module($this->name);
 							$template->set_local_params($params);
