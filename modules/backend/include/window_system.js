@@ -20,6 +20,18 @@
  * 		if (affected_window.id == 'login')
  * 			console.log('test');
  * 	}
+ *
+ *
+ * Communication between frames is done with typical Caracal message format
+ * and only in enclosed mode. This mode is enabled with presence of `enclosed`
+ * class on window container with addition of `data-source` attribute which
+ * ensures that parent authenticated properly against system and is using
+ * backend module to transfer control to windows.
+ *
+ * Any message source which is not equal to the value provided in `data-source`
+ * will be silently ignored.
+ *
+ * Refer to Caracal documentation on messages.
  */
 
 var Caracal = Caracal || new Object();
@@ -42,6 +54,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
 	self.list = new Array();
 	self.events = null;
+	self.messages = new Object();
 
 	/**
 	 * Finish object initialization.
