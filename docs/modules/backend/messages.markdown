@@ -94,3 +94,38 @@ Message:
 	content_size: [100, 100]
 }
 ```
+
+
+## System related messages
+
+
+### Injecting CSS
+
+When showing enclosed window content, all elements of the backend will be loaded apart from styles. This is to provide developers with ability to style Caracal backend windows to their liking and provide seamless experience to users. This message allows adding styles from same domain as specified in `enclosed` parameter when displaying window content. Each file however needs to be accompanied with its integrity code to ensure security is up to par. Files without integrity code are silently ignored.
+
+Request message:
+```json
+{
+	name: "system:inject-styles",
+	type: "request",
+	styles: [
+		[
+			"http://somedomain.com/styles/additional.css",
+			"sha384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+		], 
+		[
+			"http://somedomain.com/styles/style.css",
+			"sha384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+		]
+	]
+}
+```
+
+Response message:
+```json
+{
+	name: "system:inject-styles",
+	type: "response",
+	styles: ["http://somedomain.com/styles/style.css"]
+}
+```
