@@ -186,7 +186,7 @@ class backend extends Module {
 
 							// configure security options
 							$source = filter_var($_REQUEST['enclose'], FILTER_VALIDATE_URL);
-							if ($domain !== FALSE) {
+							if ($source !== FALSE) {
 								$params['source'] = $source;
 								$entries = explode(';', $content_security_policy);
 								$entries []= 'style-src '.$source;
