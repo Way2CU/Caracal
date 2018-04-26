@@ -706,6 +706,74 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		return self;
 	};
 
+	/**
+	 * Set window size.
+	 *
+	 * @param integer width
+	 * @return boolean
+	 */
+	self.set_size = function(width) {
+		self.ui.container.style.width = width.toString() + 'px';
+		return true;
+	};
+
+	/**
+	 * Set specified string as window title.
+	 *
+	 * @param string title
+	 * @return boolean
+	 */
+	self.set_title = function(title) {
+		var result = false;
+
+		if (self.ui.title) {
+			self.ui.title.innerHTML = title;
+			self.ui.title_bar.append(self.ui.close_button);
+			result = true;
+		}
+
+		return result;
+	};
+
+	/**
+	 * Return window size.
+	 *
+	 * @return array
+	 */
+	self.get_size = function() {
+		var result = new Array();
+
+		// get container size
+		result.push(self.ui.container.offsetWidth);
+		result.push(self.ui.container.offsetHeight);
+
+		return result;
+	};
+
+	/**
+	 * Return content size.
+	 *
+	 * @return array
+	 */
+	self.get_content_size = function() {
+		var result = new Array();
+
+		// get container size
+		result.push(self.ui.content.offsetWidth);
+		result.push(self.ui.content.offsetHeight);
+
+		return result;
+	};
+
+	/**
+	 * Get window title.
+	 *
+	 * @return string
+	 */
+	self.get_title = function() {
+		return self.ui.title.innerText;
+	};
+
 	// finish object initialization
 	self._init();
 };

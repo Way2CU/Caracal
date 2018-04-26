@@ -9,9 +9,10 @@
  *  window-open
  *  window-close
  *  window-focus-gain
- *  indow-focus-lost
+ *  window-focus-lost
  *  window-content-load
  *  window-before-submit
+ *  message
  *
  * All callbacks will receive only window affected as parameter. An example
  * callback function would look like:
@@ -54,7 +55,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
 	self.list = new Array();
 	self.events = null;
-	self.messages = new Object();
+	self.allowed_source = null;
 
 	/**
 	 * Finish object initialization.
@@ -68,11 +69,131 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
  				.register('window-focus-gain')
  				.register('window-focus-lost')
  				.register('window-content-load')
- 				.register('window-before-submit');
+ 				.register('window-before-submit')
+				.register('message');
 
  		// get default icon
  		if (default_icon)
  			self._default_icon = document.querySelector(default_icon);
+
+ 		// add event listened if we started in enclosed mode
+ 		if (self.container.classList.contains('enclosed')) {
+ 			window.addEventListener('message', self.handle_message);
+ 			self.allowed_source = self.container.dataset['source'];
+		}
+	};
+
+	/**
+	 * Handle receiving message from a different frame.
+	 *
+	 * @param object event
+	 */
+	self._handle_message = function(event) {
+		// check if message origin is valid
+		if (event.origin != self.allowed_source)
+			return;
+
+		var message = event.data;
+
+		// make sure message is of correct type
+		if (!(typeof message == 'object' &&
+			  message.hasOwnProperty('name') &&
+			  message.hasOwnProperty('type'))
+			return;
+
+		// this function only handles requests
+		if (message.type != 'request')
+			return;
+
+		// handle individual messages
+		switch (message.name) {
+			case 'window:set-properties':
+				// prepare for message parsing
+				var properties = message.properties;
+				var window = self.get_window(message.id);
+				var response = {
+						name: 'window:set-properties',
+						type: 'response',
+						id: message.id,
+						properties: new Array()
+					};
+
+				// make sure we have valid data
+				if (!window || !properties)
+					return;
+
+				// apply individual properties
+				if ('size' in properties && window.set_size(properties.size[0])
+					response.properties.push('size');
+
+				if ('title' in properties && window.set_title(properties.title))
+					response.properties.push('title');
+
+				// send response message
+				event.source.postMessage(response, self.allowed_source);
+				break;
+
+			case 'window:get-properties':
+				// prepare for message parsing
+				var properties = message.properties;
+				var window = self.get_window(message.id);
+				var response = {
+						name: 'window:get-properties',
+						type: 'response',
+						id: message.id,
+						properties: new Object()
+					};
+
+				// make sure we have valid data
+				if (!window || !properties)
+					return;
+
+				// apply individual properties
+				if (properties.indexOf('size') > -1)
+					response.properties.size = window.get_size();
+
+				if (properties.indexOf('title') > -1)
+					response.properties.title = window.get_title();
+
+				// send response message
+				event.source.postMessage(response, self.allowed_source);
+				break;
+
+			case 'system:inject-styles':
+				var styles = message.styles;
+				var response = {
+						name: 'system:inject-styles',
+						type: 'response',
+						styles: new Array()
+					};
+
+				for (var i=0, count=styles.count; i<count; i++) {
+					var style = styles[i];
+
+					// we need both hash and file
+					if (style.length < 2)
+						return;
+
+					// create new style tag
+					var tag = document.createElement('link');
+					with (tag) {
+						rel = "stylesheet";
+						type = 'text/css';
+						media = 'all';
+						href = style[0];
+						integrity = style[1];
+						crossorigin = 'anonymous';
+					}
+					document.querySelector('head').appendChild(tag);
+
+					// add file to the response list
+					response.styles.push(style[0]);
+				}
+
+				// send response message
+				event.source.postMessage(response, self.allowed_source);
+				break;
+		}
 	};
 
 	/**
