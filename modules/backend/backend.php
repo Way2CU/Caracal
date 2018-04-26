@@ -183,14 +183,16 @@ class backend extends Module {
 						} else {
 							// add extra parameters
 							$params['module'] = $module_name;
-							$params['source'] = urlencode($_REQUEST['enclose']);
 
 							// configure security options
-							$domain = parse_url($_REQUEST['enclose'], PHP_URL_HOST);
-							$entries = explode(';', $content_security_policy);
-							$entries []= 'style-src '.$domain;
-							$content_security_policy = join(';', $entries);
-							$frame_options = 'ALLOW-FROM '.$domain;
+							$source = filter_var($_REQUEST['enclose'], FILTER_VALIDATE_URL);
+							if ($domain !== FALSE) {
+								$params['source'] = $source;
+								$entries = explode(';', $content_security_policy);
+								$entries []= 'style-src '.$source;
+								$content_security_policy = join(';', $entries);
+								$frame_options = 'ALLOW-FROM '.$source;
+							}
 
 							// call for modules to add required tags
 							if (ModuleHandler::is_loaded('head_tag'))
