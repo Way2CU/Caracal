@@ -100,7 +100,7 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transfer_control($params, $children) {
-		global $content_security_policy;
+		global $content_security_policy, $frame_options;
 
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -185,10 +185,12 @@ class backend extends Module {
 							$params['module'] = $module_name;
 							$params['source'] = urlencode($_REQUEST['enclose']);
 
-							// add domain to content security policy
+							// configure security options
+							$domain = parse_url($_REQUEST['enclose'], PHP_URL_HOST);
 							$entries = explode(';', $content_security_policy);
-							$endtries []= 'style-src '.parse_url($_REQUEST['enclose'], PHP_URL_HOST);
+							$entries []= 'style-src '.$domain;
 							$content_security_policy = join(';', $entries);
+							$frame_options = 'ALLOW-FROM '.$domain;
 
 							// call for modules to add required tags
 							if (ModuleHandler::is_loaded('head_tag'))
