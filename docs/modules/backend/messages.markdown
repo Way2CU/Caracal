@@ -1,25 +1,96 @@
-# Communication between frames using `postMessage`
+# Supported messages
 
-Backend window system supports sending and receiving messages using `postMessage` mechanism. These messages can be used to extend functionality across different domains.
+Table of contents:
 
-Message system is only available when `enclosed` parameter is provided in URL used to load window content. This parameter contains URL of the page embedding the window.
+1. Windows;
+	- Setting window properties;
+	- Getting window properties;
+	- Notification of window content size;
+2. Styles;
+	- Injecting CSS.
 
-Communication is done through message objects with predefined required properties.
 
-Example message object:
+## Window related mesages
 
+Window components in Caracal are all non-modal interface containers. These containers in regular backend operations are movable and have number of properties associated with them. Messages listed in this section are used to work with these properties.
+
+
+### Setting window properties
+
+This message allows sender to set different properties of the window with specified `id`. All properties are optional. Window system reserves right to reject setting certain properties in cases where such action would produce undesireable effect. Response message will contain list of properties changed. In cases where window with specified `id` is not loaded empty set of properties is returned.
+
+Request message:
 ```json
 {
-	name: "window.resize",
-	type: "notify",
-	id: "shop_new_item",
-	size: [100, 100]
+	name: "window:set-properties",
+	type: "request",
+	id: "window-id",
+	properties: {
+		size: [300, 100],
+		title: "Some title"
+	}
 }
 ```
 
-Required properties:
+Properties:
+- `size` - Array containing new width and height for the window;
+- `title` - Window title to set.
 
-- `name` - Message name usually formed by combining message class with its function;
-- `type` - Type of message used for differentiation between requests, notifications and responses. The following types are recognized: `notify`, `request`, `response`;
+Response message:
+```json
+{
+	name: "window:set-properties",
+	type: "response",
+	id: "window-id",
+	properties: ["size", "title"]
+}
+```
 
-Refer to individual module documentation for list of individually supported messages.
+Response `properties` array contains list of strings indicating which properties were set.
+
+
+### Getting window properties
+
+External applications can get properties for window with specified `id`. Response message will contain only requested properties. In cases where window with specified `id` doesn't exist or is not loaded empty set of properties is returned.
+
+Request message:
+```json
+{
+	name: "window:get-properties",
+	type: "request",
+	id: "window-id",
+	properties: ["size", "title"]
+}
+```
+
+Properties:
+- `size` - Array containing new width and height for the window;
+- `title` - Window title to set.
+
+Response message:
+```json
+{
+	name: "window:get-properties",
+	type: "response",
+	id: "window-id",
+	properties: {
+		size: [300, 100],
+		title: "Some title"
+	}
+}
+```
+
+
+### Notification of window content size
+
+Notification sent to other side when message system is active and there has been change in window content size. Reported size is the size of _content_ not window itself. These messages can not be requested.
+
+Message:
+```json
+{
+	name: "window:content-size",
+	type: "notification",
+	id: "window-id",
+	content_size: [100, 100]
+}
+```
