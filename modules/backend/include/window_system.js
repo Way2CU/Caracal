@@ -231,7 +231,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 						styles: new Array()
 					};
 
-				for (var i=0, count=styles.count; i<count; i++) {
+				for (var i=0, count=styles.length; i<count; i++) {
 					var style = styles[i];
 
 					// we need both hash and file
@@ -240,14 +240,10 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
 					// create new style tag
 					var tag = document.createElement('link');
-					with (tag) {
-						rel = "stylesheet";
-						type = 'text/css';
-						media = 'all';
-						href = style[0];
-						integrity = style[1];
-						crossorigin = 'anonymous';
-					}
+					tag.rel = 'stylesheet';
+					tag.type = 'text/css';
+					tag.media = 'all';
+					tag.href = style[0];
 					document.querySelector('head').appendChild(tag);
 
 					// add file to the response list
