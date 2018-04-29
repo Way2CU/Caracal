@@ -155,7 +155,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		// make sure message is of correct type
 		if (!(typeof message == 'object' &&
 			  message.hasOwnProperty('name') &&
-			  message.hasOwnProperty('type'))
+			  message.hasOwnProperty('type')))
 			return;
 
 		// this function only handles requests
@@ -180,7 +180,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					return;
 
 				// apply individual properties
-				if ('size' in properties && window.set_size(properties.size[0])
+				if ('size' in properties && window.set_size(properties.size[0]))
 					response.properties.push('size');
 
 				if ('title' in properties && window.set_title(properties.title))
