@@ -13,7 +13,7 @@
 namespace Core\CSP;
 
 final class Element {
-	const DEFAULT = 'default-src';
+	const DEF = 'default-src';
 	const SCRIPTS = 'script-src';
 	const STYLES = 'style-src';
 	const IMAGES = 'img-src';
