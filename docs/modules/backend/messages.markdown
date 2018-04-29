@@ -89,7 +89,7 @@ This message is sent once window content has been loaded. Included is content si
 Message:
 ```json
 {
-	"name": "window:state",
+	"name": "window:content-load",
 	"type": "notification",
 	"id": "window-id",
 	"url": "content url",
