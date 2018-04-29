@@ -5,7 +5,8 @@ Table of contents:
 1. Windows;
 	- Setting window properties;
 	- Getting window properties;
-	- Notification of window content size;
+	- Window content loaded notification;
+	- Window opened/closed notification;
 2. Styles;
 	- Injecting CSS.
 
@@ -22,12 +23,12 @@ This message allows sender to set different properties of the window with specif
 Request message:
 ```json
 {
-	name: "window:set-properties",
-	type: "request",
-	id: "window-id",
-	properties: {
-		size: [300, 100],
-		title: "Some title"
+	"name": "window:set-properties",
+	"type": "request",
+	"id": "window-id",
+	"properties": {
+		"size": [300, 100],
+		"title": "Some title"
 	}
 }
 ```
@@ -39,10 +40,10 @@ Properties:
 Response message:
 ```json
 {
-	name: "window:set-properties",
-	type: "response",
-	id: "window-id",
-	properties: ["size", "title"]
+	"name": "window:set-properties",
+	"type": "response",
+	"id": "window-id",
+	"properties": ["size", "title"]
 }
 ```
 
@@ -56,10 +57,10 @@ External applications can get properties for window with specified `id`. Respons
 Request message:
 ```json
 {
-	name: "window:get-properties",
-	type: "request",
-	id: "window-id",
-	properties: ["size", "title"]
+	"name": "window:get-properties",
+	"type": "request",
+	"id": "window-id",
+	"properties": ["size", "title"]
 }
 ```
 
@@ -70,28 +71,45 @@ Properties:
 Response message:
 ```json
 {
-	name: "window:get-properties",
-	type: "response",
-	id: "window-id",
-	properties: {
-		size: [300, 100],
-		title: "Some title"
+	"name": "window:get-properties",
+	"type": "response",
+	"id": "window-id",
+	"properties": {
+		"size": [300, 100],
+		"title": "Some title"
 	}
 }
 ```
 
 
-### Notification of window content size
+### Window content loaded notification
 
-Notification sent to other side when message system is active and there has been change in window content size. Reported size is the size of _content_ not window itself. These messages can not be requested.
+This message is sent once window content has been loaded. Included is content size and window size so listening entities can adapt to this change.
 
 Message:
 ```json
 {
-	name: "window:content-size",
-	type: "notification",
-	id: "window-id",
-	content_size: [100, 100]
+	"name": "window:state",
+	"type": "notification",
+	"id": "window-id",
+	"url": "content url",
+	"size": [300, 100],
+	"content_size": [250, 50]
+}
+```
+
+
+### Window opened/closed notification
+
+This message is sent once window state has been changed to either opened or closed.
+
+Message:
+```json
+{
+	"name": "window:state",
+	"type": "notification",
+	"id": "window-id",
+	"closed": false
 }
 ```
 
@@ -106,9 +124,9 @@ When showing enclosed window content, all elements of the backend will be loaded
 Request message:
 ```json
 {
-	name: "system:inject-styles",
-	type: "request",
-	styles: [
+	"name": "system:inject-styles",
+	"type": "request",
+	"styles": [
 		[
 			"http://somedomain.com/styles/additional.css",
 			"sha384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -124,8 +142,8 @@ Request message:
 Response message:
 ```json
 {
-	name: "system:inject-styles",
-	type: "response",
-	styles: ["http://somedomain.com/styles/style.css"]
+	"name": "system:inject-styles",
+	"type": "response",
+	"styles": ["http://somedomain.com/styles/style.css"]
 }
 ```

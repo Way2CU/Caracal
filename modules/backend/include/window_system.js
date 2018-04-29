@@ -54,6 +54,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	self.window_list = document.querySelector(window_list);
 
 	self.list = new Array();
+	self.handler = new Object();
 	self.events = null;
 	self.allowed_source = null;
 
@@ -78,9 +79,65 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
  		// add event listened if we started in enclosed mode
  		if (self.container.classList.contains('enclosed')) {
- 			window.addEventListener('message', self.handle_message);
+ 			window.addEventListener('message', self.handler.message);
  			self.allowed_source = self.container.dataset['source'];
+
+			// connect events
+			self.events
+					.connect('window-content-load', self.handler.window_content_load)
+					.connect('window-open', self.handler.window_open)
+					.connect('window-close', self.handler.window_close);
 		}
+	};
+
+	/**
+	 * Handle window content load.
+	 *
+	 * @param object affected_window
+	 */
+	self.handler.window_content_load = function(affected_window) {
+		var message = {
+				"name": "window:content-load",
+				"type": "notification",
+				"id": affected_window.id,
+				"url": affected_window.url,
+				"size": affected_window.get_size(),
+				"content_size": affected_window.get_content_size()
+			};
+
+		self.send_message(message);
+	};
+
+	/**
+	 * Handle window opening.
+	 *
+	 * @param object affected_window
+	 */
+	self.handler.window_open = function(affected_window) {
+		var message = {
+				"name": "window:state",
+				"type": "notification",
+				"id": affected_window.id,
+				"closed": false
+			};
+
+		self.send_message(message);
+	};
+
+	/**
+	 * Handle window closing.
+	 *
+	 * @param object affected_window
+	 */
+	self.handler.window_close = function(affected_window) {
+		var message = {
+				"name": "window:state",
+				"type": "notification",
+				"id": affected_window.id,
+				"closed": true
+			};
+
+		self.send_message(message);
 	};
 
 	/**
@@ -88,7 +145,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	 *
 	 * @param object event
 	 */
-	self._handle_message = function(event) {
+	self.handler.message = function(event) {
 		// check if message origin is valid
 		if (event.origin != self.allowed_source)
 			return;
@@ -130,7 +187,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					response.properties.push('title');
 
 				// send response message
-				event.source.postMessage(response, self.allowed_source);
+				self.send_message(response, self.allowed_source);
 				break;
 
 			case 'window:get-properties':
@@ -156,7 +213,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					response.properties.title = window.get_title();
 
 				// send response message
-				event.source.postMessage(response, self.allowed_source);
+				self.send_message(response, self.allowed_source);
 				break;
 
 			case 'system:inject-styles':
@@ -191,9 +248,21 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 				}
 
 				// send response message
-				event.source.postMessage(response, self.allowed_source);
+				self.send_message(response, self.allowed_source);
 				break;
 		}
+	};
+
+	/**
+	 * Send message to parent window.
+	 *
+	 * @param object message
+	 */
+	self.send_message = function(message) {
+		if (!self.allowed_source)
+			return;
+
+		window.postMessage(message, self.allowed_source);
 	};
 
 	/**
