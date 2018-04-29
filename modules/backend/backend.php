@@ -1160,10 +1160,19 @@ class backend extends Module {
 		// call for module to add their menu items
 		Events::trigger('backend', 'add-menu-items');
 
-		// draw menu items
+		// load template for drawing
 		$template = new TemplateHandler('menu_item.xml', $this->path.'templates/');
-		foreach ($this->menus as $item)
+
+		// render system menu first
+		$system_menu = $this->menus[$this->name];
+		$system_menu->drawItem($template);
+
+		// render remaining menus
+		foreach ($this->menus as $name => $item) {
+			if ($name == $this->name)
+				continue;
 			$item->drawItem($template);
+		}
 	}
 
 	/**
