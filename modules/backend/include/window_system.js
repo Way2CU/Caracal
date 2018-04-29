@@ -87,6 +87,13 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					.connect('window-content-load', self.handler.window_content_load)
 					.connect('window-open', self.handler.window_open)
 					.connect('window-close', self.handler.window_close);
+
+			// send ready message
+			var message = {
+					"name": "system:ready",
+					"type": "notification"
+				};
+			self.send_message(message);
 		}
 	};
 
