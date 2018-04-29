@@ -262,7 +262,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		if (!self.allowed_source)
 			return;
 
-		window.postMessage(message, self.allowed_source);
+		window.parent.postMessage(message, '*');
 	};
 
 	/**
