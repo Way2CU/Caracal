@@ -776,7 +776,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		result.push(self.ui.content.offsetWidth);
 		result.push(self.ui.content.offsetHeight);
 
-		if (include_menu)
+		if (include_menu && self.ui.window_menu)
 			result[1] += self.ui.window_menu.offsetHeight();
 
 		return result;
