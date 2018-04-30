@@ -182,7 +182,7 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		for (var i=0, count=self.fields.length; i<count; i++) {
 			var field = self.fields[i];
 
-			if (self.language in seld.data.initial[field.name])
+			if (self.language in self.data.initial[field.name])
 				field.value = self.data.initial[field.name][self.language]; else
 				field.value = '';
 		}
