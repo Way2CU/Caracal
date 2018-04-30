@@ -10,6 +10,7 @@
  */
 
 use Core\Markdown;
+use Core\CSP\Parser as CSP;
 use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
 use Core\Testing\Handler as TestingHandler;
@@ -898,7 +899,7 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
-		global $language, $referrer_policy, $frame_options, $content_security_policy;
+		global $language, $referrer_policy, $frame_options;
 
 		header('X-Powered-By: Caracal/'._VERSION);
 		header('Content-Language: '.$language);
@@ -918,7 +919,7 @@ class TemplateHandler {
 			header('X-Xss-Protection: 1; mode=block');
 
 			// define content security policy
-			header('Content-Security-Policy: '.$content_security_policy);
+			header('Content-Security-Policy: '.CSP::get_policy());
 
 			// set referrer policy
 			header('Referrer-Policy: '.$referrer_policy);

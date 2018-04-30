@@ -23,17 +23,21 @@ final class Element {
 
 
 final class Parser {
+	private static $default_policy = 'script-src \'self\'';
+	private static $policy = null;
+
 	/**
 	 * Parse all values and return associative array.
 	 *
 	 * @return array
 	 */
 	private static function get_elements() {
-		global $content_security_policy;
+		if (is_null(self::$policy))
+			self::$policy = self::$default_policy;
 
 		// split policy into manageable chunks
 		$elements = array();
-		$raw_elements = explode(';', $content_security_policy);
+		$raw_elements = explode(';', self::$policy);
 
 		// parse each chunk
 		foreach ($raw_elements as $raw_values) {
@@ -55,15 +59,13 @@ final class Parser {
 	 * @param array $values
 	 */
 	private static function set_elements($elements) {
-		global $content_security_policy;
-
 		// prepare elements for update
 		$raw_elements = array();
 		foreach ($elements as $key => $values)
 			$raw_elements[] = $key.' '.join(' ', $values);
 
 		// update policy
-		$content_security_policy = join(';', $raw_elements);
+		self::$policy = join(';', $raw_elements);
 	}
 
 	/**
@@ -108,6 +110,15 @@ final class Parser {
 		$elements[$element][] = $value;
 
 		self::set_elements($elements);
+	}
+
+	/**
+	 * Return compiled policy string.
+	 *
+	 * @return string
+	 */
+	public static function get_policy() {
+		return self::$policy;
 	}
 }
 
