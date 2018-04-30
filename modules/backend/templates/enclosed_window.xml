@@ -22,7 +22,11 @@
 				data-source="$params['source']"
 				cms:eval="data-source"
 				>
-				<div class="window">
+				<div
+					class="window"
+					id="$params['window']"
+					cms:optional="id"
+					>
 					<!-- Title content -->
 					<div class="title">
 						<span/>

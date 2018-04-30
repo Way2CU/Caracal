@@ -185,6 +185,7 @@ class backend extends Module {
 						} else {
 							// add extra parameters
 							$params['module'] = $module_name;
+							$params['window'] = isset($_REQUEST['window']) ? fix_chars($_REQUEST['window']) : false;
 
 							// configure security options
 							$source = filter_var(urldecode($_REQUEST['enclose']), FILTER_VALIDATE_URL);
