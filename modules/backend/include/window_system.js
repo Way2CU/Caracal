@@ -109,7 +109,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 				"id": affected_window.id,
 				"url": affected_window.url,
 				"size": affected_window.get_size(),
-				"content_size": affected_window.get_content_size()
+				"content_size": affected_window.get_content_size(true)
 			};
 
 		self.send_message(message);

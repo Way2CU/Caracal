@@ -755,12 +755,15 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	 *
 	 * @return array
 	 */
-	self.get_content_size = function() {
+	self.get_content_size = function(include_menu) {
 		var result = new Array();
 
 		// get container size
 		result.push(self.ui.content.offsetWidth);
 		result.push(self.ui.content.offsetHeight);
+
+		if (include_menu)
+			result[1] += self.ui.window_menu.offsetHeight();
 
 		return result;
 	};
