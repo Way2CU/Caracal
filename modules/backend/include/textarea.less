@@ -6,35 +6,33 @@
  * Author: Mladen Mijatov
  */
 
-div.content {
-	textarea {
-		padding: @input_padding;
+div.content textarea {
+	padding: @input_padding;
 
-		border: 1px solid @color_input_border;
-		border-radius: @input_radius;
-		outline: 0;
-		background-color: @color_input_background;
+	border: 1px solid @color_input_border;
+	border-radius: @input_radius;
+	outline: 0;
+	background-color: @color_input_background;
 
-		font-family: generic;
+	font-family: generic;
 
-		.input-transition();
+	.input-transition();
 
-		&.ltr {
-			direction: ltr;
-		}
+	&.ltr {
+		direction: ltr;
+	}
 
-		&.code {
-			font-family: generic-mono;
-		}
+	&.code {
+		font-family: generic-mono;
+	}
 
-		&:disabled {
-			border-color: lighten(@color_input_border, 50);
-			color: lighten(@color_input_border, 50);
-		}
+	&:disabled {
+		border-color: lighten(@color_input_border, 50);
+		color: lighten(@color_input_border, 50);
+	}
 
-		&:focus {
-			border-color: @color_input_active;
-			color: @color_input_active;
-		}
+	&:focus {
+		border-color: @color_input_active;
+		color: @color_input_active;
 	}
 }
