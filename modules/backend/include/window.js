@@ -307,24 +307,24 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			}
 		}
 
+		// remove previous language selector user interface
+		if (self.ui.language_selector)
+			self.ui.language_selector.cleanup();
+
 		// check if form contains multi-language fields
 		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
 		if (fields.length > 0) {
-			// remove previous language selector user interface before creating new one
-			if (self.ui.language_selector)
-				self.ui.language_selector.cleanup();
 
 			// create new language selector
 			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
 		}
 
+		// remove previous notebook user interface
+		if (self.ui.notebook)
+			self.ui.notebook.cleanup();
+
 		// check if form requires notebook
 		if (self.ui.content.querySelectorAll('div.notebook').length > 0) {
-			// remove previous notebook interface before creating new one
-			if (self.ui.notebook)
-				self.ui.notebook.cleanup();
-
-			// create new notebook control
 			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
 		}
 
