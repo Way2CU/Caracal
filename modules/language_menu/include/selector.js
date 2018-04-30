@@ -188,6 +188,13 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		}
 	};
 
+	/**
+	 * Remove elements from the DOM and prepare object for deletion.
+	 */
+	self.cleanup = function() {
+		self.ui.container.remove();
+	};
+
 	// finalize object
 	self._init();
 }

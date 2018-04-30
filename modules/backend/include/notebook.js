@@ -88,6 +88,13 @@ Caracal.WindowSystem.Notebook = function(window) {
 		}
 	};
 
+	/**
+	 * Remove elements from the DOM and prepare object for deletion.
+	 */
+	self.cleanup = function() {
+		self.ui.controls.remove();
+	};
+
 	// finalize object
 	this._init();
 }

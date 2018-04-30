@@ -38,6 +38,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 	// container namespaces
 	self.ui = new Object();
+	self.ui.notebook = null;
+	self.ui.language_selector = null;
 	self.handler = new Object();
 	self.drag = new Object();
 
@@ -307,12 +309,24 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 		// check if form contains multi-language fields
 		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
-		if (fields.length > 0)
+		if (fields.length > 0) {
+			// remove previous language selector user interface before creating new one
+			if (self.ui.language_selector)
+				self.ui.language_selector.cleanup();
+
+			// create new language selector
 			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
+		}
 
 		// check if form requires notebook
-		if (self.ui.content.querySelectorAll('div.notebook').length > 0)
+		if (self.ui.content.querySelectorAll('div.notebook').length > 0) {
+			// remove previous notebook interface before creating new one
+			if (self.ui.notebook)
+				self.ui.notebook.cleanup();
+
+			// create new notebook control
 			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
+		}
 
 		// integrate toolbars
 		Caracal.Toolbar.implement(self);
