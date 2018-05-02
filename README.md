@@ -23,7 +23,7 @@ Contents:
 	7. [Parse parameter value as Markdown text - `cms:markdown`](docs/tags/markdown.markdown)
 	8. [Show parameter language tags for backend use - `cms:language_data`](docs/tags/language_data.markdown)
 	9. [Search and replace string with values in parameters - `cms:replace`](docs/tags/replace.markdown)
-	10. Conditional template parsing - `cms:if`
+	10. [Conditional template parsing - `cms:if`](docs/tags/if.markdown)
 	11. [Multiple choice conditional parsing - `cms:choice`](docs/tags/choice.markdown)
 	12. [Parse child nodes only on desktop version - `cms:desktop`](docs/tags/desktop.markdown)
 	13. [Parse child nodes only on mobile version - `cms:mobile`](docs/tags/mobile.markdown)
