@@ -36,7 +36,7 @@ Contents:
 	20. [Automated testing - `cms:test`](docs/tags/test.markdown)
 4. Framework attributes
 	1. Evaluating attribute - `cms:eval`
-	2. Optional attribute evaluation - `cms:eval`
+	2. Optional attribute evaluation - `cms:optional`
 	3. Language constant tooltip - `cms:tooltip`
 	4. Treating attribute value as language constant name - `cms:constant`
 	5. Marking dirty block for cache handling - `cms:skip_cache`
