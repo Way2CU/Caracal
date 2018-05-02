@@ -606,9 +606,9 @@ class TemplateHandler {
 					if (isset($tag->tagAttrs['section']))
 						$condition &= $tag->tagAttrs['section'] == $section;
 
-					// check if action is specified and matches
-					if (isset($tag->tagAttrs['action']))
-						$condition &= $tag->tagAttrs['action'] == $action;
+					// check if page template matches value
+					if (isset($tag->tagAttrs['page_template']))
+						$condition &= $tag->tagAttrs['page_template'] == SectionHandler::get_matched_file();
 
 					// check custom condition
 					if (isset($tag->tagAttrs['condition'])) {
