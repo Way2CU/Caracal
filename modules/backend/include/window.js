@@ -557,8 +557,14 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				var is_list = name.substring(name.length - 2) == '[]';
 
 				if (field.classList.contains('multi-language')) {
-					// multi-language input field, we need to gather other data
+					// get other language data
 					var language_data = self.ui.language_selector.data.current[field.name];
+					var current_language = self.ui.language_selector.language;
+
+					// update current language data
+					language_data[current_language] = field.value;
+
+					// add all languages to data for sending
 					for (var language in language_data)
 						data[name + '_' + language] = encodeURIComponent(language_data[language]);
 
