@@ -5,7 +5,7 @@
  * Author: Mladen Mijatov
  */
 
-function gravatar_Get($email, $size=50) {
+function gravatar_get($email, $size=50) {
 	global $gravatar_url, $gravatar_rating, $gravatar_default;
 
 	$result = str_replace('{email_hash}', md5(strtolower(trim($email))), $gravatar_url);

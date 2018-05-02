@@ -31,7 +31,6 @@ $default_language = 'en';
 $session_type = Core\Session\Type::BROWSER;
 
 // database
-$db = null;
 $db_type = DatabaseType::MYSQL;
 $db_config = array(
 		'host' => 'localhost',
@@ -47,19 +46,15 @@ $memcached_config = array(
 		'host'	=> 'localhost',
 		'port'	=> 11211
 	);
+$include_styles = false;
+$optimize_code = false;
 
 // security
 $force_https = false;
 $referrer_policy = 'strict-origin-when-cross-origin';
 $frame_options = 'SAMEORIGIN';
 
-// head tag
-$include_styles = false;
-$optimize_code = false;
-
-// various
 $url_rewrite = false;
-$url_add_extension = false;
 
 // gravatar global variables
 $gravatar_url = 'gravatar.com/avatar/{email_hash}?s={size}&amp;d={default}&amp;r={rating}';
