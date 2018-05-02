@@ -29,10 +29,10 @@ Contents:
 	13. [Parse child nodes only on mobile version - `cms:mobile`](docs/tags/mobile.markdown)
 	14. [Parse child nodes for logged in users - `cms:user`](docs/tags/user.markdown)
 	15. [Parse child nodes for guests only - `cms:guest`](docs/tags/guest.markdown)
-	16. Include variable or parameter value - `cms:var`
-	17. Include script in head tag - `cms:script`
-	18. Include script from system collection - `cms:collection`
-	19. Include style in head tag - `cms:link`
+	16. [Include variable or parameter value - `cms:var`](docs/tags/var.markdown)
+	17. [Include script in head tag - `cms:script`](docs/tags/script.markdown)
+	18. [Include script from system collection - `cms:collection`](docs/tags/collection.markdown)
+	19. [Include style in head tag or link to other elements - `cms:link`](docs/tags/link.markdown)
 	20. [Automated testing - `cms:test`](docs/tags/test.markdown)
 4. Framework attributes
 	1. Evaluating attribute - `cms:eval`
