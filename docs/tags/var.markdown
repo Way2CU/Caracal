@@ -25,7 +25,9 @@ Example rendering article title with fixed content:
 	</h1>
 
 	<p>
-		Placeat eius quisquam iste quibusdam ex non. Architecto optio magni similique sunt optio animi molestiae. Et odio ipsam accusantium in sit.
+		Placeat eius quisquam iste quibusdam ex non.
+		Architecto optio magni similique sunt optio animi
+		molestiae. Et odio ipsam accusantium in sit.
 	</p>
 </article>
 ```
