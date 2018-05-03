@@ -153,7 +153,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	 *
 	 * @param object affected_window
 	 */
-	self.handler.window_close = function(affected_window) {
+	self.handler.window_before_submit = function(affected_window) {
 		var message = {
 				"name": "window:before-submit",
 				"type": "notification",
