@@ -87,6 +87,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					.connect('window-content-load', self.handler.window_content_load)
 					.connect('window-open', self.handler.window_open)
 					.connect('window-close', self.handler.window_close);
+					.connect('window-before-submit', self.handler.window_before_submit);
 
 			// send ready message
 			var message = {
@@ -142,6 +143,22 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 				"type": "notification",
 				"id": affected_window.id,
 				"closed": true
+			};
+
+		self.send_message(message);
+	};
+
+	/**
+	 * Handle notification before window form is submitted.
+	 *
+	 * @param object affected_window
+	 */
+	self.handler.window_close = function(affected_window) {
+		var message = {
+				"name": "window:before-submit",
+				"type": "notification",
+				"id": affected_window.id,
+				"url": affected_window.url
 			};
 
 		self.send_message(message);

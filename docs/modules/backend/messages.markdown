@@ -7,6 +7,7 @@ Table of contents:
 	- Getting window properties;
 	- Window content loaded notification;
 	- Window opened/closed notification;
+	- Form submission notification;
 2. Styles;
 	- Injecting CSS.
 
@@ -110,6 +111,21 @@ Message:
 	"type": "notification",
 	"id": "window-id",
 	"closed": false
+}
+```
+
+
+### Form submission notification
+
+This message is sent before form data is submitted.
+
+Message:
+```json
+{
+	"name": "window:before-submit",
+	"type": "notification",
+	"id": "window-id",
+	"url": "..."
 }
 ```
 
