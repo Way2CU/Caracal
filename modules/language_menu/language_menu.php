@@ -89,18 +89,32 @@ class language_menu extends Module {
 		global $default_language;
 
 		$head_tag = head_tag::get_instance();
-		$language_list = Language::get_languages(false);
+		$language_list = Language::get_languages(true);
 		$in_backend = isset($_REQUEST['section']);
+
+		// add initial language menu payload
+		$data = array(
+				'items'   => array(),
+				'rtl'     => Language::get_rtl(),
+				'default' => $default_language
+			);
+
+		foreach($language_list as $short => $long)
+			$data['items'][] = array(
+						'short' => $short,
+						'long'  => $long,
+					);
+
+		$head_tag->add_tag('meta', array(
+				'name'    => 'language-payload',
+				'content' => base64_encode(json_encode($data))
+			));
 
 		// add language selector script
 		$head_tag->add_tag('script', array(
 				'src'  => URL::from_file_path($this->path.'include/language.js'),
 				'type' => 'text/javascript'
 			));
-
-		// we don't need to do this on sites with one language
-		if (count($language_list) <= 1)
-			return;
 
 		// get parameters for URL
 		if ($in_backend) {
@@ -126,7 +140,7 @@ class language_menu extends Module {
 		}
 
 		// add link to each language
-		foreach ($language_list as $language_code) {
+		foreach ($language_list as $language_code => $language_name) {
 			// prepare parameters for url building
 			$link_params['language'] = $language_code;
 			if ($in_backend)

@@ -1,41 +1,38 @@
 /**
- * Language API
- *
- * Copyright (c) 2013. by Way2CU
- * Author: Mladen Mijatov
+ * Language Handling
  *
  * Provides language services to browser side of the framework.
  *
- * Requires jQuery 1.4.2+
- *
- * TODO: Modernize and get rid of jQuery. Usage of Communicator should come in to place.
+ * Author: Mladen Mijatov
  */
 
 var Caracal = Caracal || new Object();
 var language_handler = null;
 
 
-function LanguageHandler() {
+Caracal.LanguageHandler = function(params) {
 	var self = this;
 
-	// language containers
 	self.languages = [];
 	self.rtl_languages = [];
 	self.default_language = 'en';
 	self.current_language = 'en';
-
-	// base url for self site
-	self.backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
-
-	// local language constant cache
 	self.cache = {};
+	self.communicator = null;
 
 	/**
 	 * Finalize object initialization.
 	 */
 	self._init = function() {
 		self.current_language = document.querySelector('html').getAttribute('lang');
-		self.loadLanguages();
+
+		// parse language payload
+		var raw_payload = document.querySelector('meta[name=language-payload]').getAttribute('content');
+		var payload = JSON.parse(window.atob(raw_payload));
+
+		self.languages = payload.items;
+		self.rtl_languages = payload.rtl;
+		self.default_language = payload.default;
 	};
 
 	/**
@@ -269,43 +266,12 @@ function LanguageHandler() {
 		}
 	};
 
-	/**
-	 * Load language list from server
-	 */
-	self.loadLanguages = function() {
-		// retireve languages from server
-		$.ajax({
-			url: self.backend_url,
-			method: 'GET',
-			async: false,
-			cache: true,
-			data: {
-				section: 'language_menu',
-				action: 'json',
-			},
-			dataType: 'json',
-			context: self,
-			success: self.loadLanguages_Complete
-		});
-	};
-
-	/**
-	 * Process server response
-	 *
-	 * @param object data
-	 * @param string status
-	 */
-	self.loadLanguages_Complete = function(data, status) {
-		self.languages = data.items;
-		self.rtl_languages = data.rtl;
-		self.default_language = data.default_language;
-	};
-
 	// initialize
 	self._init();
 }
 
 $(document).ready(function() {
-	language_handler = new LanguageHandler();
+	language_handler = new Caracal.LanguageHandler();
 	Caracal.language_handler = language_handler;
+	Caracal.language = language_handler;
 });
