@@ -296,6 +296,5 @@ Caracal.LanguageHandler = function(params) {
 	self._init();
 }
 
-window.addEventListener('load', function() {
-	Caracal.language = new Caracal.LanguageHandler();
-});
+// create language handler before other modules
+Caracal.language = new Caracal.LanguageHandler();
