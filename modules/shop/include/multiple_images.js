@@ -1,7 +1,7 @@
 /**
  * Shop Module
  * Multiple images upload
- * 
+ *
  * Author: Mladen Mijatov
  */
 
@@ -11,21 +11,21 @@ function MultipleImagesUpload(id, name_base) {
 	this._id = id;
 	this._container = null;
 	this._name_base = null;
-	
+
 	/**
 	 * Finalize object initialization
 	 */
 	this.init = function() {
 		this._container = $('#'+id);
 		this._name_base = name_base;
-		
+
 		// add one image container initially
 		this.addImage();
 
 		// add button
 		this.addButton();
 	};
-	
+
 	/**
 	 * Add button for adding more images
 	 */
@@ -35,7 +35,7 @@ function MultipleImagesUpload(id, name_base) {
 		// configure button
 		button
 			.click(this.__handle_add_click)
-			.html(Caracal.language.getText('shop', 'add_another'));
+			.html(Caracal.language.get_text('shop', 'add_another'));
 
 		this._container.append(button);
 	};
@@ -48,7 +48,7 @@ function MultipleImagesUpload(id, name_base) {
 		var remove_button = $('<button type="button">');
 		var upload_image = $('<input type="file">');
 		var number = this._container.children('div').length;
-		
+
 		// configure container
 		container
 			.append(upload_image)
@@ -58,12 +58,12 @@ function MultipleImagesUpload(id, name_base) {
 		remove_button
 			.data('container', container)
 			.click(this.__handle_remove_click)
-			.html(Caracal.language.getText('shop', 'remove'));
+			.html(Caracal.language.get_text('shop', 'remove'));
 
 		// configure file upload field
 		upload_image
 			.attr('name', this._name_base+'_'+number);
-		
+
 		// add image upload to the main container
 		this._container.prepend(container);
 	};
@@ -89,7 +89,7 @@ function MultipleImagesUpload(id, name_base) {
 
 		event.preventDefault();
 	};
-	
+
 	// finish initialization
 	this.init();
 }

@@ -26,7 +26,7 @@ Caracal.Shop.open_item_search = function() {
 
 	Caracal.window_system.open_window(
 					'shop_search_results', 450,
-					Caracal.language.getText('shop', 'title_search_results'),
+					Caracal.language.get_text('shop', 'title_search_results'),
 					true, url
 				);
 };
@@ -75,7 +75,7 @@ Caracal.Shop.add_color_item = function(color_name, color_value) {
 		.appendTo(item);
 
 	button_remove
-		.html(Caracal.language.getText(null, 'delete'))
+		.html(Caracal.language.get_text(null, 'delete'))
 		.click(Caracal.Shop.delete_color);
 
 	span_preview.css({
@@ -408,8 +408,8 @@ Caracal.Shop.save_property = function(button) {
 			.appendTo(column_options);
 
 		// load language constants for options
-		Caracal.language.getTextAsync(null, 'delete', function(data) {
-				option_remove.html(data);
+		Caracal.language.load_text(null, 'delete', function(constant, value) {
+				option_remove.html(value);
 			});
 
 	} else {
@@ -438,7 +438,7 @@ Caracal.Shop.save_property = function(button) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'add'));
+	current_window.find('button[name=add]').html(Caracal.language.get_text(null, 'add'));
 	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
@@ -537,7 +537,7 @@ Caracal.Shop.edit_property = function(event) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'save'));
+	current_window.find('button[name=add]').html(Caracal.language.get_text(null, 'save'));
 	current_window.find('button[name=reset]').hide();
 	current_window.find('button[name=cancel]').open();
 	input_type.attr('disabled', 'disabled');
@@ -611,7 +611,7 @@ Caracal.Shop.cancel_property_edit = function(button) {
 	input_type.val('number').trigger('change');
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'add'));
+	current_window.find('button[name=add]').html(Caracal.language.get_text(null, 'add'));
 	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');

@@ -51,7 +51,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.set_size(642, 265)
 				.set_content_from_dom('img#what_is_cvv');
 
-		Caracal.language.getTextArrayAsync(
+		Caracal.language.load_text_array(
 				'shop',
 				[
 					'title_password_dialog', 'title_cvv_dialog',
@@ -234,8 +234,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 		container.html('');
 
 		// pre-cache language constants
-		var no_estimate = Caracal.language.getText('shop', 'label_no_estimate');
-		var estimated_time = Caracal.language.getText('shop', 'label_estimated_time');
+		var no_estimate = Caracal.language.get_text('shop', 'label_no_estimate');
+		var estimated_time = Caracal.language.get_text('shop', 'label_estimated_time');
 
 		if (data.delivery_prices) {
 			for (var id in data.delivery_prices) {
@@ -470,7 +470,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var empty_option = $('<option>');
 
 		empty_option
-			.html(Caracal.language.getText('shop', 'new_preset'))
+			.html(Caracal.language.get_text('shop', 'new_preset'))
 			.attr('value', 0)
 			.appendTo(presets);
 

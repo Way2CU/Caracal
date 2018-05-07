@@ -1109,7 +1109,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.option_remove
 				.attr('href', 'javascript: void(0);')
 				.on('click', self._handle_remove)
-				.html(Caracal.language.getText('shop', 'remove'));
+				.html(Caracal.language.get_text('shop', 'remove'));
 	};
 
 	/**

@@ -69,7 +69,7 @@ Caracal.Toolbar.Markdown = function(toolbar) {
 				'toolbar_markdown_ordered_list',
 				'toolbar_markdown_unordered_list'
 			];
-		Caracal.language.getTextArrayAsync('backend', constants, self.handler.constants_load);
+		Caracal.language.load_text_array('backend', constants, self.handler.constants_load);
 
 		// pack interface
 		self.ui.format_container.append(self.ui.button_bold);
@@ -298,7 +298,7 @@ Caracal.Toolbar.Markdown = function(toolbar) {
 		var end = element.selectionEnd;
 
 		// generate replacement text
-		var url = prompt(Caracal.language.getText('backend', 'label_link'), 'http://');
+		var url = prompt(Caracal.language.get_text('backend', 'label_link'), 'http://');
 		var new_value = '[' + element.value.substring(start, end) + '](' + url + ')';
 
 		var cursor_position = start + new_value.length;

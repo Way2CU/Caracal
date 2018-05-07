@@ -95,51 +95,13 @@ Caracal.LanguageHandler = function(params) {
 	};
 
 	/**
-	 * Get language constant value for specified module and language
-	 *
-	 * @param string module
-	 * @param string constant
-	 * @return string
-	 */
-	self.getText = function(module, constant) {
-		var id = (module == null ? '_global' : module) + '.' + constant;
-		var data = {
-					section: 'language_menu',
-					action: 'json_get_text',
-					language: self.current_language,
-					constant: constant
-				};
-
-		if (module != null)
-			data.from_module = module;
-
-		// check local cache first
-		if (self.cache[id] == undefined) {
-			$.ajax({
-				url: self.backend_url,
-				method: 'GET',
-				async: false,
-				cache: true,
-				data: data,
-				dataType: 'json',
-				context: self,
-				success: function(data) {
-					self.cache[id] = data.text;
-				}
-			});
-		}
-
-		return self.cache[id];
-	};
-
-	/**
-	 * Get language constant and call specified function
+	 * Load text constants asynchronously.
 	 *
 	 * @param string module
 	 * @param string constant
 	 * @param object callback
 	 */
-	self.getTextAsync = function(module, constant, callback) {
+	self.load_text = function(module, constant, callback) {
 		var id = (module == null ? '_global' : module) + '.' + constant;
 		var data = {
 					section: 'language_menu',
@@ -153,19 +115,12 @@ Caracal.LanguageHandler = function(params) {
 
 		// check local cache first
 		if (self.cache[id] == undefined) {
-			$.ajax({
-				url: self.backend_url,
-				method: 'GET',
-				async: true,
-				cache: true,
-				data: data,
-				dataType: 'json',
-				context: self,
-				success: function(data) {
+			new Communicator('language_menu')
+				.on_success(function(data) {
 					self.cache[id] = data.text;
 					callback(constant, data.text);
-				}
-			});
+				})
+				.get('json_get_text', data);
 
 		} else {
 			// we have local cache, send that
@@ -180,7 +135,7 @@ Caracal.LanguageHandler = function(params) {
 	 * @param array constants
 	 * @return array
 	 */
-	self.getTextArray = function(module, constants) {
+	self.get_text_array = function(module, constants) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
 					section: 'language_menu',
@@ -197,35 +152,9 @@ Caracal.LanguageHandler = function(params) {
 		for (var i=0; i < constants.length; i++) {
 			var key = id + constants[i];
 
-			if (key in self.cache) {
-				// add cached value to result
-				result[constants[i]] = self.cache[key];
-
-			} else {
-				// add constant to requested list
-				request.push(constants[i]);
-			}
-		}
-
-		// check local cache first
-		if (request.length > 0) {
-			data.constants = request;
-
-			$.ajax({
-				url: self.backend_url,
-				method: 'GET',
-				async: false,
-				cache: true,
-				data: data,
-				dataType: 'json',
-				context: self,
-				success: function(data) {
-					for (var key in data.text) {
-						self.cache[id + key] = data.text[key];
-						result[key] = data.text[key];
-					}
-				}
-			});
+			if (key in self.cache)
+				result[constants[i]] = self.cache[key]; else  // add cached value to result
+				request.push(constants[i]);  // add constant to requested list
 		}
 
 		return result;
@@ -238,7 +167,7 @@ Caracal.LanguageHandler = function(params) {
 	 * @param array constants
 	 * @param object callback
 	 */
-	self.getTextArrayAsync = function(module, constants, callback) {
+	self.load_text_array = function(module, constants, callback) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
 					section: 'language_menu',
@@ -255,37 +184,25 @@ Caracal.LanguageHandler = function(params) {
 		for (var i=0; i < constants.length; i++) {
 			var key = id + constants[i];
 
-			if (key in self.cache) {
-				// add cached value to result
-				result[constants[i]] = self.cache[key];
-
-			} else {
-				// add constant to requested list
-				request.push(constants[i]);
-			}
+			if (key in self.cache)
+				result[constants[i]] = self.cache[key]; else  // add cached value to result
+				request.push(constants[i]);  // add constant to requested list
 		}
 
 		// check local cache first
 		if (request.length > 0) {
 			data.constants = request;
-
-			$.ajax({
-				url: self.backend_url,
-				method: 'GET',
-				async: true,
-				cache: true,
-				data: data,
-				dataType: 'json',
-				context: self,
-				success: function(data) {
+			new Communicator('language_menu')
+				.on_success(function(data) {
 					for (var key in data.text) {
 						self.cache[id + key] = data.text[key];
 						result[key] = data.text[key];
 					}
 
 					callback(result);
-				}
-			});
+				})
+				.get('json_get_text_array', data);
+
 		} else {
 			// we have all the data cached, send them right away
 			callback(result);

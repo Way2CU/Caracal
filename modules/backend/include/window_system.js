@@ -291,10 +291,9 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	self.open_login_window = function() {
 		var base = document.querySelector('meta[property=base-url]').getAttribute('content');
 
-		Caracal.language.getTextAsync('backend', 'title_login', function(constant) {
-			console.log(constant);
+		Caracal.language.load_text('backend', 'title_login', function(constant, value) {
 			self.open_window(
-				'login_window', 350, constant,
+				'login_window', 350, value,
 				base+'/index.php?section=backend&action=login'
 			);
 		});
