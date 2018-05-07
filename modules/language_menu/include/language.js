@@ -5,7 +5,6 @@
  *
  * Author: Mladen Mijatov
  */
-
 var Caracal = Caracal || new Object();
 Caracal.language = null;
 
@@ -75,7 +74,7 @@ Caracal.LanguageHandler = function(params) {
 			var language = self.current_language;
 
 		// return boolean result
-		return !(self.rtl_languages.indexOf(language) == -1);
+		return self.rtl_languages.indexOf(language) > -1;
 	};
 
 	/**
@@ -104,11 +103,11 @@ Caracal.LanguageHandler = function(params) {
 	self.load_text = function(module, constant, callback) {
 		var id = (module == null ? '_global' : module) + '.' + constant;
 		var data = {
-					section: 'language_menu',
-					action: 'json_get_text',
-					language: self.current_language,
-					constant: constant
-				};
+			section: 'language_menu',
+			action: 'json_get_text',
+			language: self.current_language,
+			constant: constant
+		};
 
 		if (module != null)
 			data.from_module = module;
@@ -138,10 +137,10 @@ Caracal.LanguageHandler = function(params) {
 	self.get_text_array = function(module, constants) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
-					section: 'language_menu',
-					action: 'json_get_text_array',
-					language: self.current_language,
-				};
+			section: 'language_menu',
+			action: 'json_get_text_array',
+			language: self.current_language,
+		};
 		var result = {};
 		var request = [];
 
@@ -170,10 +169,10 @@ Caracal.LanguageHandler = function(params) {
 	self.load_text_array = function(module, constants, callback) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
-					section: 'language_menu',
-					action: 'json_get_text_array',
-					language: self.current_language,
-				};
+			section: 'language_menu',
+			action: 'json_get_text_array',
+			language: self.current_language,
+		};
 		var result = {};
 		var request = [];
 
