@@ -36,11 +36,12 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		self.fields = self.ui.window.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
 
 		// create language controls
+		var language_list = Caracal.language.get_languages();
 		var default_language = null;
 		self.ui.controls = new Array();
 
-		for (var i=0, count=language_handler.languages.length; i<count; i++) {
-			var language = language_handler.languages[i];
+		for (var i=0, count=language_list; i<count; i++) {
+			var language = language_list[i];
 
 			// create controls
 			var control = document.createElement('a');
@@ -76,8 +77,8 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 			if (self.data.current[field] == undefined)
 				self.data.current[field] = new Object();
 
-			self.data.initial[field][language] = data_tag.innerText;
-			self.data.current[field][language] = data_tag.innerText;
+			self.data.initial[field][language] = data_tag.innerHTML;
+			self.data.current[field][language] = data_tag.innerHTML;
 			data_tag.remove();
 		}
 
@@ -132,13 +133,13 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 	self.set_language = function(new_language) {
 		// if omitted we are switching to default language
 		if (new_language == undefined)
-			var new_language = language_handler.default_language;
+			var new_language = Caracal.language.default_language;
 
 		// make sure we are not switching to same language
 		if (self.language == new_language)
 			return;
 
-		var new_language_is_rtl = language_handler.isRTL(new_language);
+		var new_language_is_rtl = Caracal.language.is_rtl(new_language);
 
 		// highlight active control
 		for (var i=0, count=self.ui.controls.length; i<count; i++) {

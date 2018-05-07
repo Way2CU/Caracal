@@ -21,8 +21,8 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 
 	if (is_rtl != undefined && is_rtl != null) 
 		this._is_rtl = is_rtl; else
-		if (typeof language_handler != 'undefined')
-			this._is_rtl = language_handler.isRTL(); else
+		if (typeof Caracal.language != 'undefined')
+			this._is_rtl = Caracal.language.is_rtl(); else
 			this._is_rtl = false;
 
 	/**

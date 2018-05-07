@@ -44,7 +44,7 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 
 		// load language constants
 		var constants = ['title_insert_image'];
-		language_handler.getTextArrayAsync('gallery', constants, self.handler.language_load);
+		Caracal.language.getTextArrayAsync('gallery', constants, self.handler.language_load);
 
 		// add button to toolbar
 		self.toolbar.container.append(self.button);
@@ -111,7 +111,7 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 
 		// prepare for data processing
 		var list = document.createElement('div');
-		var current_language = language_handler.current_language;
+		var current_language = Caracal.language.current_language;
 		if ('language_selector' in self.toolbar.target_window.ui) {
 			var language_selector = self.toolbar.target_window.ui.language_selector;
 			current_language = language_selector.language;

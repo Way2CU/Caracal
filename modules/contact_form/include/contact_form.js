@@ -77,7 +77,7 @@ Caracal.ContactForm.Form = function(form_object) {
 		// create dialog
 		if (Caracal.ContactForm.dialog == null) {
 			Caracal.ContactForm.dialog = new Caracal.Dialog({clear_on_close: true});
-			Caracal.ContactForm.dialog.set_title(language_handler.getText('contact_form', 'dialog_title'));
+			Caracal.ContactForm.dialog.set_title(Caracal.language.getText('contact_form', 'dialog_title'));
 		}
 
 		// create message container

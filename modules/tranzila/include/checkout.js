@@ -28,7 +28,7 @@ Site.configure_tranzila_checkout = function() {
 
 	// configure dialog
 	dialog
-		.set_title(language_handler.getText('tranzila', 'payment_method_title'))
+		.set_title(Caracal.language.getText('tranzila', 'payment_method_title'))
 		.set_content(iframe);
 
 	if (!Site.is_mobile())

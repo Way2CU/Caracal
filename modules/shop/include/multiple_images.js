@@ -35,7 +35,7 @@ function MultipleImagesUpload(id, name_base) {
 		// configure button
 		button
 			.click(this.__handle_add_click)
-			.html(language_handler.getText('shop', 'add_another'));
+			.html(Caracal.language.getText('shop', 'add_another'));
 
 		this._container.append(button);
 	};
@@ -58,7 +58,7 @@ function MultipleImagesUpload(id, name_base) {
 		remove_button
 			.data('container', container)
 			.click(this.__handle_remove_click)
-			.html(language_handler.getText('shop', 'remove'));
+			.html(Caracal.language.getText('shop', 'remove'));
 
 		// configure file upload field
 		upload_image

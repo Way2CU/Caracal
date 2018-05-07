@@ -217,7 +217,7 @@ Caracal.Dialog = function(config, constants) {
 			if (self.constants[index])
 				constants.push(self.constants[index]);
 
-		language_handler.getTextArrayAsync(null, constants, self.handler.constants_load);
+		Caracal.language.getTextArrayAsync(null, constants, self.handler.constants_load);
 	};
 
 	/**

@@ -465,8 +465,8 @@ Caracal.Shop.Cart = function() {
 				url = '/' + url;
 
 			// add language if different from default
-			if (language_handler.current_language != language_handler.default_language)
-				url = '/' + language_handler.current_language + url;
+			if (Caracal.language.current_language != Caracal.language.default_language)
+				url = '/' + Caracal.language.current_language + url;
 
 			url = $('meta[property=base-url]').attr('content') + url;
 		}
@@ -1109,7 +1109,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.option_remove
 				.attr('href', 'javascript: void(0);')
 				.on('click', self._handle_remove)
-				.html(language_handler.getText('shop', 'remove'));
+				.html(Caracal.language.getText('shop', 'remove'));
 	};
 
 	/**
@@ -1126,7 +1126,7 @@ Caracal.Shop.ItemView = function(item) {
 	 * Handler externally called when item count has changed.
 	 */
 	self.handle_change = function() {
-		self.label_name.text(self.item.name[language_handler.current_language]);
+		self.label_name.text(self.item.name[Caracal.language.current_language]);
 		self.label_count.text(self.item.count);
 		self.label_total
 				.text(self.item.get_total_cost().toFixed(2))

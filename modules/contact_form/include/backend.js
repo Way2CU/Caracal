@@ -57,7 +57,7 @@ ContactForm.add_domain = function() {
 
 	// make sure domain is not already in the list
 	if ($('input[name=' + field_name + ']').length > 0) {
-		alert(language_handler.getText('contact_form', 'message_domain_already_in_list'));
+		alert(Caracal.language.getText('contact_form', 'message_domain_already_in_list'));
 		return;
 	}
 
@@ -69,7 +69,7 @@ ContactForm.add_domain = function() {
 	remove
 		.attr('href', 'javascript: void(0);')
 		.click(ContactForm.remove_domain)
-		.html(language_handler.getText(null, 'delete'))
+		.html(Caracal.language.getText(null, 'delete'))
 		.appendTo(options);
 
 	name

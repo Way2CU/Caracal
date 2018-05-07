@@ -291,11 +291,13 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	self.open_login_window = function() {
 		var base = document.querySelector('meta[property=base-url]').getAttribute('content');
 
-		self.open_window(
-			'login_window', 350,
-			language_handler.getText('backend', 'title_login'),
-			base+'/index.php?section=backend&action=login'
-		);
+		Caracal.language.getTextAsync('backend', 'title_login', function(constant) {
+			console.log(constant);
+			self.open_window(
+				'login_window', 350, constant,
+				base+'/index.php?section=backend&action=login'
+			);
+		});
 	};
 
 	/**

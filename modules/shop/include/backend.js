@@ -26,7 +26,7 @@ Caracal.Shop.open_item_search = function() {
 
 	Caracal.window_system.open_window(
 					'shop_search_results', 450,
-					language_handler.getText('shop', 'title_search_results'),
+					Caracal.language.getText('shop', 'title_search_results'),
 					true, url
 				);
 };
@@ -75,7 +75,7 @@ Caracal.Shop.add_color_item = function(color_name, color_value) {
 		.appendTo(item);
 
 	button_remove
-		.html(language_handler.getText(null, 'delete'))
+		.html(Caracal.language.getText(null, 'delete'))
 		.click(Caracal.Shop.delete_color);
 
 	span_preview.css({
@@ -318,7 +318,7 @@ Caracal.Shop.save_property = function(button) {
 
 	// collect data
 	var prepared_value = '';
-	var languages = language_handler.getLanguages();
+	var languages = Caracal.language.get_languages();
 	var languages_short = new Array();
 
 	// prepare short language list
@@ -388,7 +388,7 @@ Caracal.Shop.save_property = function(button) {
 		var column_options = $('<span class="column">');
 
 		column_name
-			.html(data.name[language_handler.current_language])
+			.html(data.name[Caracal.language.current_language])
 			.attr('style', 'width: 250px')
 			.appendTo(row);
 
@@ -408,7 +408,7 @@ Caracal.Shop.save_property = function(button) {
 			.appendTo(column_options);
 
 		// load language constants for options
-		language_handler.getTextAsync(null, 'delete', function(data) {
+		Caracal.language.getTextAsync(null, 'delete', function(data) {
 				option_remove.html(data);
 			});
 
@@ -419,7 +419,7 @@ Caracal.Shop.save_property = function(button) {
 		data_field.val(JSON.stringify(data));
 
 		// update column
-		row.find('span.column').eq(0).html(data.name[language_handler.current_language]);
+		row.find('span.column').eq(0).html(data.name[Caracal.language.current_language]);
 	}
 
 	// clear input fields
@@ -438,7 +438,7 @@ Caracal.Shop.save_property = function(button) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
+	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'add'));
 	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
@@ -478,8 +478,8 @@ Caracal.Shop.edit_property = function(event) {
 	input_name.val(data.name[selector.current_language]);
 	var language_data = input_name.data('language');
 
-	for (var index in language_handler.languages) {
-		var language = language_handler.languages[index];
+	for (var index in Caracal.language.languages) {
+		var language = Caracal.language.languages[index];
 		var short_name = language.short;
 
 		if (short_name in data.name)
@@ -537,7 +537,7 @@ Caracal.Shop.edit_property = function(event) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(language_handler.getText(null, 'save'));
+	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'save'));
 	current_window.find('button[name=reset]').hide();
 	current_window.find('button[name=cancel]').open();
 	input_type.attr('disabled', 'disabled');
@@ -611,7 +611,7 @@ Caracal.Shop.cancel_property_edit = function(button) {
 	input_type.val('number').trigger('change');
 
 	// show and hide buttons
-	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
+	current_window.find('button[name=add]').html(Caracal.language.getText(null, 'add'));
 	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
@@ -640,7 +640,7 @@ Caracal.Shop.add_coupon_code = function(button, code, discount) {
 	column_times.classList.add('column');
 	column_times.style.width = '80px';
 
-	var data = language_handler.getTextArray(null, ['delete', 'change']);
+	var data = Caracal.language.getTextArray(null, ['delete', 'change']);
 	option_delete.appendChild(document.createTextNode(data['delete']));
 	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
 

@@ -48,7 +48,7 @@ Caracal.Downloads.Toolbar = function(toolbar) {
 				'toolbar_add_download', 'column_name', 'column_size',
 				'column_downloads', 'column_filename'
 			];
-		language_handler.getTextArrayAsync('downloads', constants, self.handler.language_load);
+		Caracal.language.getTextArrayAsync('downloads', constants, self.handler.language_load);
 
 		// add button to toolbar
 		self.toolbar.container.append(self.button);
@@ -100,15 +100,15 @@ Caracal.Downloads.Toolbar = function(toolbar) {
 		var header_filename = document.createElement('td');
 
 		header_name.style.width = '200px';
-		header_name.innerHTML = language_handler.getText('downloads', 'column_name');
+		header_name.innerHTML = Caracal.language.getText('downloads', 'column_name');
 
 		header_size.style.width = '100px';
-		header_size.innerHTML = language_handler.getText('downloads', 'column_size');
+		header_size.innerHTML = Caracal.language.getText('downloads', 'column_size');
 
 		header_count.style.width = '100px';
-		header_count.innerHTML = language_handler.getText('downloads', 'column_downloads');
+		header_count.innerHTML = Caracal.language.getText('downloads', 'column_downloads');
 
-		header_filename.innerHTML = language_handler.getText('downloads', 'column_filename');
+		header_filename.innerHTML = Caracal.language.getText('downloads', 'column_filename');
 
 		// configure scrollable list
 		var row = document.createElement('tr');
@@ -123,7 +123,7 @@ Caracal.Downloads.Toolbar = function(toolbar) {
 		container.classList.add('list');
 
 		// prepare for data processing
-		var current_language = language_handler.current_language;
+		var current_language = Caracal.language.current_language;
 		if ('language_selector' in self.toolbar.target_window.ui) {
 			var language_selector = self.toolbar.target_window.ui.language_selector;
 			current_language = language_selector.language;

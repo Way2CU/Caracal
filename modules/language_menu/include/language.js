@@ -7,7 +7,6 @@
  */
 
 var Caracal = Caracal || new Object();
-var language_handler = null;
 
 
 Caracal.LanguageHandler = function(params) {
@@ -36,11 +35,22 @@ Caracal.LanguageHandler = function(params) {
 	};
 
 	/**
+	 * Generate key for module and constant combination.
+	 *
+	 * @param string module
+	 * @param string constant
+	 * @return string
+	 */
+	self._get_key = function(module, constant) {
+		return (module == null ? '_global' : module) + '.' + constant;
+	};
+
+	/**
 	 * Get language list
 	 *
 	 * @return json object
 	 */
-	self.getLanguages = function() {
+	self.get_languages = function() {
 		return self.languages;
 	};
 
@@ -49,7 +59,7 @@ Caracal.LanguageHandler = function(params) {
 	 *
 	 * @return array
 	 */
-	self.getRTL = function() {
+	self.get_rtl_languages = function() {
 		return self.rtl_languages;
 	};
 
@@ -58,7 +68,7 @@ Caracal.LanguageHandler = function(params) {
 	 *
 	 * @return boolean
 	 */
-	self.isRTL = function(language) {
+	self.is_rtl = function(language) {
 		// in case language is not specified use current
 		if (language == undefined || language == null)
 			var language = self.current_language;
@@ -68,11 +78,26 @@ Caracal.LanguageHandler = function(params) {
 	};
 
 	/**
+	 * Get cached module constnat.
+	 *
+	 * @param string module
+	 * @param string constant
+	 */
+	self.get_text = function(module, constant) {
+		var key = self._get_key(module, constant);
+		var result = null;
+
+		if (key in self.cache)
+			result = self.cache[key];
+
+		return result;
+	};
+
+	/**
 	 * Get language constant value for specified module and language
 	 *
 	 * @param string module
 	 * @param string constant
-	 * @param string language
 	 * @return string
 	 */
 	self.getText = function(module, constant) {
@@ -270,8 +295,6 @@ Caracal.LanguageHandler = function(params) {
 	self._init();
 }
 
-$(document).ready(function() {
-	language_handler = new Caracal.LanguageHandler();
-	Caracal.language_handler = language_handler;
-	Caracal.language = language_handler;
+window.addEventListener('load', function() {
+	Caracal.language = new Caracal.LanguageHandler();
 });
