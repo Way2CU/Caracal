@@ -294,7 +294,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		Caracal.language.load_text('backend', 'title_login', function(constant, value) {
 			self.open_window(
 				'login_window', 350, value,
-				base+'/index.php?section=backend&action=login', null
+				base + '/index.php?section=backend&action=login', null
 			);
 		});
 	};
@@ -341,7 +341,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 			}
 
 			// load content after opening the window
-			result.open(true).load_content();
+			result.open(true).load_content(url);
 		}
 
 		return result;
