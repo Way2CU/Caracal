@@ -40,7 +40,7 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		var default_language = null;
 		self.ui.controls = new Array();
 
-		for (var i=0, count=language_list; i<count; i++) {
+		for (var i=0, count=language_list.length; i<count; i++) {
 			var language = language_list[i];
 
 			// create controls
