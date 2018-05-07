@@ -77,8 +77,8 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 			if (self.data.current[field] == undefined)
 				self.data.current[field] = new Object();
 
-			self.data.initial[field][language] = data_tag.innerHTML;
-			self.data.current[field][language] = data_tag.innerHTML;
+			self.data.initial[field][language] = data_tag.textContent;
+			self.data.current[field][language] = data_tag.textContent;
 			data_tag.remove();
 		}
 
