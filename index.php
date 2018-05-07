@@ -140,7 +140,7 @@ if ($cache->is_cached()) {
 }
 
 // print out copyright and timing
-if (defined('DEBUG')) {
+if (defined('DEBUG') && !_AJAX_REQUEST) {
 	$time_end = explode(" ", microtime());
 	$time_end = $time_end[0] + $time_end[1];
 	$time = round($time_end - $time_start, 3);
