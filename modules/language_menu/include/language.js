@@ -7,6 +7,7 @@
  */
 
 var Caracal = Caracal || new Object();
+Caracal.language = null;
 
 
 Caracal.LanguageHandler = function(params) {
