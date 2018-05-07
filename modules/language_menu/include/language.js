@@ -120,7 +120,7 @@ Caracal.LanguageHandler = function(params) {
 					self.cache[id] = data.text;
 					callback(constant, data.text);
 				})
-				.get('json_get_text', data);
+				.get('json_get_text', data, 'json');
 
 		} else {
 			// we have local cache, send that
@@ -201,7 +201,7 @@ Caracal.LanguageHandler = function(params) {
 
 					callback(result);
 				})
-				.get('json_get_text_array', data);
+				.get('json_get_text_array', data, 'json');
 
 		} else {
 			// we have all the data cached, send them right away

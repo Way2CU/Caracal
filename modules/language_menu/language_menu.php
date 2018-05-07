@@ -307,6 +307,7 @@ class language_menu extends Module {
 									'long'			=> $long,
 								);
 
+		header('Content-type: application/json');
 		print json_encode($result);
 	}
 
@@ -323,10 +324,12 @@ class language_menu extends Module {
 			$text = Language::get_text(escape_chars($_REQUEST['constant']));
 		}
 
+		// prepare response object
 		$result = array(
 					'text'	=> $text,
 				);
 
+		header('Content-type: application/json');
 		print json_encode($result);
 	}
 
@@ -354,6 +357,7 @@ class language_menu extends Module {
 					$result['text'][$constant] = $language_handler->get_text($constant); else
 					$result['text'][$constant] = Language::get_text($constant);
 
+		header('Content-type: application/json');
 		print json_encode($result);
 	}
 
@@ -362,6 +366,7 @@ class language_menu extends Module {
 	 */
 	private function json_GetCurrentLanguage() {
 		global $language;
+		header('Content-type: application/json');
 		print json_encode($language);
 	}
 }
