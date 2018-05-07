@@ -128,7 +128,9 @@ Caracal.LanguageHandler = function(params) {
 	};
 
 	/**
-	 * Get array of language constants from server
+	 * Get array of cached constants. This function does *NOT*
+	 * load data from the server. For that you need to use `load_*`
+	 * functions.
 	 *
 	 * @param string module
 	 * @param array constants
@@ -160,7 +162,9 @@ Caracal.LanguageHandler = function(params) {
 	};
 
 	/**
-	 * Get array of language constants and call specified function when completed
+	 * Load array of constants from the server for specified
+	 * module. After loading is completed callback function is
+	 * called with retrieved data as parameter.
 	 *
 	 * @param string module
 	 * @param array constants
