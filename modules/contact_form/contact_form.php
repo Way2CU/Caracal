@@ -144,6 +144,10 @@ class contact_form extends Module {
 					$this->amendSubmission($params, $children);
 					break;
 
+				case 'json_form_list':
+					$this->json_form_list();
+					break;
+
 				default:
 					break;
 			}
@@ -3602,6 +3606,31 @@ class contact_form extends Module {
 				$template->set_local_params($params);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Return list of contact forms as JSON object.
+	 */
+	private function json_form_list() {
+		$manager = ContactForm_FormManager::get_instance();
+		$forms = $manager->get_items($manager->get_field_names(), array());
+		$result = array();
+
+		if (count($forms) > 0)
+			foreach ($forms as $form)
+				$result[] = array(
+					'id'          => $form->id,
+					'text_id'     => $form->text_id,
+					'name'        => $form->name,
+					'template'    => $form->template,
+					'use_ajax'    => $form->use_ajax,
+					'show_submit' => $form->show_submit,
+					'show_reset'  => $form->show_reset,
+					'show_cancel' => $form->show_cancel
+				);
+
+		header('Content-Type: json/application');
+		print json_encode($result);
 	}
 
 	/**
