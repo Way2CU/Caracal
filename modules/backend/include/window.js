@@ -572,7 +572,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				} else {
 					if (type == 'checkbox') {
 						// checkbox
-						data[name] = this.checked ? 1 : 0;
+						data[name] = field.checked ? 1 : 0;
 
 					} else if (type == 'radio') {
 						// radio button
