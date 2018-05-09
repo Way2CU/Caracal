@@ -7,7 +7,7 @@ Tag recognizes the following attributes:
 - `name` - Name of the module where function resides;
 - `action` - Function name to call;
 - `template` - Optional template file to use for rendering. If omitted system will use its own;
-- `template_path` - Optional location where to look for template file.
+- `template_path` - Optional location where to look for template file. If omitted it defaults to `$template_path`;
 - `local` - Optional flag which indicates where template file should be loaded from.
 
 If `local` attribute is set to `1` system will ignore `template_path` attribute and look for template file inside of module specific template directory. This is meant for internal use and when developing modules and is rarely used when developing sites. Omitting this attribute or setting it `0` indicates that template should be loaded from `template_path` if specified, or from default `$template_path` specified in configuration file. Most of the times user will just specify `template` and not worry about other attributes.
