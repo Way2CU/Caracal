@@ -2,13 +2,15 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<input
-			type="checkbox"
-			name="'mailer_'.$params['name']"
-			checked="$params['selected'] ? 'checked' : false"
-			cms:eval="name"
-			cms:optional="checked"
-			/>
-		<span><cms:var param="title"/></span>
+		<label>
+			<input
+				type="checkbox"
+				name="'mailer_'.$params['name']"
+				checked="$params['selected'] ? 'checked' : false"
+				cms:eval="name"
+				cms:optional="checked"
+				/>
+			<span><cms:var param="title"/></span>
+		</label>
 	</div>
 </document>
