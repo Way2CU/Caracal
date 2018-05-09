@@ -532,23 +532,24 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		self.ui.container.classList.add('loading');
 
 		var data = {};
-		var field_types = ['input', 'select', 'textarea'];
+		var field_tags = ['input', 'select', 'textarea'];
 
 		// emit event
 		self.system.events.trigger('window-before-submit', self);
 
 		// collect data from from
-		for (var i = 0; i < field_types.length; i++) {
-			var type = field_types[i];
-			var fields = form.querySelectorAll(type);
+		for (var i = 0; i < field_tags.length; i++) {
+			var tag_name = field_tags[i];
+			var fields = form.querySelectorAll(tag_name);
 
-			// make sure form contains fields of this type
+			// make sure form contains fields of this tag name
 			if (!fields.length)
 				continue;
 
 			for (var j = 0; j < fields.length; j++) {
 				var field = fields[j];
 				var name = field.getAttribute('name');
+				var type = field.hasAttribute('type') ? field.getAttribute('type') : null;
 
 				// we ignore fields without name
 				if (!name)
