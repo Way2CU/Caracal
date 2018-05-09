@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<label>
+		<label class="checkbox">
 			<input
 				type="checkbox"
 				name="'mailer_'.$params['name']"
