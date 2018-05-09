@@ -677,6 +677,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 					// get all multi-language fields
 					var fields = this.querySelectorAll('input.multi-language, textarea.multi-language');
 
+					// trigger before submit event
+					self.system.events.trigger('window-before-submit', self);
+
 					// make sure we have data to work with
 					if (fields.length == 0)
 						return;
