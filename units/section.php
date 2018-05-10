@@ -51,7 +51,7 @@ final class SectionHandler {
 		}
 
 		// get query string
-		$request_path = URL::get_request_uri();
+		$request_path = URL::get_request_path();
 
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
