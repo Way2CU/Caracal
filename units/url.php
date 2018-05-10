@@ -298,7 +298,7 @@ final class URL {
 	public static function get_request_uri() {
 		$result = '';
 		$query = $_SERVER['QUERY_STRING'];
-		$contains_question_mark = strpos($query, '?') === false;
+		$contains_question_mark = strpos($query, '?') !== false;
 		$starts_with_slash = substr($query, 0, 1) == SectionHandler::ROOT_KEY;
 
 		if (!$starts_with_slash && !$contains_question_mark) {
