@@ -303,7 +303,7 @@ final class URL {
 
 		if (!$starts_with_slash && !$contains_question_mark) {
 			$result = SectionHandler::ROOT_KEY.'?'.$_SERVER['QUERY_STRING'];
-		} ($starts_with_slash && !$contains_question_mark) {
+		} else if ($starts_with_slash && !$contains_question_mark) {
 			$result = $query.'?';
 		}
 
