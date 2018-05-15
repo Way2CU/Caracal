@@ -1341,10 +1341,7 @@ class articles extends Module {
 								'time'			=> $time,
 								'title'			=> $all_languages ? $item->title : $item->title[$language],
 								'content'		=> $all_languages ? $item->content : Markdown::parse($item->content[$language]),
-								'author'		=> $admin_manager->get_item_value(
-																	'fullname',
-																	array('id' => $item->author)
-																),
+								'author'		=> $admin_manager->get_item_value('fullname', array('id' => $item->author)),
 								'visible'		=> $item->visible,
 								'views'			=> $item->views,
 								'votes_up'		=> $item->votes_up,
