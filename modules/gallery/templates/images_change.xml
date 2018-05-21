@@ -34,7 +34,12 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_file" module="gallery"/></span>
-			<div><cms:var name="$params['filename']"/></div>
+			<input
+				type="text"
+				readonly="readonly"
+				value="$params['filename']"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_description" module="gallery"/></span>
