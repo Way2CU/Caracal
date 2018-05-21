@@ -676,6 +676,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				form.addEventListener('submit', function(event) {
 					// get all multi-language fields
 					var fields = this.querySelectorAll('input.multi-language, textarea.multi-language');
+					var current_language = self.ui.language_selector.language;
 
 					// trigger before submit event
 					self.system.events.trigger('window-before-submit', self);
@@ -687,7 +688,10 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 					for (var j = 0; j < fields.length; j++) {
 						var field = fields[j];
 						var name = field.getAttribute('name');
-						var data = field.dataset.language;
+						var data = self.ui.language_selector.data.current[name];
+
+						// update current language data
+						data[current_language] = field.value;
 
 						// create hidden field for each language
 						for (var language in data) {
