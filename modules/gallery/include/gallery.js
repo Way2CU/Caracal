@@ -2,12 +2,12 @@
  * Gallery JavaScript
  * Caracal Development Framework
  *
- * Copyright (c) 2015. by Way2CU, http://way2cu.com
+ * Copyright (c) 2018. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
  */
 
-var Caracal = Caracal || {};
-Caracal.Gallery = Caracal.Gallery || {};
+var Caracal = Caracal || new Object();
+Caracal.Gallery = Caracal.Gallery || new Object();
 
 
 /**
@@ -27,7 +27,7 @@ Caracal.Gallery.Constraint = {
 Caracal.Gallery.Loader = function() {
 	var self = this;
 
-	self.handlers = {};
+	self.handlers = new Object();
 	self.galleries = null;
 	self.callbacks = null;
 	self.constructor = null;
@@ -186,7 +186,7 @@ Caracal.Gallery.Loader = function() {
 	self.handlers.load_success = function(data, callback_data) {
 		if (!data.error) {
 			// create image storage array
-			var images = $();
+			var storage = new Array();
 
 			// create images
 			for (var i=0, count=data.items.length; i<count; i++) {
@@ -198,15 +198,15 @@ Caracal.Gallery.Loader = function() {
 					image = Caracal.Gallery.create_image(image_data);
 
 				if (image != null)
-					images = images.add(image);
+					storage.push(image);
 			}
 
 			// add images to every gallery
 			for (var i=0, count=self.galleries.length; i<count; i++)
 				self.galleries[i]
 						.images.clear()
-						.images.append(images)
-						.images.add(images)
+						.images.append(storage)
+						.images.add(storage)
 						.images.update();
 		}
 
@@ -272,8 +272,8 @@ Caracal.Gallery.Loader = function() {
 Caracal.Gallery.Slider = function(visible_items, vertical) {
 	var self = this;
 
-	self.images = {};
-	self.controls = {};
+	self.images = new Object();
+	self.controls = new Object();
 	self.container = null;
 	self.direction = 1;
 	self.step_size = 1;
@@ -294,16 +294,16 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		self.visible_items = visible_items || 3;
 
 		// create image container
-		self.images.list = $();
+		self.images.list = new Array();
 
 		// create control containers
-		self.controls.next = $();
-		self.controls.previous = $();
+		self.controls.next = new Array();
+		self.controls.previous = new Array();
 		self.controls.direct = null;
 		self.controls.constructor = null;
 
 		// detect list direction automatically
-		if ($('html').attr('dir') == 'rtl' && !self.vertical)
+		if (document.querySelector('html').getAttribute('dir') == 'rtl' && !self.vertical)
 			self.direction = -1;
 	};
 
@@ -333,7 +333,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 
 		// shift images
 		var slice = null;
-		var images = self.images.list.toArray();
+		var images = self.images.list;
 		var subset = null;
 
 		if (real_direction == 1) {
@@ -348,7 +348,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		}
 
 		// make jquery set from array
-		self.images.list = $(images);
+		self.images.list = images;
 
 		// perform update
 		self.images.update(real_direction);
@@ -363,53 +363,65 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	self.images._prepare_position = function(params, direction) {
 		if (direction == 1) {
 			var incoming = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
-			var outgoing = self.images.list.slice(-self.step_size).not(incoming);
+			var outgoing = self.images.list.slice(-self.step_size);
+
 		} else {
 			var incoming = self.images.list.slice(0, self.step_size);
-			var outgoing = self.images.list.slice(self.visible_items, self.visible_items + self.step_size).not(incoming);
+			var outgoing = self.images.list.slice(self.visible_items, self.visible_items + self.step_size);
 		}
 
 		// disable transitions for a moment
-		incoming.addClass('transit');
+		incoming.forEach(function(image) {
+			image.classList.remove('transit');
+		});
 
 		// position elements
 		if (direction == 1) {
-			incoming.css(params.property_name, params.container_size);
-			outgoing.css(params.property_name, '-100%');
+			incoming.forEach(function(image) {
+				image.style[params.property_name] = params.container_size.toString() + 'px';
+			});
+			outgoing.forEach(function(image) {
+				image.style[params.property_name] = '-100%';
+			});
+
 		} else {
-			incoming.css(params.property_name, '-100%');
-			outgoing.css(params.property_name, params.container_size);
+			incoming.forEach(function(image) {
+				image.style[params.property_name] = '-100%';
+			});
+			outgoing.forEach(function(image) {
+				image.style[params.property_name] = params.container_size.toString() + 'px';
+			});
 		}
 
-		// trigger reflow on all incomming elements
-		incoming.each(function() {
-			this.offsetHeight;
+		// trigger reflow and enable transitions
+		incoming.forEach(function(image) {
+			image.offsetHeight;
+			image.classList.remove('transit');
 		});
-
-		// enable transitions
-		incoming.removeClass('transit');
 	};
 
 	/**
 	 * Get image spacing parameters.
 	 *
-	 * @param object image_set
+	 * @param array image_set
 	 * @return object
 	 */
 	self.images._get_params = function(image_set) {
-		var result = {};
+		var result = new Object();
 
 		// get size of container
-		if (self.vertical)
-			result.container_size = self.container.outerHeight(); else
-			result.container_size = self.container.outerWidth();
+		result.container_size = 0;
+		if (self.container)
+			if (self.vertical)
+				result.container_size = self.container.offsetHeight; else
+				result.container_size = self.container.offsetWidth;
 
 		// get total image width
 		result.total_size = 0;
-		image_set.each(function() {
+		image_set.forEach(function(image) {
 			if (self.vertical)
-				result.total_size += $(this).outerHeight(); else
-				result.total_size += $(this).outerWidth();
+				result.total_size += image.offestHeight; else
+				result.total_size += image.offsetWidth;
 		});
 		result.negative_space = result.container_size - result.total_size;
 
@@ -442,15 +454,14 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	/**
 	 * Update image positions.
 	 *
-	 * @param object image_set
+	 * @param array image_set
 	 */
 	self.images._update_position = function(image_set, params) {
 		var pos = params.start_position;
 
-		image_set.each(function() {
-			var item = $(this);
-			var size = self.vertical ? item.outerHeight() : item.outerWidth();
-			item.css(params.property_name, pos);
+		image_set.forEach(function(item) {
+			var size = self.vertical ? item.offsetHeight : item.offsetWidth;
+			item.style[params.property_name] = pos.toString() + 'px';
 			pos += size + params.spacing;
 		});
 	};
@@ -458,24 +469,30 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	/**
 	 * Update image visibility.
 	 *
-	 * @param object image_set
+	 * @param array image_set
 	 */
 	self.images._update_visibility = function(image_set) {
 		// update image visibility
-		self.images.list.not(image_set).removeClass('visible');
-		image_set.addClass('visible');
+		self.images.list.forEach(function(image) {
+			if (image in image_set)
+				image.classList.add('visible'); else
+				image.classList.remove('visible');
+		});
 
 		// update direct controls if they are used
 		if (self.show_direct_controls) {
 			// get controls for active image set
-			var control_set = $();
-			image_set.each(function(index) {
-				$.extend(control_set, $(this).data('control'))
+			var control_set = new Array();
+			image_set.forEach(function(image) {
+				control_set.push(image.data('control'));  // TODO: FIX!
 			});
 
 			// update controls
-			self.controls.direct.not(control_set).removeClass('active');
-			control_set.addClass('active');
+			self.controls.direct.forEach(function(control) {
+				if (control in control_set)
+					control.classList.add('active'); else
+					control.classList.remove('active');
+			});
 		}
 	};
 
@@ -508,7 +525,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 * @return object
 	 */
 	self.images.set_container = function(container) {
-		self.container = $(container);
+		self.container = typeof container == 'string' ? document.querySelector(container) : container;
 		return self;
 	};
 
@@ -520,8 +537,8 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.images.set_container_status = function(busy) {
 		if (busy)
-			self.container.addClass('loading'); else
-			self.container.removeClass('loading');
+			self.container.classList.add('loading'); else
+			self.container.classList.remove('loading');
 
 		return self;
 	};
@@ -534,9 +551,9 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 * @return object
 	 */
 	self.images.add = function(images) {
-		// add images to container
-		var list = typeof images == 'string' ? $(images) : images;
-		$.extend(self.images.list, list);
+		var container = self.container || document;
+		var list = typeof images == 'string' ? container.querySelectorAll(images) : images;
+		self.images.list = self.images.list.concat(Array.prototype.slice.call(list));
 
 		// create direct controls if needed
 		if (self.show_direct_controls)
@@ -553,7 +570,9 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.images.append = function(images) {
 		// add images to container
-		self.container.append(images);
+		images.forEach(function(image) {
+			self.container.append(image);
+		})
 
 		// create direct controls if needed
 		if (self.show_direct_controls)
@@ -569,8 +588,10 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.images.clear = function() {
 		// remove images
-		self.images.list.remove();
-		self.images.list = $();
+		self.images.list.forEach(function(image) {
+			image.remove();
+		});
+		self.images.list = new Array();
 
 		// remove direct controls if they are visible
 		if (self.show_direct_controls)
@@ -659,7 +680,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.controls.set_direct_container = function(container) {
 		// assign container
-		var new_container = typeof container == 'string' ? $(container) : container;
+		var new_container = typeof container == 'string' ? document.querySelector(container) : container;
 		self.controls.direct = new_container;
 
 		return self;
@@ -686,8 +707,8 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		var create_control = self.controls.constructor || Caracal.Gallery.create_control;
 
 		// create controls
-		images.each(function(index) {
-			var control = create_control($(this));
+		images.forEach(function(image) {
+			var control = create_control(image);
 			self.controls.direct.append(control);
 		});
 	};
@@ -758,34 +779,35 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 * @param boolean container
 	 */
 	self.controls._attach_handlers = function(next, previous, container) {
-		var controls = $();
+		var controls = new Array();
 
 		if (next)
-			$.extend(controls, self.controls.next);
-
+			controls = controls.concat(self.controls.next);
 		if (previous)
-			$.extend(controls, self.controls.previous);
-
+			controls = controls.concat(self.controls.previous);
 		if (container)
-			$.extend(controls, self.container);
+			controls = controls.concat(self.container);
 
 		// reset click handlers
 		if (next)
-			self.controls.next
-				.off('click', self.controls._handle_next)
-				.on('click', self.controls._handle_next);
+			self.controls.next.forEach(function(control) {
+				control.removeEventListener('click', self.controls._handle_next);
+				control.addEventListener('click', self.controls._handle_next);
+			});
 
 		if (previous)
-			self.controls.previous
-				.off('click', self.controls._handle_previous)
-				.on('click', self.controls._handle_previous);
+			self.controls.previous.forEach(function(control) {
+				control.removeEventListener('click', self.controls._handle_previous);
+				control.addEventListener('click', self.controls._handle_previous);
+			});
 
 		// reset hover handlers
-		controls
-			.off('mouseenter', self.controls._handle_mouse_enter)
-			.off('mouseleave', self.controls._handle_mouse_leave)
-			.on('mouseenter', self.controls._handle_mouse_enter)
-			.on('mouseleave', self.controls._handle_mouse_leave);
+		controls.forEach(function(control) {
+			control.removeEventListener('mouseenter', self.controls._handle_mouse_enter);
+			control.removeEventListener('mouseleave', self.controls._handle_mouse_leave);
+			control.addEventListener('mouseenter', self.controls._handle_mouse_enter);
+			control.addEventListener('mouseleave', self.controls._handle_mouse_leave);
+		});
 	};
 
 	/**
@@ -796,9 +818,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.controls.attach_next = function(control) {
 		// add control to the list
-		$.extend(self.controls.next, $(control));
-
-		// re-attach event handlers
+		self.controls.next.push(control);
 		self.controls._attach_handlers(true, false, false);
 
 		return self;
@@ -812,9 +832,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 */
 	self.controls.attach_previous = function(control) {
 		// add control to the list
-		$.extend(self.controls.previous, $(control));
-
-		// re-attach event handlers
+		self.controls.previous.push(control);
 		self.controls._attach_handlers(false, true, false);
 
 		return self;
@@ -870,7 +888,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 Caracal.Gallery.Container = function() {
 	var self = this;
 
-	self.images = {};
+	self.images = new Object();
 	self.container = null;
 
 	/**
@@ -878,7 +896,7 @@ Caracal.Gallery.Container = function() {
 	 */
 	self._init = function() {
 		// create image container
-		self.images.list = $();
+		self.images.list = new Array();
 	};
 
 	/**
@@ -890,7 +908,7 @@ Caracal.Gallery.Container = function() {
 	 * @return object
 	 */
 	self.images.set_container = function(container) {
-		self.container = $(container);
+		self.container = container;
 		return self;
 	};
 
@@ -902,8 +920,8 @@ Caracal.Gallery.Container = function() {
 	 */
 	self.images.set_container_status = function(busy) {
 		if (busy)
-			self.container.addClass('loading'); else
-			self.container.removeClass('loading');
+			self.container.classList.add('loading'); else
+			self.container.classList.remove('loading');
 
 		return self;
 	};
@@ -916,8 +934,10 @@ Caracal.Gallery.Container = function() {
 	 * @return object
 	 */
 	self.images.add = function(images) {
-		var list = typeof images == 'string' ? $(images) : images;
-		$.extend(self.images.list, list);
+		var container = self.container || document;
+		var list = typeof images == 'string' ? container.querySelectorAll(images) : images;
+		self.images.list = self.images.list.concat(Array.prototype.slice.call(list));
+
 		return self;
 	};
 
@@ -928,7 +948,10 @@ Caracal.Gallery.Container = function() {
 	 * @return object
 	 */
 	self.images.append = function(images) {
-		self.container.append(images);
+		images.forEach(function(image) {
+			self.container.append(image);
+		});
+
 		return self;
 	};
 
@@ -938,8 +961,11 @@ Caracal.Gallery.Container = function() {
 	 * @return object
 	 */
 	self.images.clear = function() {
-		self.images.list.remove();
-		self.images.list = $();
+		self.images.list.forEach(function(image) {
+			image.remove();
+		});
+		self.images.list = new Array();
+
 		return self;
 	};
 
@@ -962,16 +988,15 @@ Caracal.Gallery.Container = function() {
  * @return object
  */
 Caracal.Gallery.create_image = function(data) {
-	var link = $('<a>');
-	link
-		.addClass('image')
-		.data('id', data.id)
-		.attr('href', data.image);
+	var link = document.createElement('a');
+	link.classList.add('image');
+	link.dataset.id = data.id;
+	link.setAttribute('href', data.image);
 
-	var thumbnail = $('<img>').appendTo(link);
-	thumbnail
-		.attr('src', data.thumbnail)
-		.attr('alt', data.title);
+	var thumbnail = new Image();
+	thumbnail.src = data.thumbnail;
+	thumbnail.alt = data.title;
+	link.append(thumbnail);
 
 	return link;
 };
@@ -989,9 +1014,8 @@ Caracal.Gallery.create_image = function(data) {
  * @return object
  */
 Caracal.Gallery.create_control = function(image) {
-	var link = $('<a>');
-
-	link.data('tooltip', image.attr('alt'));
+	var link = document.createElement('a');
+	link.dataset.tooltip = image.alt;
 
 	return link;
 };
