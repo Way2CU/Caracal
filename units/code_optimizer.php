@@ -65,7 +65,7 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	private function get_cached_name($list) {
-		$all_files = implode($list);
+		$all_files = _DOMAIN.implode($list);
 		return md5($all_files);
 	}
 
@@ -106,17 +106,19 @@ class CodeOptimizer {
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
-		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
 			$file_name = URL::to_file_path($file_name);
 
+		// get reference for replacing relative paths in styles
+		$reference_url = URL::from_file_path(dirname(dirname($file_name)));
+
 		switch ($extension) {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
+					$this->less_compiler->parseFile($file_name);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -126,21 +128,43 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
 
 				// change path for relative module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\2)\3', $data);
+					$data = preg_replace(
+						'|url\s*\('.      // `url` keyword
+						'\s*'.            // allow for arbitraty space
+						'[\'"]?'.         // leading quotation marks
+						'(\.\./){1}(.*)'. // path matching
+						'[\'"]?'.         // trailing quotation marks
+						'\)'.             // closing `url`
+						'([;,])|ium',     // end of statement or next value
+						'url('.$reference_url.'\2)\3', $data);
 				break;
 		}
 
 		// remove comments
-		$data = preg_replace('|/\*.*?(?=\*/)\*/|imus', '', $data);
+		$data = preg_replace(
+			'|/\*'.       // block start
+			'.*?(?=\*/)'. // any characters in between
+			'\*/|imus',   // block end
+			'', $data);
 
 		// fix relative paths
-		$data = preg_replace('|url\s*\(\s*(\.\./){2,}|imus', 'url(../', $data);
-		$data = preg_replace('|url\(\.\./([^\)]+)\)|imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
+		$data = preg_replace(
+			'|url\s*\('.                 // `url` keyword
+			'\s*[\'"]?(\.\./){2,}|imus', // multiple parent directories
+			'url(../', $data);
+
+		// expand relative paths
+		$full_path = URL::from_file_path(dirname(dirname($file_name)));
+		$data = preg_replace(
+			'|url\('.        // `url` keyword
+			'[\'"]?\.\./'.   // parent directory
+			'([^\)"]+)'.     // path fragment
+			'[\'"]?\)|imus', // optional closing quotes, and bracket
+			'url('.$full_path.'/\1)', $data);
 
 		// parse most important
 		$data = str_replace("\r", '', $data);
@@ -286,11 +310,9 @@ class CodeOptimizer {
 	}
 
 	/**
-	 * Return compiled scripts and styles.
-	 *
-	 * @return string
+	 * Show compiled styles.
 	 */
-	public function print_data() {
+	public function print_style_data() {
 		global $cache_path, $include_styles;
 
 		// compile styles if needed
@@ -298,7 +320,23 @@ class CodeOptimizer {
 		if ($this->needs_recompile($style_cache, $this->style_list))
 			$this->recompile_styles($style_cache, $this->style_list);
 
-		// compile scripts
+		// include styles in page or as outside resource
+		$integrity = '';
+		if (file_exists($style_cache.'.sha384'))
+			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
+
+		if (!$include_styles)
+			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
+			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+	}
+
+	/**
+	 * Show compiled scripts.
+	 */
+	public function print_script_data() {
+		global $cache_path, $include_styles;
+
+		// recompile scripts if needed
 		$script_cache = $cache_path.$this->get_cached_name($this->script_list).'.js';
 		if ($this->needs_recompile($script_cache, $this->script_list)) {
 			// send data to closure server for compilation
@@ -327,15 +365,6 @@ class CodeOptimizer {
 				}
 			}
 		}
-
-		// include styles in page or as outside resource
-		$integrity = '';
-		if (file_exists($style_cache.'.sha384'))
-			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
-
-		if (!$include_styles)
-			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
-			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
 
 		// show javascript tags
 		$integrity = '';
