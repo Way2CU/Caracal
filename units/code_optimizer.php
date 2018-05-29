@@ -118,7 +118,7 @@ class CodeOptimizer {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name);
+					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
