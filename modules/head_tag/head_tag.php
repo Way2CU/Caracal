@@ -5,6 +5,10 @@
  *
  * This module provides simplified interface for adding links and scripts.
  *
+ * Events provided by this module:
+ *  - before-print
+ *		Event triggered before head tags are rendered to final template.
+ *
  * Author: Mladen Mijatov
  */
 use Core\Events;
@@ -60,7 +64,7 @@ class head_tag extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_tag':
-					$this->printTags();
+					$this->printTags($params);
 					break;
 			}
 	}
@@ -81,6 +85,8 @@ class head_tag extends Module {
 	 * @param array $params
 	 */
 	public function addTag($name, $params) {
+		global $optimize_code, $section;
+
 		$name = strtolower($name);
 		$data = array($name, $params);
 
@@ -90,6 +96,13 @@ class head_tag extends Module {
 				break;
 
 			case 'link':
+				// include LESS JavaScript parser
+				$optimize_styles = $section == 'backend' || $optimize_code;
+				if ((isset($params['rel']) && $params['rel'] == 'stylesheet/less') && !$optimize_styles) {
+					$collection = collection::get_instance();
+					$collection->includeScript(collection::LESS);
+				}
+
 				$this->link_tags[] = $data;
 				break;
 
@@ -142,61 +155,99 @@ class head_tag extends Module {
 	}
 
 	/**
-	 * Print previously added tags
+	 * Show tags previously added. This function also emits two events, before title and
+	 * before print giving additional opportunity for modules to add their tags.
+	 *
+	 * @param array $params
 	 */
-	private function printTags() {
+	private function printTags($params=array()) {
 		global $optimize_code, $section;
+
+		// take flags from params
+		$show_title = isset($params['title']) ? $params['title'] == 1 : true;
+		$show_scripts = isset($params['scripts']) ? $params['scripts'] == 1 : true;
+		$show_styles = isset($params['styles']) ? $params['styles'] == 1 : true;
+		$show_other = isset($params['other']) ? $params['other'] == 1 : true;
+
+		// determine whether we should optimize code
+		if ($section != 'backend') {
+			$optimize_styles = $optimize_code && !defined('DEBUG');
+			$optimize_scripts = $optimize_code && !defined('DEBUG');
+
+		} else {
+			$optimize_styles = true;
+			$optimize_scripts = false;
+		}
 
 		// give modules chance to add elements
 		Events::trigger('head-tag', 'before-print');
 
-		// merge tag lists
-		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
+		// get instance of code optimizer
+		$optimizer = CodeOptimizer::get_instance();
 
-		if ($optimize_code && !in_array($section, array('backend', 'backend_module'))) {
-			// use code optimizer if possible
-			$optimizer = CodeOptimizer::get_instance();
-			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
+		// list of tags to show as they are
+		$unhandled_tags = $this->tags;
 
-			// add tags for compilation
-			foreach ($this->link_tags as $link) {
-				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
+		// show meta tags first
+		foreach ($this->meta_tags as $tag)
+			$this->print_tag($tag);
 
-				if ($can_be_compiled)
-					$added = $optimizer->add_style($link[1]['href']);
+		// show styles
+		if ($show_styles) {
+			if (!$optimize_styles) {
+				// show style tags as they are when specified
+				$unhandled_tags = array_merge($unhandled_tags, $this->link_tags);
 
-				if (!$can_be_compiled || !$added)
-					$unhandled_tags [] = $link;
+			} else {
+				// add each style for compilation
+				foreach ($this->link_tags as $link) {
+					$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
+
+					if ($can_be_compiled)
+						$added = $optimizer->add_style($link[1]['href']);
+
+					if (!$can_be_compiled || !$added)
+						$unhandled_tags [] = $link;
+				}
+
+				// print optimized code
+				$optimizer->print_style_data();
 			}
-
-			// add scripts for compilation
-			$handled_tags = array();
-			foreach ($this->script_tags as $script)
-				if (!$optimizer->add_script($script[1]['src']))
-					$unhandled_tags []= $script; else
-					$handled_tags []= $script;  // collect scripts in case compile fails
-
-			foreach ($unhandled_tags as $tag)
-				$this->printTag($tag);
-
-			// print optimized code
-			try {
-				$optimizer->print_data();
-
-			} catch (ScriptCompileError $error) {
-				// there was a problem compiling script, show tags traditional way
-				foreach ($handled_tags as $tag)
-					$this->printTag($tag);
-			}
-
-		} else {
-			// no optimization
-			foreach ($tags as $tag)
-				$this->printTag($tag);
 		}
 
+		// show scripts
+		if ($show_scripts) {
+			if (!$optimize_code) {
+				// show script tags as they are when specified
+				if ($show_scripts)
+					$unhandled_tags = array_merge($unhandled_tags, $this->script_tags);
+
+			} else {
+				// add each script link for compilation
+				$handled_tags = array();
+				foreach ($this->script_tags as $script)
+					if (!$optimizer->add_script($script[1]['src']))
+						$unhandled_tags []= $script; else
+						$handled_tags []= $script;  // collect scripts in case compile fails
+
+				// print optimized code
+				try {
+					$optimizer->print_script_data();
+
+				} catch (ScriptCompileError $error) {
+					// handle issue with compiling code
+					trigger_error($error->getMessage(), E_USER_WARNING);
+					$unhandled_tags = array_merge($unhandled_tags, $handled_tags);
+				}
+			}
+		}
+
+		// show unhandled tags
+		foreach ($unhandled_tags as $tag)
+			$this->print_tag($tag);
+
 		// print google analytics code if needed
-		if (!is_null($this->analytics)) {
+		if (!is_null($this->analytics) && $show_other) {
 			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
 			$template->set_mapped_module($this->name);
 
@@ -211,7 +262,7 @@ class head_tag extends Module {
 		}
 
 		// print google site optimizer code if needed
-		if (!is_null($this->optimizer)) {
+		if (!is_null($this->optimizer) && $show_other) {
 			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
 			$template->set_mapped_module($this->name);
 
