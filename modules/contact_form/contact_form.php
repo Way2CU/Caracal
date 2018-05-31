@@ -155,10 +155,6 @@ class contact_form extends Module {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
-				case 'settings_show':
-					$this->showSettings();
-					break;
-
 				case 'submissions':
 					$this->showSubmissions();
 					break;
@@ -173,6 +169,10 @@ class contact_form extends Module {
 
 				case 'export_submissions_commit':
 					$this->exportSubmissions();
+					break;
+
+				case 'settings_show':
+					$this->showSettings();
 					break;
 
 				case 'settings_save':
@@ -305,6 +305,10 @@ class contact_form extends Module {
 
 				case 'values_delete_commit':
 					$this->deleteValue_Commit();
+					break;
+
+				case 'json_settings':
+					$this->json_settings();
 					break;
 
 				default:
@@ -3629,6 +3633,29 @@ class contact_form extends Module {
 					'show_cancel' => $form->show_cancel
 				);
 
+		header('Content-Type: json/application');
+		print json_encode($result);
+	}
+
+	/**
+	 * Return list of current configuration.
+	 */
+	private function json_settings() {
+		// duplicate settings array
+		$result = $this->settings;
+
+		// generate list of mailers
+		$mailers = array();
+
+		foreach ($this->mailers as $name => $mailer)
+			$mailers[] = array(
+					'name'  => $name,
+					'title' => $mailer->get_title(),
+				);
+
+		$result['mailer_list'] = $mailers;
+
+		// show result
 		header('Content-Type: json/application');
 		print json_encode($result);
 	}
