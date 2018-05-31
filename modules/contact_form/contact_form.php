@@ -1022,34 +1022,51 @@ class contact_form extends Module {
 	 * Save settings
 	 */
 	private function save_settings() {
-		// grab parameters
-		$use_ssl = $this->get_boolean_field('use_ssl') ? 1 : 0;
 		$params = array(
 			'mailer', 'sender_name', 'sender_address', 'recipient_name', 'recipient_address',
 			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
 		);
+		$saved_params = array();
 
-		// save settings
 		foreach($params as $param) {
+			if (!isset($_REQUEST[$param]))
+				continue;
+
 			$value = fix_chars($_REQUEST[$param]);
 			$this->save_setting($param, $value);
+			$saved_params []= $param;
 		}
 
-		$this->save_setting('use_ssl', $use_ssl);
+		if (isset($_REQUEST['use_ssl'])) {
+			$use_ssl = $this->get_boolean_field('use_ssl') ? 1 : 0;
+			$this->save_setting('use_ssl', $use_ssl);
+			$saved_params []= 'use_ssl';
+		}
 
 		// show message
-		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->name);
-
-		$params = array(
-					'message'	=> $this->get_language_constant('message_saved'),
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close('contact_form_settings')
+		if (_AJAX_REQUEST) {
+			$result = array(
+					'success'      => count($saved_params) > 0,
+					'saved_params' => $params
 				);
 
-		$template->restore_xml();
-		$template->set_local_params($params);
-		$template->parse();
+			header('Content-Type: json/application');
+			print json_encode($result);
+
+		} else {
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+
+			$params = array(
+						'message'	=> $this->get_language_constant('message_saved'),
+						'button'	=> $this->get_language_constant('close'),
+						'action'	=> window_Close('contact_form_settings')
+					);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 	}
 
 	/**
