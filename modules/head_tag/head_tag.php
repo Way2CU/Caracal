@@ -190,7 +190,7 @@ class head_tag extends Module {
 
 		// show meta tags first
 		foreach ($this->meta_tags as $tag)
-			$this->print_tag($tag);
+			$this->printTag($tag);
 
 		// show styles
 		if ($show_styles) {
@@ -244,7 +244,7 @@ class head_tag extends Module {
 
 		// show unhandled tags
 		foreach ($unhandled_tags as $tag)
-			$this->print_tag($tag);
+			$this->printTag($tag);
 
 		// print google analytics code if needed
 		if (!is_null($this->analytics) && $show_other) {
