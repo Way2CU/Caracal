@@ -111,9 +111,6 @@ class CodeOptimizer {
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
 			$file_name = URL::to_file_path($file_name);
 
-		// get reference for replacing relative paths in styles
-		$reference_url = URL::from_file_path(dirname(dirname($file_name)));
-
 		switch ($extension) {
 			case 'less':
 				// compile files
@@ -132,15 +129,18 @@ class CodeOptimizer {
 
 				// change path for relative module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace(
-						'|url\s*\('.      // `url` keyword
-						'\s*'.            // allow for arbitraty space
-						'[\'"]?'.         // leading quotation marks
-						'(\.\./){1}(.*)'. // path matching
-						'[\'"]?'.         // trailing quotation marks
-						'\)'.             // closing `url`
-						'([;,])|ium',     // end of statement or next value
-						'url('.$reference_url.'\2)\3', $data);
+					$data = preg_replace_callback(
+						'|url\s*\('.   // `url` keyword
+						'\s*'.         // allow for arbitraty space
+						'[\'"]?'.      // leading quotation marks
+						'([^"\'\)]+)'. // path matching
+						'[\'"]?'.      // trailing quotation marks
+						'\)'.          // closing `url`
+						'([;,])|ium',
+						function ($matches) use ($file_name) {
+							$path = dirname($file_name).'/'.$matches[1];
+							return 'url('.URL::from_file_path($path).')'.$matches[2];
+						}, $data);
 				break;
 		}
 
@@ -151,26 +151,20 @@ class CodeOptimizer {
 			'\*/|imus',   // block end
 			'', $data);
 
-		// fix relative paths
-		$data = preg_replace(
-			'|url\s*\('.                 // `url` keyword
-			'\s*[\'"]?(\.\./){2,}|imus', // multiple parent directories
-			'url(../', $data);
-
 		// expand relative paths
-		$full_path = URL::from_file_path(dirname(dirname($file_name)));
-		$data = preg_replace(
-			'|url\('.        // `url` keyword
-			'[\'"]?\.\./'.   // parent directory
-			'([^\)"]+)'.     // path fragment
-			'[\'"]?\)|imus', // optional closing quotes, and bracket
-			'url('.$full_path.'/\1)', $data);
+		$data = preg_replace_callback(
+			'|url\('.       // `url` keyword
+			'[\'"]?(\.\./'. // parent directory
+			'[^\)\'"]+'.    // path fragment
+			')[\'"]?\)|imus',
+			function ($matches) use ($file_name) {
+				$path = dirname($file_name).'/'.$matches[1];
+				return 'url('.URL::from_file_path($path).')';
+			}, $data);
 
-		// parse most important
+		// handle meta commands
 		$data = str_replace("\r", '', $data);
 		$data = explode("\n", $data);
-
-		$in_comment = false;
 
 		foreach($data as $line) {
 			$line_data = trim($line);
