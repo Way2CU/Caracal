@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Code optimizer object is used to compile JavaScript and CSS. By reducting its
+ * Code optimizer object is used to compile JavaScript and CSS. By reducing its
  * size, web page responsivness is considerably increased.
  *
  * There's no need to use this class manually as both template handler and head tag
