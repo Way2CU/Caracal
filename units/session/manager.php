@@ -190,8 +190,9 @@ final class Manager {
 			case 'login':
 				$method = self::login();
 				$result = array(
-						'success' => !is_null($method),
-						'method'  => $method
+						'success'    => !is_null($method),
+						'session_id' => session_id(),
+						'method'     => $method
 					);
 
 				if ($result['success'] && !is_null($redirect_url)) {
