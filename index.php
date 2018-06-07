@@ -42,6 +42,7 @@ require_once('units/template.php');
 require_once('units/section.php');
 require_once('units/xml_parser.php');
 require_once('units/csp.php');
+require_once('units/cors.php');
 require_once('units/markdown.php');
 require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
@@ -59,12 +60,11 @@ require_once('units/doctypes.php');
 require_once('units/gravatar.php');
 
 // start measuring time
-if (defined('DEBUG')) {
-	$time_start = explode(" ", microtime());
-	$time_start = $time_start[0] + $time_start[1];
-}
+if (defined('DEBUG'))
+	$time_start = microtime(true);
 
 // make namespaces more friendly
+use Core\CORS\Manager as CORS;
 use Core\Cache\Manager as Cache;
 use Core\Session\Manager as Session;
 
@@ -121,7 +121,14 @@ if ($cache->is_cached()) {
 
 } else {
 	// load all the modules
-	$module_handler->load_modules();
+	$module_handler->load_modules(false);
+
+	// handle preflight requests and exit
+	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+		CORS::handle_preflight_request();
+
+	// include response headers for regular and simple requests
+	CORS::add_response_headers();
 
 	// check if module is being requested and is available
 	$module_match = ModuleHandler::is_loaded($section);
@@ -141,8 +148,7 @@ if ($cache->is_cached()) {
 
 // print out copyright and timing
 if (defined('DEBUG') && !_AJAX_REQUEST) {
-	$time_end = explode(" ", microtime());
-	$time_end = $time_end[0] + $time_end[1];
+	$time_end = microtime();
 	$time = round($time_end - $time_start, 3);
 	echo "\n<!-- Page generated with Caracal in $time second(s) -->";
 }
