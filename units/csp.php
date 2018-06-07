@@ -8,6 +8,10 @@
  *
  * This class automatically updates system configuration for CSP.
  *
+ * Usage example:
+ *
+ *	Parser::add_value(Element::SCRIPTS, 'domain.com/scripts/something.js');
+ *
  * Author: Mladen Mijatov
  */
 namespace Core\CSP;
