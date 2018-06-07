@@ -11,6 +11,7 @@
 use Core\Events;
 use Core\Module;
 use Core\Markdown;
+use Core\CORS\Manager as CORS;
 
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');
@@ -74,6 +75,22 @@ class contact_form extends Module {
 		global $section;
 
 		parent::__construct(__FILE__);
+
+		// configure cross-domain resource sharing
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS' && isset($_REQUEST['form_id'])) {
+			$form_id = isset($_REQUEST['form_id']) ? fix_id($_REQUEST['form_id']) : null;
+
+			// get list of domains for specified form
+			$domain_manager = ContactForm_DomainManager::get_instance();
+			$raw_list = $domain_manager->get_instance(array('domain'), array('form' => $id));
+
+			if (count($raw_list) > 0)
+				foreach ($raw_list as $record) {
+					$domain = CORS::add_domain($record->domain);
+					CORS::allow_methods($domain, array('POST'));
+					CORS::allow_headers($domain, array('Content-Type', 'X-Requested-With'));
+				}
+		}
 
 		// register events
 		Events::register($this->name, 'email-sent', 4);  // params: mailer, recipient, subject, data
@@ -540,28 +557,6 @@ class contact_form extends Module {
 	private function submitForm($tag_params, $children) {
 		$id = isset($_REQUEST['form_id']) ? fix_id($_REQUEST['form_id']) : null;
 		$result = false;
-
-		// allow cross domain posting
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS' && isset($_SERVER['HTTP_ORIGIN'])) {
-			// get list of allowed domains
-			$remote_domain = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
-			$domain_manager = ContactForm_DomainManager::get_instance();
-			$raw_list = $domain_manager->get_instance(array('domain'), array('id' => $id));
-			$domain_list = array();
-
-			if (count($raw_list) > 0)
-				foreach ($raw_list as $record)
-					$domain_list[] = $record->domain;
-
-			if (in_array($remote_domain, $domain_list)) {
-				header('Access-Control-Allow-Origin: ');
-				header('Access-Control-Allow-Methods: POST, OPTIONS');
-				header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
-				header('Access-Control-Max-Age: 1000');
-			}
-
-			return;
-		}
 
 		// we need form id
 		if (is_null($id))

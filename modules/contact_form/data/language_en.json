@@ -49,7 +49,7 @@
     "label_address": "Email address:",
     "label_autocomplete": "Allow browser to autocomplete?",
     "label_disabled": "Field is disabled?",
-    "label_domain": "Domain:",
+    "label_domain": "Domain with protocol:",
     "label_export_filename": "Filename:",
     "label_export_include_headers": "Include headers?",
     "label_export_ip": "Include IP address?",
