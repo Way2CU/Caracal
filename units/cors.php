@@ -98,10 +98,10 @@ final class Manager {
 		if (!array_key_exists($domain, self::$domains))
 			throw new CorsException('Invalid domain handle.');
 
-		if (!is_array($methods))
+		if (!is_array($headers))
 			throw new CorsException('Headers parameter must be array.');
 
-		self::$config[$domain]['headers'] = $methods;
+		self::$config[$domain]['headers'] = $headers;
 	}
 
 	/**
@@ -115,10 +115,10 @@ final class Manager {
 		if (!array_key_exists($domain, self::$domains))
 			throw new CorsException('Invalid domain handle.');
 
-		if (!is_array($methods))
+		if (!is_array($headers))
 			throw new CorsException('Headers parameter must be array.');
 
-		self::$config[$domain]['expose'] = $methods;
+		self::$config[$domain]['expose'] = $headers;
 	}
 
 	/**
