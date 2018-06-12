@@ -209,6 +209,9 @@ final class Manager {
 
 			header('Access-Control-Allow-Origin: '.$domain);
 
+			if (!is_null($config['credentials']))
+				header('Access-Control-Allow-Credentials: '.($config['credentials'] ? 'true' : 'false'));
+
 			$methods = array_intersect(self::$simple_request_allowed_methods, $config['methods']);
 			if (!empty($methods))
 				header('Access-Control-Allow-Methods: '.implode(', ', $methods));
