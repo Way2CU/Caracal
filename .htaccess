@@ -47,11 +47,13 @@
 Header unset Pragma
 
 <FilesMatch "\.(ico|pdf|jpg|jpeg|png|gif)$">
+	Header always set Access-Control-Allow-Origin "*"
 	Header set Cache-Control "max-age=864000, public, must-revalidate"
 	Header unset Last-Modified
 </FilesMatch>
 
 <FilesMatch "\.(svg)$">
+	Header always set Access-Control-Allow-Origin "*"
 	Header set Cache-Control "max-age=864000, public, must-revalidate"
 	SetOutputFilter DEFLATE
 </FilesMatch>
