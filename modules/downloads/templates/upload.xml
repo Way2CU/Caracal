@@ -8,6 +8,17 @@
 		enctype="multipart/form-data"
 		>
 		<label>
+			<span><cms:text constant="label_category" module="downloads"/></span>
+			<select name="category" style="width: 270px;">
+				<option/>
+				<cms:categories
+					template="category_option.xml"
+					local="1"
+					/>
+			</select>
+		</label>
+
+		<label>
 			<span><cms:text constant="label_name" module="downloads"/></span>
 			<input
 				type="text"

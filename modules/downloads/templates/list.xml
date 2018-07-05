@@ -27,7 +27,7 @@
 		</div>
 		<div class="list_content" style="height: 250px">
 			<!-- List Content -->
-			<_downloads_list/>
+			<cms:downloads_list show_invisible="1"/>
 		</div>
 	</div>
 </document>

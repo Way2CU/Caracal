@@ -1,0 +1,21 @@
+<document>
+	<tr>
+		<td style="width: 170px;">
+			<cms:var param="text_id"/>
+		</td>
+		<td style="width: 300px;">
+			<cms:var param="name" multilanguage="yes"/>
+		</td>
+		<td>
+			<cms:var param="item_add"/><cms:raw text=" "/>
+			<cms:var param="item_change"/><cms:raw text=" "/>
+			<cms:var param="item_delete"/>
+		</td>
+	</tr>
+
+	<cms:children
+		parent="$params['id']"
+		level="$params['level'] + 1"
+		cms:eval="parent,level"
+		/>
+</document>

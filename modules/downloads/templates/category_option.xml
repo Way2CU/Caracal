@@ -1,0 +1,10 @@
+<document>
+	<option
+		value="$params['id']"
+		selected="$params['selected'] == $params['id'] ? 'selected' : false"
+		cms:eval="value"
+		cms:optional="selected"
+		>
+		<cms:var param="name" multilanguage="yes"/>
+	</option>
+</document>

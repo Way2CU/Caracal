@@ -1,0 +1,28 @@
+<document>
+	<!-- Window Menu -->
+	<nav class="window">
+		<cms:var name="$params['link_new']"/>
+	</nav>
+
+	<!-- Header -->
+	<table class="list">
+		<thead>
+			<tr>
+				<td style="width: 170px;">
+					<cms:text constant="column_text_id" module="downloads"/>
+				</td>
+				<td style="width: 300px;">
+					<cms:text constant="column_name" module="downloads"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody>
+			<!-- List Content -->
+			<cms:category_list parent="0"/>
+		</tbody>
+	</table>
+</document>

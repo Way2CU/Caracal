@@ -6,8 +6,22 @@
 		cms:eval="action"
 		method="POST"
 		>
+		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+
 		<label>
-			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+			<span><cms:text constant="label_category" module="downloads"/></span>
+			<select name="category" style="width: 270px;">
+				<option/>
+				<cms:categories
+					template="category_option.xml"
+					local="1"
+					selected="$params['category']"
+					cms:eval="selected"
+					/>
+			</select>
+		</label>
+
+		<label>
 			<span><cms:text constant="label_name" module="downloads"/></span>
 			<input
 				type="text"

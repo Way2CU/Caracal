@@ -1,0 +1,64 @@
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<input
+			type="hidden"
+			name="id"
+			value="$params['id']"
+			cms:eval="value"
+			/>
+
+		<label>
+			<span><cms:text constant="label_text_id" module="downloads"/></span>
+			<input
+				type="text"
+				name="text_id"
+				class="code ltr"
+				maxlength="32"
+				value="$params['text_id']"
+				cms:eval="value"
+				/>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_parent" module="downloads"/></span>
+			<select name="parent">
+				<option/>
+				<cms:category_list
+					template="category_option.xml"
+					selected="$params['parent']"
+					local="1"
+					cms:eval="selected"
+					/>
+			</select>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_name" module="downloads"/></span>
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				maxlength="100"
+				/>
+			<cms:language_data param="name"/>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_description" module="downloads"/></span>
+			<textarea
+				class="multi-language code"
+				name="description"
+				rows="5"
+				cols="40"
+				style="height: 250px;"
+				data-toolbar="all"
+				/>
+			<cms:language_data param="description"/>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+		</div>
+	</form>
+</document>

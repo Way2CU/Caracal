@@ -1,0 +1,10 @@
+<document>
+	<div class="group">
+		<cms:module
+			name="downloads"
+			action="show_list"
+			group="$params['id']"
+			cms:eval="group"
+			/>
+	</div>
+</document>
