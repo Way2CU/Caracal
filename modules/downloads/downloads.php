@@ -65,7 +65,7 @@ class downloads extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'get':
-					$this->redirectDownload();
+					$this->redirect_download();
 					break;
 
 				case 'show':
@@ -88,31 +88,31 @@ class downloads extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'upload':
-					$this->uploadFile();
+					$this->show_upload_form();
 					break;
 
 				case 'upload_save':
-					$this->uploadFile_Save();
+					$this->save_upload();
 					break;
 
 				case 'list':
-					$this->showDownloads();
+					$this->show_downloads();
 					break;
 
 				case 'change':
-					$this->changeData();
+					$this->change_data();
 					break;
 
 				case 'save':
-					$this->saveData();
+					$this->save_data();
 					break;
 
 				case 'delete':
-					$this->deleteDownload();
+					$this->delete_download();
 					break;
 
 				case 'delete_commit':
-					$this->deleteDownload_Commit();
+					$this->delete_download_commit();
 					break;
 
 				case 'categories':
@@ -252,7 +252,7 @@ class downloads extends Module {
 	/**
 	 * Show downloads management form
 	 */
-	private function showDownloads() {
+	private function show_downloads() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -276,7 +276,7 @@ class downloads extends Module {
 	/**
 	 * Provides a form for uploading files
 	 */
-	private function uploadFile() {
+	private function show_upload_form() {
 		$template = new TemplateHandler('upload.xml', $this->path.'templates/');
 		$template->register_tag_handler('cms:categories', $this, 'tag_CategoryList');
 		$template->set_mapped_module($this->name);
@@ -293,8 +293,8 @@ class downloads extends Module {
 	/**
 	 * Save uploaded file to database and rename it (if needed)
 	 */
-	private function uploadFile_Save() {
-		$result = $this->saveUpload('file');
+	private function save_upload() {
+		$result = $this->save_uploaded_file('file');
 
 		if (!$result['error']) {
 			$manager =  DownloadsManager::get_instance();
@@ -328,7 +328,7 @@ class downloads extends Module {
 	/**
 	 * Print form for changing data
 	 */
-	private function changeData() {
+	private function change_data() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = DownloadsManager::get_instance();
 
@@ -356,7 +356,7 @@ class downloads extends Module {
 	/**
 	 * Save changes of download file
 	 */
-	private function saveData() {
+	private function save_data() {
 		$manager = DownloadsManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
@@ -386,7 +386,7 @@ class downloads extends Module {
 	/**
 	 * Show confirmation dialog for delete
 	 */
-	private function deleteDownload() {
+	private function delete_download() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -423,7 +423,7 @@ class downloads extends Module {
 	/**
 	 * Complete removal of specified image
 	 */
-	private function deleteDownload_Commit() {
+	private function delete_download_commit() {
 		$id = fix_id($_REQUEST['id']);
 
 		$manager = DownloadsManager::get_instance();
@@ -621,7 +621,7 @@ class downloads extends Module {
 	/**
 	 * Record download count and redirect to existing file
 	 */
-	private function redirectDownload() {
+	private function redirect_download() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = DownloadsManager::get_instance();
 
@@ -632,7 +632,7 @@ class downloads extends Module {
 			$manager->update_items(array('count' => $item->count + 1), array('id' => $id));
 
 			// redirect
-			$url = $this->_getDownloadURL($item);
+			$url = URL::from_file_path($this->file_path.$item->filename);
 			header('Location: '.$url, true, 302);
 
 		} else {
@@ -1010,19 +1010,9 @@ class downloads extends Module {
 	}
 
 	/**
-	 * Return absolute URL for file download
-	 *
-	 * @param resource $item
-	 * @return string
-	 */
-	private function _getDownloadURL($item) {
-		return URL::from_file_path($this->file_path.$item->filename);
-	}
-
-	/**
 	 * Store file in new location
 	 */
-	private function saveUpload($field_name) {
+	private function save_uploaded_file($field_name) {
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
