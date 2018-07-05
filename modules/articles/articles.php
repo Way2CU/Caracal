@@ -1150,15 +1150,15 @@ class articles extends Module {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? fix_chars($tag_params['text_id']) : null;
 
-		// we need at least one of IDs in order to display article
-		if (is_null($id) && is_null($text_id)) return;
+		// we need at least one of ids in order to display article
+		if (is_null($id) && is_null($text_id))
+			return;
 
 		$manager = Modules\Articles\GroupManager::get_instance();
 
 		// load template
 		$template = $this->load_template($tag_params, 'group.xml');
 		$template->set_template_params_from_array($children);
-		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:article_list', $this, 'tag_ArticleList');
 
 		if (!is_null($id))
