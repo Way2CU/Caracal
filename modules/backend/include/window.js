@@ -490,9 +490,6 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	 * @param string url
 	 */
 	self.load_content = function(url) {
-		if (url == null)
-			return;
-
 		if (url != undefined)
 			self.url = url;
 
