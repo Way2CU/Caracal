@@ -11,7 +11,7 @@ namespace Modules\Kodkod;
 
 
 class Mechanism extends \Core\Session\Mechanism {
-	const ENDPOINT = 'https://127.0.0.1:8080/storage/verification';
+	const ENDPOINT = 'https://127.0.0.1:8080/verification';
 
 	/**
 	 * Perform authentication and return boolean value denoting
