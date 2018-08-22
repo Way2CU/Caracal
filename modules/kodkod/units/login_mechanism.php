@@ -30,7 +30,18 @@ class Mechanism extends \Core\Session\Mechanism {
 
 		// get data from storage service
 		$query = http_build_query($data);
-		$raw_response = file_get_contents(self::ENDPOINT.'?'.$query);
+		$context = stream_context_create(array(
+					'http' => array(
+						'method'        => 'GET',
+						'ignore_errors' => true
+					),
+				    'ssl' => array(
+						'allow_self_signed' => true,
+						'verify_peer'       => false,
+						'verify_peer_name'  => false,
+					)
+			));
+		$raw_response = file_get_contents(self::ENDPOINT.'?'.$query, false, $context);
 
 		if ($raw_response !== NULL) {
 			$response = json_decode($raw_response);
