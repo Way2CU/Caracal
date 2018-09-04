@@ -128,7 +128,7 @@ class CodeOptimizer {
 				$data = file_get_contents($file_name);
 
 				// change path for relative module urls
-				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
+				if (substr($file_name, 0, strlen($system_module_path)) == $system_module_path)
 					$data = preg_replace_callback(
 						'|url\s*\('.   // `url` keyword
 						'\s*'.         // allow for arbitraty space
