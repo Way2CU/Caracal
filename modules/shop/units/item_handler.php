@@ -1129,7 +1129,6 @@ class Handler {
 		}
 
 		// create JSON object and print it
-		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 }

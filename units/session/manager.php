@@ -201,7 +201,6 @@ final class Manager {
 
 				} else {
 					header('Content-Type: application/json');
-					define('_OMIT_STATS', 1);
 					print(json_encode($result));
 				}
 				break;
@@ -218,7 +217,6 @@ final class Manager {
 					header('Location: '.$redirect_url);
 
 				} else {
-					define('_OMIT_STATS', 1);
 					header('Content-Type: application/json');
 					print(json_encode($result));
 				}

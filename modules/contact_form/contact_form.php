@@ -1331,8 +1331,6 @@ class contact_form extends Module {
 			$raw_data .= $line."\n";
 		}
 
-		define('_OMIT_STATS', 1);
-
 		// send headers and data
     	header('Content-Type: text/csv; charset=utf-8');
     	header('Content-Disposition: attachment; filename="'.$filename.'"');

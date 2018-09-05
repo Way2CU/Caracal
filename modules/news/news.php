@@ -1423,8 +1423,6 @@ class news extends Module {
 	 * Print json object for specified news
 	 */
 	private function json_News() {
-		define('_OMIT_STATS', 1);
-
 		$manager = NewsManager::get_instance();
 		$admin_manager = UserManager::get_instance();
 
@@ -1478,24 +1476,18 @@ class news extends Module {
 	 * Print json object containing news list
 	 */
 	private function json_NewsList() {
-		define('_OMIT_STATS', 1);
-
 	}
 
 	/**
 	 * Print json object containing news group
 	 */
 	private function json_Group() {
-		define('_OMIT_STATS', 1);
-
 	}
 
 	/**
 	 * Print json object containing news group list
 	 */
 	private function json_GroupList() {
-		define('_OMIT_STATS', 1);
-
 	}
 }
 
