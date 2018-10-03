@@ -58,6 +58,10 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	self.events = null;
 	self.allowed_source = null;
 
+	self.injected = new Object();
+	self.injected.styles_pending = new Array();
+	self.injected.styles_loaded = new Array();
+
 	/**
 	 * Finish object initialization.
 	 */
@@ -242,11 +246,6 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 
 			case 'system:inject-styles':
 				var styles = message.styles;
-				var response = {
-						name: 'system:inject-styles',
-						type: 'response',
-						styles: new Array()
-					};
 
 				for (var i=0, count=styles.length; i<count; i++) {
 					var style = styles[i];
@@ -255,21 +254,48 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 					if (style.length < 2)
 						return;
 
+					// add style to the list of expected to load
+					self.injected.styles_pending.push(style[0]);
+
 					// create new style tag
 					var tag = document.createElement('link');
 					tag.rel = 'stylesheet';
 					tag.type = 'text/css';
 					tag.media = 'all';
 					tag.href = style[0];
+					tag.addEventListener('load', self.handler.style_load);
 					document.querySelector('head').appendChild(tag);
-
-					// add file to the response list
-					response.styles.push(style[0]);
 				}
 
-				// send response message
-				self.send_message(response, self.allowed_source);
 				break;
+		}
+	};
+
+	/**
+	 * Handle page style loading.
+	 *
+	 * @param object event
+	 */
+	self.handler.style_load = function(event) {
+		var href = this.getAttribute('href');
+		var index = self.injected.styles_pending.indexOf(href);
+
+		// make sure style is listed
+		if (index == -1)
+			return;
+
+		// update record on loaded style
+		self.injected.styles_pending.pop(index);
+		self.injected.styles_loaded.push(href);
+
+		// if there are no more pending loads notify about load result
+		if (self.injected.styles_pending.length == 0) {
+			var response = {
+					name: 'system:inject-styles',
+					type: 'response',
+					styles: Array.from(self.injected.styles_loaded)
+				};
+			self.send_message(response);
 		}
 	};
 
