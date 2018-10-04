@@ -66,8 +66,10 @@ Request message:
 ```
 
 Properties:
-- `size` - Array containing new width and height for the window;
-- `title` - Window title to set.
+- `size` - Array containing width and height for the window;
+- `content_size` - Array containing width and height of the window content;
+- `title` - Window title.
+
 
 Response message:
 ```json

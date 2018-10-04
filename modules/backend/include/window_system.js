@@ -237,6 +237,9 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 				if (properties.indexOf('size') > -1)
 					response.properties.size = window.get_size();
 
+				if (properties.indexOf('content_size') > -1)
+					response.properties.content_size = window.get_content_size();
+
 				if (properties.indexOf('title') > -1)
 					response.properties.title = window.get_title();
 
