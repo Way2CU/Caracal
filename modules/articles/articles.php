@@ -99,9 +99,11 @@ class articles extends Module {
 					break;
 
 				case 'json_group':
+					$this->json_Group();
 					break;
 
 				case 'json_group_list':
+					$this->json_GroupList();
 					break;
 
 				case 'json_rating_image':
@@ -1470,6 +1472,91 @@ class articles extends Module {
 			// no articles were found for specified cirteria
 			$result['error'] = true;
 			$result['error_message'] = $this->get_language_constant('message_json_articles_not_found');
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Return data for article group.
+	 */
+	private function json_Group() {
+		$conditions = array();
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'group'			=> null
+				);
+
+		// get parameters
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
+
+		$group_text_id = null;
+		if (isset($_REQUEST['text_id']))
+			$conditions['text_id'] = fix_chars($_REQUEST['text_id']);
+
+		// make sure we have everything needed
+		if (empty($conditions)) {
+			$result['error'] = true;
+			$result['error_message'] = 'Missing required parameters.';
+			print json_encode($result);
+			return;
+		}
+
+		// get group and prepare result
+		$manager = Modules\Articles\GroupManager::get_instance();
+		$group = $manager->get_single_item($manager->get_field_names(), $conditions);
+
+		if (is_object($group)) {
+			$result['group'] = array(
+					'id'          => $group->id,
+					'text_id'     => $group->text_id,
+					'title'       => $group->title,
+					'description' => $group->description,
+					'visible'     => $group->visible
+				);
+
+		} else {
+			$result['error'] = true;
+			$result['error_message'] = 'Unable to find group with specified id.';
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Return all article groups.
+	 */
+	private function json_GroupList() {
+		$conditions = array();
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		// get parameters
+		if (isset($_REQUEST['visible']))
+			$conditions['visible'] = fix_id($_REQUEST['visible']);
+
+		// get groups and prepare result
+		$manager = Modules\Articles\GroupManager::get_instance();
+		$group_list = $manager->get_items($manager->get_field_names(), $conditions);
+
+		if (count($group_list) > 0) {
+			foreach ($group_list as $group) {
+				$result['items'][] = array(
+						'id'          => $group->id,
+						'text_id'     => $group->text_id,
+						'title'       => $group->title,
+						'description' => $group->description,
+						'visible'     => $group->visible
+					);
+			}
+
+		} else {
+			$result['error_message'] = 'No groups with matching criteria found.';
 		}
 
 		print json_encode($result);
