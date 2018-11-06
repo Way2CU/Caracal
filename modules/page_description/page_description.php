@@ -127,6 +127,11 @@ class page_description extends Module {
 		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:list', $this, 'tag_DescriptionList');
 
+		$params = array(
+				'form_action' => backend_UrlMake($this->name, 'show')
+			);
+
+		$template->set_local_params($params);
 		$template->restore_xml();
 		$template->parse();
 	}
@@ -248,8 +253,15 @@ class page_description extends Module {
 		$manager = Manager::get_instance();
 		$conditions = array();
 
+		// gather conditions
+		if (isset($_REQUEST['query']))
+			$conditions['url'] = array(
+					'operator' => 'LIKE',
+					'value'    => '%'.escape_chars($_REQUEST['query']).'%'
+				);
+
 		// get page descriptions from database
-		$items = $manager->get_items($manager->get_field_names(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, array('id'), false, 1000);
 
 		if (count($items) == 0)
 			return;

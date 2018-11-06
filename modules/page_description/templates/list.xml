@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<!-- Search interface -->
+	<nav class="window">
+		<form
+			action="$params['form_action']"
+			method="post"
+			style="margin-bottom: 10px;"
+			cms:eval="action"
+			>
+			<label class="inline">
+				<span><cms:text constant="label_search" module="page_description"/></span>
+				<input
+					type="search"
+					name="query"
+					value="isset($_REQUEST['query']) ? escape_chars($_REQUEST['query']) : false"
+					cms:optional="value"
+					/>
+				<button type="submit"><cms:text constant="search"/></button>
+			</label>
+		</form>
+	</nav>
+
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
