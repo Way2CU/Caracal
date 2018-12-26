@@ -9,6 +9,7 @@
  * Author: Mladen Mijatov
  */
 
+use Core\Events;
 use Core\Markdown;
 use Core\CSP\Parser as CSP;
 use Core\Cache\Type as CacheType;
@@ -122,6 +123,18 @@ class TemplateHandler {
 	private $last_eval = null;
 
 	/**
+	 * List of links to be added to head tag when event is triggered.
+	 * @var array
+	 */
+	private $link_list = array();
+
+	/**
+	 * List of script tags to be added to head tag when event is triggered.
+	 * @var array
+	 */
+	private $script_list = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $file
@@ -154,6 +167,24 @@ class TemplateHandler {
 	 */
 	public function set_top_level($top_level=true) {
 		$this->is_top_level = $top_level;
+
+		if ($top_level)
+			Events::connect('head-tag', 'before-print', 'add_tags', $this);
+	}
+
+	/**
+	 * Add cached tags to head tag.
+	 */
+	public function add_tags() {
+		$head_tag = head_tag::get_instance();
+
+		// add links to the head tag
+		foreach ($this->link_list as $tag)
+			$head_tag->add_tag('link', $tag);
+
+		// add scripts to the head tag
+		foreach ($this->script_list as $tag)
+			$head_tag->add_tag('script', $tag);
 	}
 
 	/**
@@ -689,10 +720,9 @@ class TemplateHandler {
 						$path = URL::from_file_path($this->module->path.'include/'.$script);
 						echo '<script type="text/javascript" src="'.$path.'"/>';
 
-					} else if (ModuleHandler::is_loaded('head_tag')) {
-						// treat script as generic page script and pass it on to head tag
-						$head_tag = head_tag::get_instance();
-						$head_tag->add_tag('script', $tag->tagAttrs);
+					} else {
+						// treat script as generic page script and store it for later use
+						$this->script_list []= $tag->tagAttrs;
 					}
 					break;
 
@@ -708,10 +738,7 @@ class TemplateHandler {
 
 				// support for link tag
 				case 'cms:link':
-					if (ModuleHandler::is_loaded('head_tag')) {
-						$head_tag = head_tag::get_instance();
-						$head_tag->add_tag('link', $tag->tagAttrs);
-					}
+					$this->link_list []= $tag->tagAttrs;
 					break;
 
 				// automated testing support
