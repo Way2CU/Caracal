@@ -12,7 +12,7 @@ Contents:
 	1. [Configuration file](docs/configuration_file.markdown)
 	2. Multiple language support
 	3. Path handling and template loading
-		4. Error pages
+		- Error pages
 3. Framework tags
 	1. [Set session variable - `cms:session`](docs/tags/session.markdown)
 	2. [Call module function - `cms:module`](docs/tags/module.markdown)
