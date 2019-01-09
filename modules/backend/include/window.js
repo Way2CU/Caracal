@@ -684,8 +684,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 					for (var j = 0; j < fields.length; j++) {
 						var field = fields[j];
-						var name = field.getAttribute('name');
-						var data = self.ui.language_selector.data.current[name];
+						var field_name = field.getAttribute('name');
+						var data = self.ui.language_selector.data.current[field_name];
 
 						// update current language data
 						data[current_language] = field.value;
@@ -696,7 +696,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 							with (hidden_field) {
 								setAttribute('type', 'hidden');
-								setAttribute('name', name + '_' + language);
+								setAttribute('name', field_name + '_' + language);
 								value = data[language];
 							}
 
