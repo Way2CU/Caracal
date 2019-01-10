@@ -22,7 +22,7 @@ function gallery_update_image_list() {
 		params.delete('enclose');
 
 	// modify selected group
-	params.set('group', list.value())
+	params.set('group', list.value)
 	url.search = params.toString();
 
 	// reload window content
