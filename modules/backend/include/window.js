@@ -133,10 +133,6 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			self.ui.content = self.ui.container.querySelector('div.content')
 		}
 
-		// store location if window is loaded inside of iframe
-		if (frames.top !== window)
-			self.url = window.location;
-
 		// empty placeholders
 		self.ui.language_selector = null;
 		self.ui.notebook = null;
