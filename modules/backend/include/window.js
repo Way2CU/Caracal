@@ -95,10 +95,6 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 			self.ui.title_bar.append(self.ui.close_button);
 
-			// store location if window is loaded inside of iframe
-			if (frames.top !== window)
-				self.url = window.location;
-
 		} else {
 			// find new window structure
 			self.ui.container = structure;
@@ -136,6 +132,10 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			self.ui.window_menu = self.ui.container.querySelector('nav');
 			self.ui.content = self.ui.container.querySelector('div.content')
 		}
+
+		// store location if window is loaded inside of iframe
+		if (frames.top !== window)
+			self.url = window.location;
 
 		// empty placeholders
 		self.ui.language_selector = null;
