@@ -148,7 +148,7 @@ if ($cache->is_cached()) {
 
 // print out copyright and timing
 if (defined('DEBUG') && !_AJAX_REQUEST) {
-	$time_end = microtime();
+	$time_end = microtime(true);
 	$time = round($time_end - $time_start, 3);
 	echo "\n<!-- Page generated with Caracal in $time second(s) -->";
 }
