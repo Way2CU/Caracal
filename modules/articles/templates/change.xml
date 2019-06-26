@@ -72,14 +72,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		var converter = new Showdown.converter();
-
-		// update preview on blur
-		$('div#article_write_notebook textarea[name=content]').blur(function() {
-			var preview = $('div#article_preview');
-			preview.html(converter.makeHtml($(this).val()));
-		});
-	</script>
 </document>
