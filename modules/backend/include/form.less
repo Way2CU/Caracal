@@ -76,6 +76,11 @@ div.content form {
 
 	fieldset {
 		margin-bottom: @box_spacing;
+		border: 1px dotted @color_input_border;
+
+		&:last-of-type {
+			margin: 0;
+		}
 
 		legend {
 			color: @color_active;
