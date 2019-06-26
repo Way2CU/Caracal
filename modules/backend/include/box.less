@@ -1,0 +1,35 @@
+/**
+ * Boxes Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2019. Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.content div.box {
+	display: block;
+	margin: 0;
+	padding: 0;
+
+	&.note {
+		padding-top: @label_spacing;
+		color: @color_note;
+		font-size: 0.8em;
+	}
+
+	&.horizontal {
+		display: inline-block;
+		vertical-align: top;
+		margin-right: @box_spacing;
+
+		html[dir=rtl] & {
+			margin-right: 0;
+			margin-left: @box_spacing;
+		}
+	}
+
+	&.horizontal-ending {
+		display: inline-block;
+		vertical-align: top;
+	}
+}

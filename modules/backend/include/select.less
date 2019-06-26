@@ -1,0 +1,47 @@
+/**
+ * Select Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2019. Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.content select {
+	@arrow_size: 10px;
+
+	// reset default appearance
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	&::-ms-expand {
+		display: none;
+	}
+
+	// define our own
+	width: 100%;
+	box-sizing: border-box;
+	padding: @input_padding;
+	padding-right: calc(~'@{input_padding} + @{arrow_size}');
+
+	border: 1px solid @color_input_border;
+	background-color: @color_input_background;
+	background-image: url(../images/select-arrow.svg);
+	background-position: calc(~'100% - (@{arrow_size} / 2)') center;
+	background-size: @arrow_size @arrow_size;
+	background-repeat: no-repeat;
+
+	font-family: generic;
+	line-height: 1;
+
+	&:focus {
+		border-color: @color_input_active;
+		color: @color_input_active;
+		outline: none;
+	}
+
+	html[dir=rtl] & {
+		padding: @input_padding;
+		padding-left: calc(~'@{input_padding} + @{arrow_size}');
+		background-position: (@arrow_size / 2) center;
+	}
+}
