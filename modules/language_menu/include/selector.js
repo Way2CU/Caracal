@@ -30,7 +30,7 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		// create button container and configure it
 		self.ui.container = document.createElement('div');
 		self.ui.container.classList.add('language-selector');
-		self.ui.window.ui.window_menu.append(self.ui.container);
+		self.ui.window.ui.menu.append(self.ui.container);
 
 		// find fields to integrate with
 		self.fields = self.ui.window.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');

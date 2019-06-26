@@ -27,7 +27,7 @@ Caracal.WindowSystem.Notebook = function(window) {
 		// container for controls
 		self.ui.controls = document.createElement('div');
 		self.ui.controls.classList.add('notebook-controls');
-		self.ui.window.ui.window_menu.append(self.ui.controls);
+		self.ui.window.ui.menu.append(self.ui.controls);
 
 		// page container
 		self.ui.container = self.ui.window.ui.content.querySelector('div.notebook');

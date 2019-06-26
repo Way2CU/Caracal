@@ -134,12 +134,24 @@
 							name="property_type"
 							onchange="this.parentNode.className = 'property-selector ' + this.value"
 							>
-							<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
-							<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
-							<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
-							<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
-							<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
-							<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
+							<option value="number">
+								<cms:text constant="property_type_number" module="shop"/>
+							</option>
+							<option value="decimal">
+								<cms:text constant="property_type_decimal" module="shop"/>
+							</option>
+							<option value="text">
+								<cms:text constant="property_type_text" module="shop"/>
+							</option>
+							<option value="ml_text">
+								<cms:text constant="property_type_ml_text" module="shop"/>
+							</option>
+							<option value="array">
+								<cms:text constant="property_type_array" module="shop"/>
+							</option>
+							<option value="ml_array">
+								<cms:text constant="property_type_ml_array" module="shop"/>
+							</option>
 						</select>
 					</label>
 					<div class="property-container">
@@ -293,17 +305,20 @@
 			</div>
 
 			<!-- Categories -->
-			<div class="scrollable_list page" data-title="tab_category" cms:constant="data-title">
-				<div class="list_header">
-					<cms:text constant="column_categories" module="shop"/>
-				</div>
-				<div class="list_content" style="height: 390px">
+			<table class="list page" data-title="tab_category" cms:constant="data-title">
+				<thead>
+					<tr>
+						<td><cms:text constant="column_categories" module="shop"/></td>
+					</tr>
+				</thead>
+
+				<tbody style="height: 390px">
 					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
 						/>
-				</div>
-			</div>
+				</tbody>
+			</table>
 
 			<!-- Related items -->
 			<div class="scrollable_list page" data-title="tab_related" cms:constant="data-title">

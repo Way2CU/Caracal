@@ -54,20 +54,75 @@ div.window > nav {
 	}
 }
 
-
 div.window div.content div.main_menu {
 	.deprecated();
 	z-index: 1;
 }
 
-div.window div.content nav.main,
-div.window div.content div.main_menu {
+div.window div.content > nav.window,
+div.window div.content > div.main_menu {
+	display: flex;
 	position: absolute;
 	bottom: @padding_unit;
 	right: @padding_unit;
 
+	flex-direction: column-reverse;
+	z-index: 1000000;
+
 	html[dir=rtl] & {
 		right: auto;
 		left: @padding_unit;
+	}
+
+	// showing and hiding all elements
+	* {
+		display: none;
+	}
+
+	&:hover * {
+		display: block;
+	}
+
+	// menu items
+	a {
+		margin-top: @control_spacing;
+		padding: @control_padding;
+
+		border: 0;
+		border-radius: @control_radius;
+		background-color: @color_dull;
+
+		color: @color_bright;
+		text-align: right;
+		cursor: default;
+
+		html[dir=rtl] & {
+			text-align: left;
+		}
+
+		// TODO: switch to circle to be default
+		&.icon {
+			border-radius: 50%;
+		}
+
+		&:hover {
+			background-color: darken(@color_dull, 10);
+		}
+
+		// first element is always visible
+		&:first-child {
+			display: block;
+			background-color: @color_active;
+
+			&:hover {
+				background-color: darken(@color_active, 10);
+			}
+		}
+
+		svg {
+			width: 1.5rem;
+			height: 1.5rem;
+			fill: currentColor;
+		}
 	}
 }

@@ -75,9 +75,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			self.ui.title.innerHTML = title;
 			self.ui.title_bar.append(self.ui.title);
 
-			// window menu
-			self.ui.window_menu = document.createElement('nav');
-			self.ui.container.append(self.ui.window_menu);
+			// main window menu
+			self.ui.menu = document.createElement('nav');
+			self.ui.container.append(self.ui.menu);
 
 			// window content
 			self.ui.content = document.createElement('div');
@@ -129,7 +129,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			}
 
 			// window elements
-			self.ui.window_menu = self.ui.container.querySelector('nav');
+			self.ui.menu = self.ui.container.querySelector('> nav');
 			self.ui.content = self.ui.container.querySelector('div.content')
 		}
 
@@ -787,8 +787,8 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		result.push(self.ui.content.offsetWidth);
 		result.push(self.ui.content.offsetHeight);
 
-		if (include_menu && self.ui.window_menu)
-			result[1] += self.ui.window_menu.offsetHeight;
+		if (include_menu && self.ui.menu)
+			result[1] += self.ui.menu.offsetHeight;
 
 		return result;
 	};
