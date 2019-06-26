@@ -24,6 +24,17 @@ div.content form {
 			margin-bottom: @input_spacing;
 		}
 
+		&.horizontal {
+			display: inline-block;
+			vertical-align: top;
+			margin-right: @label_spacing;
+
+			html[dir=rtl] & {
+				margin-right: 0;
+				margin-left: @label_spacing;
+			}
+		}
+
 		// checkbox text and box
 		&.checkbox {
 			> input {
