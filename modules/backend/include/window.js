@@ -314,7 +314,6 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		// check if form contains multi-language fields
 		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
 		if (fields.length > 0) {
-
 			// create new language selector
 			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
 		}

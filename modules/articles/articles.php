@@ -37,6 +37,7 @@ class articles extends Module {
 		// connect to search module
 		Events::connect('search', 'get-results', 'get_search_results', $this);
 		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
 	}
 
 	/**
@@ -200,6 +201,15 @@ class articles extends Module {
 	}
 
 	/**
+	 * Add scripts and styles needed for backend operation.
+	 */
+	public function add_backend_tags() {
+		// include local scripts
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script', array('src' => URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+	}
+
+	/**
 	 * Add items to backend menu.
 	 */
 	public function add_menu_items() {
@@ -256,6 +266,7 @@ class articles extends Module {
 
 		$backend->addMenu($this->name, $articles_menu);
 	}
+
 
 	/**
 	 * Import provided data to system.

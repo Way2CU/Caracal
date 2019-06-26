@@ -461,7 +461,7 @@ class TemplateHandler {
 				// load other template
 				case 'cms:template':
 					$file = $tag->tagAttrs['file'];
-					$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : '';
+					$path = key_exists('path', $tag->tagAttrs) ? $tag->tagAttrs['path'] : '';
 
 					// create new template handler
 					$new = new TemplateHandler($file, $path);
@@ -479,8 +479,8 @@ class TemplateHandler {
 					if (key_exists('file', $tag->tagAttrs)) {
 						// show content of the file
 						$file = $tag->tagAttrs['file'];
-						$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : $template_path;
-						$text= file_get_contents($path.$file);
+						$path = key_exists('path', $tag->tagAttrs) ? $tag->tagAttrs['path'] : $template_path;
+						$text = file_get_contents($path.$file);
 
 					} elseif (key_exists('text', $tag->tagAttrs)) {
 						// show raw text

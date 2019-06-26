@@ -8,6 +8,7 @@
 					<span><cms:text constant="label_text_id" module="articles"/></span>
 					<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
 				</label>
+
 				<label class="horizontal">
 					<span><cms:text constant="label_group" module="articles"/></span>
 					<select name="group" style="width: 270px;">
@@ -15,6 +16,7 @@
 						<cms:group_list template="group_option.xml" local="1"/>
 					</select>
 				</label>
+
 				<label class="horizontal">
 					<span><cms:text constant="label_gallery" module="articles"/></span>
 					<select name="gallery">
@@ -25,10 +27,12 @@
 							/>
 					</select>
 				</label>
+
 				<label>
 					<span><cms:text constant="label_title" module="articles"/></span>
 					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
 				</label>
+
 				<label class="checkbox">
 					<input type="checkbox" name="visible" checked="checked"/>
 					<span><cms:text constant="label_visible" module="articles"/></span>
@@ -60,13 +64,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		var converter = new Showdown.converter();
-
-		// update preview on blur
-		$('div#article_write_notebook textarea[name=content]').blur(function() {
-			var preview = $('div#article_preview');
-			preview.html(converter.makeHtml($(this).val()));
-		});
-	</script>
 </document>
