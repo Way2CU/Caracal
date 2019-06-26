@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item with_details">
-		<cms:if condition="$params['has_children']">
-			<input
-				type="checkbox"
-				class="trigger"
-				id="'category_'.$params['id']"
-				cms:eval="id"
-				/>
-		</cms:if>
-
-		<span class="column" style="display: block;">
-			<cms:if condition="$params['has_children']">
-				<label
-					class="trigger"
-					for="'category_'.$params['id']"
-					cms:eval="for"
-					/>
-			</cms:if>
-
-			<label>
+	<tr class="with_details">
+		<td>
+			<label class="checkbox">
 				<input
 					type="checkbox"
 					name="'category_id_'.$params['id']"
@@ -33,7 +16,7 @@
 					/>
 				<cms:var name="$params['title'][$language]"/>
 			</label>
-		</span>
+		</td>
 
 		<cms:if condition="$params['has_children']">
 			<div class="children details">
@@ -47,5 +30,5 @@
 					/>
 			</div>
 		</cms:if>
-	</div>
+	</tr>
 </document>
