@@ -102,14 +102,15 @@
 					<input type="checkbox" name="visible" checked="checked"/>
 					<span><cms:text constant="label_item_visible" module="shop"/></span>
 				</label>
-				<div style="clear: both; padding-bottom: 25px;">
+
+				<div class="box note">
 					<cms:text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
 
 			<!-- Properties -->
 			<div class="page" data-title="tab_properties" cms:constant="data-title">
-				<div class="box left">
+				<div class="box horizontal">
 					<label>
 						<span><cms:text constant="label_text_id" module="shop"/></span>
 						<input
@@ -226,7 +227,7 @@
 					</div>
 				</div>
 
-				<div class="scrollable_list box">
+				<div class="scrollable_list box horizontal-ending">
 					<div class="list_header">
 						<span class="column" style="width: 250px;">
 							<cms:text constant="column_name" module="shop"/>
@@ -305,20 +306,22 @@
 			</div>
 
 			<!-- Categories -->
-			<table class="list page" data-title="tab_category" cms:constant="data-title">
-				<thead>
-					<tr>
-						<td><cms:text constant="column_categories" module="shop"/></td>
-					</tr>
-				</thead>
+			<div class="page" data-title="tab_category" cms:constant="data-title">
+				<table class="list">
+					<thead>
+						<tr>
+							<td><cms:text constant="column_categories" module="shop"/></td>
+						</tr>
+					</thead>
 
-				<tbody style="height: 390px">
-					<cms:category_list
-						template="category_checkbox_list_item.xml"
-						local="1"
-						/>
-				</tbody>
-			</table>
+					<tbody style="max-height: 390px">
+						<cms:category_list
+							template="category_checkbox_list_item.xml"
+							local="1"
+							/>
+					</tbody>
+				</table>
+			</div>
 
 			<!-- Related items -->
 			<div class="scrollable_list page" data-title="tab_related" cms:constant="data-title">
