@@ -33,7 +33,7 @@ class callbox extends Module {
 					$this->path.'images/icon.svg',
 					window_Open( // on click open window
 								'callbox_settings',
-								400,
+								430,
 								$this->get_language_constant('title_settings'),
 								true, true,
 								backend_UrlMake($this->name, 'settings')
