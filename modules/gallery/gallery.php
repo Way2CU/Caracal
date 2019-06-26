@@ -419,7 +419,7 @@ class gallery extends Module {
 					$this->get_language_constant('upload_images'),
 					window_Open(
 						'gallery_images_upload',
-						400,
+						600,
 						$this->get_language_constant('title_images_upload'),
 						true, false,
 						$url_new

@@ -26,6 +26,10 @@ div.content input {
 		font-family: generic-mono;
 	}
 
+	&[type=file] {
+		max-width: 100%;
+	}
+
 	&:disabled {
 		border-color: lighten(@color_input_border, 50);
 		color: lighten(@color_input_border, 50);
