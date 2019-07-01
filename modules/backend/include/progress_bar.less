@@ -1,0 +1,26 @@
+/**
+ * Progress Bar Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2019. Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.window div.progress_bar,
+div.dialog div.progress_bar {
+	display: block;
+	margin: 0;
+	padding: @progress_bar_padding;
+
+	border: 1px solid @color_progress_border;
+	background-color: @color_progress_background;
+
+	line-height: 1;
+	overflow: hidden;
+
+	div.gauge {
+		height: 0.5em;
+		display: block;
+		background-color: @color_progress_gauge;
+	}
+}
