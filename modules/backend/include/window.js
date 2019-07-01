@@ -327,6 +327,33 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
 		}
 
+		// improve look of tables
+		var tables = self.ui.content.querySelectorAll('table.list');
+		if (tables.length > 0) {
+			for (var i=0, count=tables.length; i<count; i++) {
+				var table = tables[i];
+
+				// we only adjust tables which require height
+				if (!('height' in table.dataset))
+					continue;
+
+				// get required parameters
+				var existing_body = table.querySelector('tbody');
+				var desired_height = parseInt(table.dataset['height']);
+
+				// apply height
+				var spacing_body = document.createElement('tbody');
+				spacing_body.classList.add('spacing');
+
+				if (existing_body.offsetHeight < desired_height)
+					spacing_body.style.height = (desired_height - existing_body.offsetHeight).toString() + 'px'; else
+					spacing_body.style.height = '50px';
+
+				// add spacing body to the table
+				table.appendChild(spacing_body);
+			}
+		}
+
 		// integrate toolbars
 		Caracal.Toolbar.implement(self);
 

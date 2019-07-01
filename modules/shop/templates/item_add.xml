@@ -307,14 +307,14 @@
 
 			<!-- Categories -->
 			<div class="page" data-title="tab_category" cms:constant="data-title">
-				<table class="list">
+				<table class="list" data-height="400">
 					<thead>
 						<tr>
 							<td><cms:text constant="column_categories" module="shop"/></td>
 						</tr>
 					</thead>
 
-					<tbody style="max-height: 390px">
+					<tbody>
 						<cms:category_list
 							template="category_checkbox_list_item.xml"
 							local="1"

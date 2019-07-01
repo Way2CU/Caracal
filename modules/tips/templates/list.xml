@@ -7,7 +7,7 @@
 	</nav>
 
 	<!-- Header -->
-	<table class="list">
+	<table class="list" data-height="300">
 		<thead>
 			<tr>
 				<td class="column" style="width: 350px;">
@@ -19,7 +19,7 @@
 			</tr>
 		</thead>
 
-		<tbody style="height: 300px">
+		<tbody>
 			<cms:tip_list/>
 		</tbody>
 	</table>

@@ -8,7 +8,7 @@
 	</nav>
 
 	<!-- Header -->
-	<table class="list">
+	<table class="list" data-height="300">
 		<thead>
 			<tr>
 				<td><cms:text constant="column_title" module="news"/></td>

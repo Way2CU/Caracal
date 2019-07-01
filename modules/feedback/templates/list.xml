@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Header -->
-	<table class="list">
+	<table class="list" data-height="400">
 		<thead>
 			<tr>
 				<td style="width: 150px;">
@@ -17,7 +17,7 @@
 			</tr>
 		</thead>
 
-		<tbody style="height: 400px">
+		<tbody>
 			<cms:list/>
 		</tbody>
 	</table>

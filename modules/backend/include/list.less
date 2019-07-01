@@ -21,6 +21,10 @@ div.window table.list {
 	tbody {
 		overflow-y: auto;
 
+		&.spacing {
+			display: block;
+		}
+
 		tr {
 			&.selectable {
 				cursor: pointer;
@@ -41,6 +45,7 @@ div.window table.list {
 			.container-padding();
 
 			&.options {
+				padding: @options_padding;
 				white-space: nowrap;
 
 				a {

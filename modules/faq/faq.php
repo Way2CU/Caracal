@@ -153,7 +153,7 @@ class faq extends Module {
 									),
 					);
 
-		$template->register_tag_handler('_questions', $this, 'tag_QuestionList');
+		$template->register_tag_handler('cms:questions', $this, 'tag_QuestionList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();

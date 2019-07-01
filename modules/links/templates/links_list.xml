@@ -9,7 +9,7 @@
 	</nav>
 
 	<!-- Header -->
-	<table class="list">
+	<table class="list" data-height="400">
 		<thead>
 			<tr>
 				<td style="width: 250px;">
@@ -30,7 +30,7 @@
 			</tr>
 		</thead>
 
-		<tbody style="height: 400px">
+		<tbody>
 			<cms:link_list/>
 		</tbody>
 	</table>

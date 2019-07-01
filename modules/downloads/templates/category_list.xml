@@ -5,7 +5,7 @@
 	</nav>
 
 	<!-- Header -->
-	<table class="list">
+	<table class="list" data-height="300">
 		<thead>
 			<tr>
 				<td style="width: 170px;">
