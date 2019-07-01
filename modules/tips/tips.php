@@ -27,23 +27,15 @@ class tips extends Module {
 			$tips_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_tips'),
 					$this->path.'images/icon.svg',
-					'javascript:void(0);',
+					window_Open( // on click open window
+								'tips',
+								500,
+								$this->get_language_constant('title_tips_manage'),
+								true, true,
+								backend_UrlMake($this->name, 'tips')
+							),
 					$level=5
 				);
-
-			$tips_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_tips_manage'),
-								$this->path.'images/manage.svg',
-
-								window_Open( // on click open window
-											'tips',
-											500,
-											$this->get_language_constant('title_tips_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'tips')
-										),
-								$level=5
-							));
 
 			$backend->addMenu($this->name, $tips_menu);
 		}
@@ -149,14 +141,14 @@ class tips extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new'		=> window_OpenHyperlink(
-										$this->get_language_constant('new'),
-										'tips_new', 400,
-										$this->get_language_constant('title_tips_new'),
-										true, false,
-										$this->name,
-										'tips_new'
-									),
+					'link_new' => window_OpenHyperlink(
+								$this->get_language_constant('new'),
+								'tips_new', 600,
+								$this->get_language_constant('title_tips_new'),
+								true, false,
+								$this->name,
+								'tips_new'
+							)
 					);
 
 		$template->register_tag_handler('_tip_list', $this, 'tag_TipList');

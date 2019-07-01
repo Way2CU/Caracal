@@ -9,7 +9,7 @@
 				name="content"
 				class="multi-language"
 				data-toolbar="all"
-				style="width: 370px; height: 200px;"
+				rows="5"
 				/>
 			<cms:language_data param="content"/>
 		</label>

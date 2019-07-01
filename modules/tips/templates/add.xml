@@ -8,7 +8,7 @@
 				name="content"
 				class="multi-language"
 				data-toolbar="all"
-				style="width: 370px; height: 200px;"
+				rows="5"
 				/>
 		</label>
 		<label class="checkbox">
