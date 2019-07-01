@@ -9,8 +9,8 @@
 			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_change']"/>
+			<cms:var name="$params['item_delete']"/>
 			<cms:var name="$params['item_preview']"/>
 		</span>
 	</div>

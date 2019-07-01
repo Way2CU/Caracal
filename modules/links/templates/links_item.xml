@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
+	<tr>
+		<td>
 			<cms:var param="text" multilanguage="yes"/>
-		</span>
-		<span class="column" style="width: 70px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var param="external_character"/>
-		</span>
-		<span class="column" style="width: 70px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var param="sponsored_character"/>
-		</span>
-		<span class="column" style="width: 90px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var param="total_clicks"/>
-		</span>
-		<span class="column">
-			<cms:var param="item_change"/><cms:raw text=" "/>
-			<cms:var param="item_delete"/><cms:raw text=" "/>
+		</td>
+		<td class="options">
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 			<cms:var param="item_open"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

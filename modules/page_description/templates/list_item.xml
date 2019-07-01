@@ -9,7 +9,7 @@
 			<cms:var param="filled"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_open']"/>
 		</span>
 	</div>

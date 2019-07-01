@@ -58,7 +58,6 @@
 									<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
 									<td class="total-value">
 										<cms:var name="$params['total']"/>
-										<cms:raw text=" "/>
 										<cms:var name="$params['currency']"/>
 									</td>
 								</tr>

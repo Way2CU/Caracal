@@ -9,7 +9,7 @@
 			<cms:var name="$params['url']"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>

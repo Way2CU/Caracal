@@ -12,8 +12,8 @@
 			<cms:var name="$params['domestic_char']"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_change']"/>
+			<cms:var name="$params['item_delete']"/>
 			<cms:var name="$params['item_prices']"/>
 		</span>
 	</div>

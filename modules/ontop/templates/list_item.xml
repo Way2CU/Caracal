@@ -6,8 +6,8 @@
 			<cms:var param="name"/>
 		</span>
 		<span class="column">
-			<cms:var param="item_change"/><cms:raw text=" "/>
-			<cms:var param="item_delete"/><cms:raw text=" "/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 			<cms:var param="item_test"/>
 		</span>
 	</div>

@@ -9,26 +9,29 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 250px;">
-				<cms:text constant="column_text" module="links"/>
-			</span>
-			<span class="column" style="width: 70px; text-align: center;">
-				<cms:text constant="column_external" module="links"/>
-			</span>
-			<span class="column" style="width: 70px; text-align: center;">
-				<cms:text constant="column_sponsored" module="links"/>
-			</span>
-			<span class="column" style="width: 90px; text-align: center;">
-				<cms:text constant="column_total_clicks" module="links"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 400px">
+	<table class="list">
+		<thead>
+			<tr>
+				<td style="width: 250px;">
+					<cms:text constant="column_text" module="links"/>
+				</td>
+				<td style="width: 70px; text-align: center;">
+					<cms:text constant="column_external" module="links"/>
+				</td>
+				<td style="width: 70px; text-align: center;">
+					<cms:text constant="column_sponsored" module="links"/>
+				</td>
+				<td style="width: 90px; text-align: center;">
+					<cms:text constant="column_total_clicks" module="links"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody style="height: 400px">
 			<cms:link_list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

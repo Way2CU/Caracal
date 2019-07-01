@@ -7,8 +7,8 @@
 			<cms:var param="name" multilanguage="yes"/>
 		</td>
 		<td>
-			<cms:var param="item_add"/><cms:raw text=" "/>
-			<cms:var param="item_change"/><cms:raw text=" "/>
+			<cms:var param="item_add"/>
+			<cms:var param="item_change"/>
 			<cms:var param="item_delete"/>
 		</td>
 	</tr>

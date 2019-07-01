@@ -9,11 +9,10 @@
 			<cms:var name="$params['type']"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
 
 			<cms:if condition="$params['type'] == 'select'">
-				<cms:raw text=" "/>
 				<cms:var name="$params['item_values']"/>
 			</cms:if>
 		</span>

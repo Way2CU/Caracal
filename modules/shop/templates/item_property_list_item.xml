@@ -18,7 +18,6 @@
 			<a onclick="javascript: Caracal.Shop.edit_property(this)">
 				<cms:text constant="change"/>
 			</a>
-			<cms:raw text=" "/>
 			<a onclick="javascript: Caracal.Shop.delete_property(this)">
 				<cms:text constant="delete"/>
 			</a>

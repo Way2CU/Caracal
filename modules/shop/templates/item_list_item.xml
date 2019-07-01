@@ -18,8 +18,8 @@
 			<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
 		</span>
 		<span class="column">
-			<cms:var param="item_change"/><cms:raw text=" "/>
-			<cms:var param="item_delete"/><cms:raw text=" "/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 			<cms:var param="item_images"/>
 		</span>
 	</div>
