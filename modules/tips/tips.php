@@ -151,7 +151,7 @@ class tips extends Module {
 							)
 					);
 
-		$template->register_tag_handler('_tip_list', $this, 'tag_TipList');
+		$template->register_tag_handler('cms:tip_list', $this, 'tag_TipList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -373,7 +373,7 @@ class tips extends Module {
 													$this->get_language_constant('change'),
 													window_Open(
 														'tips_change', 		// window id
-														400,				// width
+														600,				// width
 														$this->get_language_constant('title_tips_change'), // title
 														false, false,
 														URL::make_query(

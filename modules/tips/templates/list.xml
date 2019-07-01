@@ -7,18 +7,20 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 350px;">
-				<cms:text constant="column_tip" module="tips"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
-			<_tip_list/>
-		</div>
-	</div>
+	<table class="list">
+		<thead>
+			<tr>
+				<td class="column" style="width: 350px;">
+					<cms:text constant="column_tip" module="tips"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody style="height: 300px">
+			<cms:tip_list/>
+		</tbody>
+	</table>
 </document>
