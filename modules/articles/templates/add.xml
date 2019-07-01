@@ -12,7 +12,7 @@
 				<label class="horizontal">
 					<span><cms:text constant="label_group" module="articles"/></span>
 					<select name="group" style="width: 270px;">
-						<option></option>
+						<option/>
 						<cms:group_list template="group_option.xml" local="1"/>
 					</select>
 				</label>
@@ -20,7 +20,7 @@
 				<label class="horizontal">
 					<span><cms:text constant="label_gallery" module="articles"/></span>
 					<select name="gallery">
-						<option></option>
+						<option/>
 						<cms:gallery_list
 							template="groups_option.xml"
 							local="1"
