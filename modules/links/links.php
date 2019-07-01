@@ -315,7 +315,7 @@ class links extends Module {
 											650,
 											$this->get_language_constant('title_links_overview'),
 											true, true,
-											backend_UrlMake($this->name, 'links_overview')
+											backend_UrlMake($this->name, 'overview')
 										)
 									)
 					);
