@@ -19,20 +19,62 @@ div.window table.list {
 	}
 
 	tbody {
-		min-height: 15em;
 		overflow-y: auto;
 
-		tr.selectable {
-			cursor: pointer;
+		tr {
+			&.selectable {
+				cursor: pointer;
 
-			&:hover {
-				color: @color_bright;
-				background-color: @color_active;
+				&:hover {
+					color: @color_bright;
+					background-color: @color_active;
+				}
+			}
+
+			&:last-of-type {
+				margin-bottom: 3em;
 			}
 		}
 
 		td {
+			vertical-align: top;
 			.container-padding();
+
+			&.options {
+				white-space: nowrap;
+
+				a {
+					display: inline-block;
+					vertical-align: top;
+					margin: 0;
+					margin-right: @options_spacing;
+					padding: @options_padding;
+
+					border: 0;
+					border-radius: @control_radius;
+					background-color: @color_options_regular_background;
+
+					color: @color_options_regular_text;
+					font-size: 0.9rem;
+					text-decoration: none;
+					cursor: default;
+
+					.control-transition();
+
+					html[dir=rtl] & {
+						margin-right: 0;
+						margin-left: @options_spacing;
+					}
+
+					&:last-of-type {
+						margin: 0;
+					}
+
+					&:hover {
+						background-color: @color_active;
+					}
+				}
+			}
 		}
 	}
 }
