@@ -53,8 +53,8 @@ Caracal.Toolbar.register_extension = function(name, constructor) {
 Caracal.Toolbar.implement = function(target_window) {
 	var elements = target_window.ui.container.querySelectorAll('textarea');
 
-	for (var i=0, count=elements.length; i<count; i++) {
-		var element = elements[i];
+	for (var index=0, element_count=elements.length; index<element_count; index++) {
+		var element = elements[index];
 
 		// check if element is requesting toolbar
 		if (!element.hasAttribute('data-toolbar'))
