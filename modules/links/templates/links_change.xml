@@ -38,7 +38,7 @@
 				name="description"
 				class="multi-language"
 				data-toolbar="all"
-				style="width: 575px; height: 200px;"
+				rows="6"
 				/>
 			<cms:language_data param="description"/>
 		</label>
