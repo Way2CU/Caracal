@@ -27,23 +27,15 @@ class faq extends Module {
 			$faq_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_faq'),
 					$this->path.'images/icon.svg',
-					'javascript:void(0);',
+					window_Open( // on click open window
+								'faq',
+								700,
+								$this->get_language_constant('title_questions'),
+								true, true,
+								backend_UrlMake($this->name, 'manage')
+							),
 					$level=4
 				);
-
-			$faq_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_manage_questions'),
-								$this->path.'images/questions.svg',
-
-								window_Open( // on click open window
-											'faq',
-											700,
-											$this->get_language_constant('title_questions'),
-											true, true,
-											backend_UrlMake($this->name, 'manage')
-										),
-								$level=4
-							));
 
 			$backend->addMenu($this->name, $faq_menu);
 		}
@@ -153,7 +145,7 @@ class faq extends Module {
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
 										$this->get_language_constant('new_question'),
-										'faq_new', 500,
+										'faq_new', 600,
 										$this->get_language_constant('title_question_new'),
 										true, false,
 										$this->name,
@@ -368,7 +360,7 @@ class faq extends Module {
 												$this->get_language_constant('change'),
 												window_Open(
 													'faq_change', 	// window id
-													730,				// width
+													600,				// width
 													$this->get_language_constant('title_question_change'), // title
 													false, false,
 													URL::make_query(

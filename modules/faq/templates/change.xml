@@ -8,7 +8,8 @@
 			<textarea
 				class="multi-language"
 				name="question"
-				style="width: 450px; height: 100px;"
+				rows="5"
+				data-toolbar="all"
 				/>
 			<cms:language_data param="question"/>
 		</label>
@@ -18,7 +19,8 @@
 			<textarea
 				class="multi-language"
 				name="answer"
-				style="width: 450px; height: 100px;"
+				rows="5"
+				data-toolbar="all"
 				/>
 			<cms:language_data param="answer"/>
 		</label>
