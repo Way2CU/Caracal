@@ -2,28 +2,26 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 300px;">
-				<cms:text constant="column_name" module="links"/>
-			</span>
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_progress" module="links"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_clicks" module="links"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_options" module="links"/>
-			</span>
-		</div>
+	<table class="list" data-height="300">
+		<thead>
+			<tr>
+				<td style="width: 300px;">
+					<cms:text constant="column_name" module="links"/>
+				</td>
+				<td style="width: 100px;">
+					<cms:text constant="column_progress" module="links"/>
+				</td>
+				<td style="width: 70px;">
+					<cms:text constant="column_clicks" module="links"/>
+				</td>
+				<td>
+					<cms:text constant="column_options" module="links"/>
+				</td>
+			</tr>
+		</thead>
 
-		<div class="list_content" style="height: 300px">
-			<cms:link_list
-				sponsored="1"
-				template="overview_list_item.xml"
-				local="1"
-				/>
-		</div>
-	</div>
+		<tbody>
+			<cms:link_list sponsored="1" template="overview_list_item.xml" local="1"/>
+		</tbody>
+	</table>
 </document>

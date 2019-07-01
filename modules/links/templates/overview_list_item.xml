@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 300px;">
+	<tr>
+		<td>
 			<cms:var param="text" multilanguage="yes"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<div class="progress_bar" style="width: 90px;">
 				<div
 					class="gauge"
@@ -13,14 +13,14 @@
 					cms:eval="style"
 					/>
 			</div>
-		</span>
-		<span class="column" style="width: 70px;">
+		</td>
+		<td>
 			<cms:var param="sponsored_clicks"/>
-			<cms:raw text="/"/>
+			<cms:raw text=" / "/>
 			<cms:var param="display_limit"/>
-		</span>
-		<span class="column" style="width: 70px;">
+		</td>
+		<td class="options">
 			<cms:var param="item_change"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

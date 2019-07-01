@@ -2,24 +2,28 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div class="scrollable_list">
-			<input type="hidden" name="group" value="$params['group'];" cms:eval="value"/>
-			<div class="list_header">
-				<span class="column" style="width: 250px;">
-					<cms:text constant="column_text" module="links"/>
-				</span>
-				<span class="column" style="width: 70px; text-align: center;">
-					<cms:text constant="column_sponsored" module="links"/>
-				</span>
-			</div>
-			<div class="list_content" style="height: 300px">
+		<input type="hidden" name="group" value="$params['group'];" cms:eval="value"/>
+
+		<table class="list" data-height="300">
+			<thead>
+				<tr>
+					<td style="width: 250px;">
+						<cms:text constant="column_text" module="links"/>
+					</td>
+					<td style="text-align: center;">
+						<cms:text constant="column_sponsored" module="links"/>
+					</td>
+				</tr>
+			</thead>
+
+			<tbody>
 				<cms:group_links group="$params['group']" cms:eval="group"/>
-			</div>
-		</div>
+			</tbody>
+		</table>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
 </document>

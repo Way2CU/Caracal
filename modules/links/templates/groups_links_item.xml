@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
-			<label>
+	<tr>
+		<td>
+			<label class="checkbox">
 				<input
 					type="checkbox"
 					name="'link_id_'.$params['id']"
@@ -14,10 +14,10 @@
 					/>
 				<cms:var param="text" multilanguage="yes"/>
 			</label>
-		</span>
+		</td>
 
-		<span class="column" style="width: 70px; text-align: center;">
+		<td style="text-align: center;">
 			<cms:var param="sponsored_character"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
