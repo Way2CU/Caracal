@@ -6,24 +6,25 @@
 		<cms:var param="link_export"/>
 	</nav>
 
-	<!-- Exports list -->
-	<div class="scrollable_list modules">
+	<table class="list" data-height="350">
 		<!-- Header -->
-		<div class="list_header">
-			<span class="column" style="width: 220px;">
-				<cms:text constant="column_file_name" module="backend"/>
-			</span>
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_file_size" module="backend"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
+		<thead>
+			<tr>
+				<td style="width: 220px;">
+					<cms:text constant="column_file_name" module="backend"/>
+				</td>
+				<td style="width: 100px;">
+					<cms:text constant="column_file_size" module="backend"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
 
 		<!-- List -->
-		<div class="list_content" style="height: 250px">
+		<tbody>
 			<cms:list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

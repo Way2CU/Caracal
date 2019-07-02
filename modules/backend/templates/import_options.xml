@@ -8,6 +8,7 @@
 			value="$params['file_name']"
 			cms:eval="value"
 			/>
+
 		<div class="notebook">
 			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label>
@@ -30,27 +31,28 @@
 			</div>
 
 			<!-- Modules tab -->
-			<div class="scrollable_list modules page" data-title="tab_modules" cms:constant="data-title">
-				<!-- Header -->
-				<div class="list_header">
-					<span class="column" style="width: 170px;">
-						<cms:text constant="column_module_name" module="backend"/>
-					</span>
-					<span class="column" style="width: 70px;">
-						<cms:text constant="column_module_data" module="backend"/>
-					</span>
-					<span class="column" style="width: 70px;">
-						<cms:text constant="column_module_settings" module="backend"/>
-					</span>
-				</div>
+			<div class="modules page" data-title="tab_modules" cms:constant="data-title">
+				<table class="list" data-height="350">
+					<!-- Header -->
+					<thead>
+						<tr>
+							<td style="width: 170px;">
+								<cms:text constant="column_module_name" module="backend"/>
+							</td>
+							<td style="width: 70px;">
+								<cms:text constant="column_module_data" module="backend"/>
+							</td>
+							<td style="width: 70px;">
+								<cms:text constant="column_module_settings" module="backend"/>
+							</td>
+						</tr>
+					</thead>
 
-				<!-- List -->
-				<div class="list_content" style="height: 250px">
-					<cms:module_import_list
-						file_name="$params['file_name']"
-						cms:eval="file_name"
-						/>
-				</div>
+					<!-- List -->
+					<tbody>
+						<cms:module_import_list file_name="$params['file_name']" cms:eval="file_name"/>
+					</tbody>
+				</table>
 			</div>
 
 			<!-- Options tab -->

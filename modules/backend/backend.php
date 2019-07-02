@@ -775,7 +775,7 @@ class backend extends Module {
 						$this->get_language_constant('export'),
 						window_Open(
 							'system_export_data',	 	// window id
-							350,						// width
+							450,						// width
 							$this->get_language_constant('title_export_data'), // title
 							false, false,
 							URL::make_query(
@@ -1204,7 +1204,7 @@ class backend extends Module {
 							$this->get_language_constant('import'),
 							window_Open(
 								'system_import_data',	 	// window id
-								400,						// width
+								450,						// width
 								$this->get_language_constant('title_import_data').' '.$file_name, // title
 								false, false,
 								URL::make_query(

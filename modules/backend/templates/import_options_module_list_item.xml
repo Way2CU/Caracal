@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 170px;">
+	<tr>
+		<td>
 			<cms:var param="name"/>
-		</span>
-		<span class="column" style="width: 70px;">
-			<label>
+		</td>
+
+		<td>
+			<label class="checkbox">
 				<input
 					type="checkbox"
 					name="'data_'.$params['name']"
@@ -15,9 +16,10 @@
 					cms:optional="disabled"
 					/>
 			</label>
-		</span>
-		<span class="column" style="width: 70px;">
-			<label>
+		</td>
+
+		<td>
+			<label class="checkbox">
 				<input
 					type="checkbox"
 					name="'settings_'.$params['name']"
@@ -26,6 +28,6 @@
 					cms:optional="disabled"
 					/>
 			</label>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

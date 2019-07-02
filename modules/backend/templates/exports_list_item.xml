@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 220px;">
+	<tr>
+		<td>
 			<cms:var param="name"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<cms:var param="size"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var param="item_import"/>
 			<cms:var param="item_download"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
