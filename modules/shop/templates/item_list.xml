@@ -7,66 +7,72 @@
 		<cms:var name="$params['link_categories']"/>
 
 		<!-- Simple filter options -->
-		<div class="floated">
-			<cms:text constant="label_manufacturer" module="shop"/>
-			<select name="manufacturer" onchange="Caracal.Shop.update_item_list(this);">
-				<option/>
-				<cms:manufacturer_list
-					selected="isset($_REQUEST['manufacturer']) ? $_REQUEST['manufacturer'] : null"
-					template="manufacturer_option.xml"
-					local="1"
-					cms:optional="selected"
-					/>
-			</select>
+		<form class="filter">
+			<label>
+				<span><cms:text constant="label_manufacturer" module="shop"/></span>
+				<select name="manufacturer" onchange="Caracal.Shop.update_item_list(this);">
+					<option/>
+					<cms:manufacturer_list
+						selected="isset($_REQUEST['manufacturer']) ? $_REQUEST['manufacturer'] : null"
+						template="manufacturer_option.xml"
+						local="1"
+						cms:optional="selected"
+						/>
+				</select>
+			</label>
 
-			<cms:text constant="label_category" module="shop"/>
-			<select
-				name="category"
-				onchange="Caracal.Shop.update_item_list(this);"
-				style="max-width: 150px;"
-				>
-				<option/>
-				<cms:category_list
-					selected="isset($_REQUEST['category']) ? $_REQUEST['category'] : null"
-					template="category_option.xml"
-					local="1"
-					show_all="1"
-					cms:optional="selected"
-					/>
-			</select>
-		</div>
+			<label>
+				<span><cms:text constant="label_category" module="shop"/></span>
+				<select
+					name="category"
+					onchange="Caracal.Shop.update_item_list(this);"
+					style="max-width: 150px;"
+					>
+					<option/>
+					<cms:category_list
+						selected="isset($_REQUEST['category']) ? $_REQUEST['category'] : null"
+						template="category_option.xml"
+						local="1"
+						show_all="1"
+						cms:optional="selected"
+						/>
+				</select>
+			</label>
+		</form>
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 250px;">
-				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 60px;">
-				<cms:text constant="column_price" module="shop"/>
-			</span>
-			<span class="column" style="width: 60px;">
-				<cms:text constant="column_views" module="shop"/>
-			</span>
-			<span class="column" style="width: 50px;">
-				<cms:text constant="column_rating" module="shop"/>
-			</span>
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_expires" module="shop"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
+	<table class="list" data-height="500">
+		<thead>
+			<tr>
+				<td style="width: 250px;">
+					<cms:text constant="column_name" module="shop"/>
+				</td>
+				<td style="width: 60px;">
+					<cms:text constant="column_price" module="shop"/>
+				</td>
+				<td style="width: 60px;">
+					<cms:text constant="column_views" module="shop"/>
+				</td>
+				<td style="width: 50px;">
+					<cms:text constant="column_rating" module="shop"/>
+				</td>
+				<td style="width: 100px;">
+					<cms:text constant="column_expires" module="shop"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
 
-		<div class="list_content" style="height: 400px">
+		<tbody>
 			<!-- List Content -->
 			<cms:item_list
 				category="isset($_REQUEST['category']) ? $_REQUEST['category'] : false"
 				show_hidden="1"
 				cms:optional="category"
 				/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

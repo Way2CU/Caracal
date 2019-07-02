@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
+	<tr>
+		<td>
 			<cms:var param="name" multilanguage="yes"/>
-		</span>
-		<span class="column" style="width: 60px;">
+		</td>
+		<td>
 			<cms:var param="price"/>
-		</span>
-		<span class="column" style="width: 60px;">
+		</td>
+		<td>
 			<cms:var param="views"/>
-		</span>
-		<span class="column" style="width: 50px;">
+		</td>
+		<td>
 			<cms:var param="rating"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var param="item_change"/>
 			<cms:var param="item_delete"/>
 			<cms:var param="item_images"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

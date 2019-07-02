@@ -7,19 +7,22 @@
 		<cms:var name="$params['link_order']"/>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 300px;">
-				<cms:text constant="column_title" module="shop"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
+	<table class="list" data-height="400">
+		<!-- Header -->
+		<thead>
+			<tr>
+				<td style="width: 350px;">
+					<cms:text constant="column_title" module="shop"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<!-- List Content -->
+		<tbody>
 			<cms:category_list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>
