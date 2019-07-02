@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-			<span class="column" style="'width: 220px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" cms:eval="style">
-				<cms:svg file="$params['icon']" cms:eval="file"/>
-				<cms:var name="$params['name']"/>
-			</span>
-			<span class="column" style="width: 50px; text-align: center;">
-				<cms:var name="$params['order']"/>
-			</span>
-			<span class="column" style="width: 60px; text-align: center;">
-				<cms:var name="$params['preload_symbol']"/>
-			</span>
-			<span class="column" style="width: 50px; text-align: center;">
-				<cms:var name="$params['active_symbol']"/>
-			</span>
-			<span class="column">
-				<cms:if condition="$params['status'] == 'not_initialized'">
-					<!-- Module is NOT initialised -->
-					<cms:var name="$params['item_initialise']"/>
+	<tr>
+		<td>
+			<cms:svg file="$params['icon']" cms:eval="file"/>
+			<cms:var name="$params['name']"/>
+		</td>
+		<td style="text-align: center;">
+			<cms:var name="$params['order']"/>
+		</td>
+		<td style="text-align: center;">
+			<cms:var name="$params['preload_symbol']"/>
+		</td>
+		<td style="text-align: center;">
+			<cms:var name="$params['active_symbol']"/>
+		</td>
+		<td class="options">
+			<!-- Module is NOT initialised -->
+			<cms:if condition="$params['status'] == 'not_initialized'">
+				<cms:var name="$params['item_initialise']"/>
+			</cms:if>
+
+			<!-- Module is initialised -->
+			<cms:if condition="$params['status'] != 'not_initialized'">
+				<cms:if condition="$params['status'] == 'active'">
+					<cms:var name="$params['item_deactivate']"/>
 				</cms:if>
 
-				<cms:if condition="$params['status'] != 'not_initialized'">
-					<!-- Module is initialised -->
-					<cms:if condition="$params['status'] == 'active'">
-						<cms:var name="$params['item_deactivate']"/>
-					</cms:if>
-
-					<cms:if condition="$params['status'] == 'inactive'">
-						<cms:var name="$params['item_activate']"/>
-					</cms:if>
-
-					<cms:var name="$params['item_disable']"/>
+				<cms:if condition="$params['status'] == 'inactive'">
+					<cms:var name="$params['item_activate']"/>
 				</cms:if>
-			</span>
-	</div>
+
+				<cms:var name="$params['item_disable']"/>
+			</cms:if>
+		</td>
+	</tr>
 </document>

@@ -337,20 +337,24 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				if (!('height' in table.dataset))
 					continue;
 
-				// get required parameters
+				// create bottom spacing table body
 				var existing_body = table.querySelector('tbody');
 				var desired_height = parseInt(table.dataset['height']);
-
-				// apply height
 				var spacing_body = document.createElement('tbody');
 				spacing_body.classList.add('spacing');
 
-				if (existing_body.offsetHeight < desired_height)
-					spacing_body.style.height = (desired_height - existing_body.offsetHeight).toString() + 'px'; else
-					spacing_body.style.height = '50px';
-
 				// add spacing body to the table
 				table.appendChild(spacing_body);
+
+				// create table wrapper to allow scrolling
+				var parent_element = table.parentNode;
+				var wrapper = document.createElement('div');
+
+				wrapper.classList.add('scrolled');
+				wrapper.style.height = desired_height.toString() + 'px';
+
+				parent_element.insertBefore(wrapper, table);
+				wrapper.appendChild(table);
 			}
 		}
 
