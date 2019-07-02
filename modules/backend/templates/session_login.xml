@@ -2,60 +2,53 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$_SERVER['PHP_SELF']" method="POST" cms:eval="action">
-		<div style="margin-bottom: 15px;">
-			<div class="icon">
-				<img src="$params['image']" alt="" cms:eval="src"/>
-			</div>
+		<input type="hidden" name="section" value="backend_module"/>
+		<input type="hidden" name="action" value="login_commit"/>
 
-			<div class="controls">
-				<div class="message">
-					<input type="hidden" name="section" value="backend_module"/>
-					<input type="hidden" name="action" value="login_commit"/>
-					<cms:text constant="message_login" module="backend"/>
-				</div>
-				<div class="input_controls">
-					<label style="clear: both;">
-						<span><cms:text constant="username" module="backend"/></span>
-						<input
-							type="text"
-							name="username"
-							value="$params['username']"
-							autofocus="autofocus"
-							cms:eval="value"
-							style="width: 160px;"
-							/>
-					</label>
-					<label>
-						<span><cms:text constant="password" module="backend"/></span>
-						<input
-							type="password"
-							name="password"
-							value=""
-							style="width: 160px;"
-							/>
-					</label>
 
-					<cms:if condition="$params['show_captcha']">
-						<label class="captcha">
-							<span><cms:text constant="captcha" module="backend"/></span>
-							<cms:module name="captcha" action="print_image_tag"/>
-							<input type="text" name="captcha" value=""/>
-						</label>
-					</cms:if>
-
-					<label class="checkbox">
-						<input type="checkbox" name="lasting"/>
-						<span><cms:text constant="label_lasting_session" module="backend"/></span>
-					</label>
-				</div>
-			</div>
-			<div style="clear: both;"/>
+		<div class="message">
+			<cms:text constant="message_login" module="backend"/>
 		</div>
+
+		<label>
+			<span><cms:text constant="username" module="backend"/></span>
+			<input
+				type="text"
+				name="username"
+				value="$params['username']"
+				autofocus="autofocus"
+				cms:eval="value"
+				/>
+		</label>
+
+		<label>
+			<span><cms:text constant="password" module="backend"/></span>
+			<input
+				type="password"
+				name="password"
+				value=""
+				/>
+		</label>
+
+		<cms:if condition="$params['show_captcha']">
+			<label class="captcha">
+				<span><cms:text constant="captcha" module="backend"/></span>
+				<cms:module name="captcha" action="print_image_tag"/>
+				<input type="text" name="captcha" value=""/>
+			</label>
+		</cms:if>
+
+		<label class="checkbox">
+			<input type="checkbox" name="lasting"/>
+			<span><cms:text constant="label_lasting_session" module="backend"/></span>
+		</label>
+
 		<cms:if condition="!empty($params['message'])">
 			<div class="error_message">
 				<cms:var name="$params['message']"/>
 			</div>
 		</cms:if>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="login" module="backend"/></button>
 		</div>

@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window Menu -->
-	<nav class="main">
+	<nav class="window">
 		<cms:var name="$params['link_new']"/>
 		<cms:var name="$params['link_groups']"/>
 	</nav>
