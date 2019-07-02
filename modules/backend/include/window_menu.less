@@ -101,11 +101,25 @@ div.window div.content > div.main_menu {
 				margin-left: @label_spacing;
 			}
 		}
+
+		&.filter {
+			margin-bottom: @label_spacing;
+
+			label {
+				display: block;
+				margin-bottom: @label_spacing;
+
+				span {
+					display: block;
+					margin-bottom: @input_spacing;
+				}
+			}
+		}
 	}
 
 	a, button {
 		margin-top: @control_spacing;
-		padding: @control_padding;
+		padding: @control_padding_symmetric;
 
 		border: 0;
 		border-radius: @control_radius;
