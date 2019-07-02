@@ -75,16 +75,35 @@ div.window div.content > div.main_menu {
 	}
 
 	// showing and hiding all elements
-	* {
+	> * {
 		display: none;
+
+		&:first-child {
+			display: block;
+		}
 	}
 
-	&:hover * {
+	&:hover > * {
 		display: block;
 	}
 
 	// menu items
-	a {
+	form {
+		margin: 0;
+		padding: 0;
+
+		&.search label {
+			display: inline-block;
+			margin-right: @label_spacing;
+
+			html[dir=rtl] & {
+				margin-right: 0;
+				margin-left: @label_spacing;
+			}
+		}
+	}
+
+	a, button {
 		margin-top: @control_spacing;
 		padding: @control_padding;
 
@@ -111,7 +130,6 @@ div.window div.content > div.main_menu {
 
 		// first element is always visible
 		&:first-child {
-			display: block;
 			background-color: @color_active;
 
 			&:hover {

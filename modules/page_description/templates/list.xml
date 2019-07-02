@@ -3,13 +3,8 @@
 <document>
 	<!-- Search interface -->
 	<nav class="window">
-		<form
-			action="$params['form_action']"
-			method="post"
-			style="margin-bottom: 10px;"
-			cms:eval="action"
-			>
-			<label class="inline">
+		<form action="$params['form_action']" method="post" cms:eval="action" class="search">
+			<label>
 				<span><cms:text constant="label_search" module="page_description"/></span>
 				<input
 					type="search"
@@ -17,12 +12,12 @@
 					value="isset($_REQUEST['query']) ? escape_chars($_REQUEST['query']) : false"
 					cms:optional="value"
 					/>
-				<button type="submit"><cms:text constant="search"/></button>
 			</label>
+			<button type="submit"><cms:text constant="search"/></button>
 		</form>
 	</nav>
 
-	<table class="list" data-height="300">
+	<table class="list" data-height="500">
 		<!-- Header -->
 		<thead>
 			<tr>
