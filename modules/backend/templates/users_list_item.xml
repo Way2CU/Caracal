@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 200px;">
+	<tr>
+		<td>
 			<cms:var name="$params['fullname']"/>
-		</span>
-		<span class="column" style="width: 150px;">
+		</td>
+		<td>
 			<cms:var name="$params['username']"/>
-		</span>
-		<span class="column" style="width: 50px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var name="$params['level']"/>
-		</span>
-		<span class="column" style="width: 60px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var name="$params['verified_char']"/>
-		</span>
-		<span class="column" style="width: 60px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var name="$params['agreed_char']"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

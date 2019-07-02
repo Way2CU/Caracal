@@ -105,7 +105,7 @@ class Backend_UserManager {
 									)
 			);
 
- 		$template->register_tag_handler('_user_list', $this, 'tag_UserList');
+ 		$template->register_tag_handler('cms:user_list', $this, 'tag_UserList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
