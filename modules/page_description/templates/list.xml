@@ -22,21 +22,25 @@
 		</form>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 400px;">
-				<cms:text constant="column_url" module="page_description"/>
-			</span>
-			<span class="column" style="width: 50px;"/>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
+	<table class="list" data-height="300">
+		<!-- Header -->
+		<thead>
+			<tr>
+				<td style="width: 400px;">
+					<cms:text constant="column_url" module="page_description"/>
+				</td>
+				<td style="width: 50px; text-align: center;">
+					<cms:text constant="column_done" module="page_description"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
 
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
+		<!-- List Content -->
+		<tbody>
 			<cms:list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

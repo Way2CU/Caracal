@@ -3,6 +3,7 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+
 		<label>
 			<span><cms:text constant="label_url" module="page_description"/></span>
 			<input
@@ -29,13 +30,12 @@
 		</label>
 
 		<label>
-			<span><cms:text constant="label_content" module="page_description"/></span>
+			<span><cms:text constant="label_description" module="page_description"/></span>
 			<textarea
 				class="multi-language"
 				name="content"
 				rows="5"
-				cols="40"
-				style="width: 300px; height: 200px;"
+				cols="30"
 				maxlength="160"
 				/>
 			<cms:language_data param="content"/>

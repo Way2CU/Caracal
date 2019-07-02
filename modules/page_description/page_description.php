@@ -282,7 +282,7 @@ class page_description extends Module {
 									$this->get_language_constant('change'),
 									window_Open(
 										'page_descriptions_change_'.$item->id, 	// window id
-										350,		// width
+										420,		// width
 										$this->get_language_constant('title_change'), // title
 										false, false,
 										URL::make_query(
