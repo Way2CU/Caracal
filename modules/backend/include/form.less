@@ -93,6 +93,33 @@ div.content form {
 	}
 
 	// form controls
+	button {
+		margin: 0;
+		margin-left: @control_spacing;
+		padding: @control_padding_symmetric;
+
+		border: 0;
+		border-radius: @control_radius;
+		background-color: @color_options_regular_background;
+
+		color: @color_options_regular_text;
+
+		.control-transition();
+
+		&:hover {
+			background-color: darken(@color_dull, 10);
+		}
+
+		&:first-child {
+			margin: 0;
+		}
+
+		html[dir=rtl] & {
+			margin-left: 0;
+			margin-right: @control_spacing;
+		}
+	}
+
 	div.button_bar {
 		padding-top: @form_padding;
 		text-align: center;
