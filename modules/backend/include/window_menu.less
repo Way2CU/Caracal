@@ -65,9 +65,14 @@ div.window div.content > div.main_menu {
 	position: absolute;
 	bottom: @padding_unit;
 	right: @padding_unit;
+	padding: @padding_unit;
 
 	flex-direction: column-reverse;
 	z-index: 1000000;
+
+	border-radius: @padding_unit;
+	background-color: @color_bright;
+	box-shadow: 0px 0px 3px @color_bright;
 
 	html[dir=rtl] & {
 		right: auto;
@@ -96,9 +101,6 @@ div.window div.content > div.main_menu {
 			display: inline-block;
 			margin-right: @label_spacing;
 
-			background-color: @color_bright;
-			box-shadow: 0px 0px 3px @color_bright;
-
 			html[dir=rtl] & {
 				margin-right: 0;
 				margin-left: @label_spacing;
@@ -107,9 +109,6 @@ div.window div.content > div.main_menu {
 
 		&.filter {
 			margin-bottom: @label_spacing;
-
-			background-color: @color_bright;
-			box-shadow: 0px 0px 3px @color_bright;
 
 			label {
 				display: block;
