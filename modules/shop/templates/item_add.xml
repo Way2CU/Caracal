@@ -86,7 +86,7 @@
 					<input
 						type="text"
 						name="discount"
-						style="width: 80px;"
+						style="width: 100px;"
 						maxlength="6"
 						/>
 				</label>
@@ -280,7 +280,7 @@
 				<input name="colors" type="hidden"/>
 				<label class="horizontal inline">
 					<span><cms:text constant="label_color_value" module="shop"/></span>
-					<input name="color_value" class="code" type="color" style="width: 60px"/>
+					<input name="color_value" type="color"/>
 				</label>
 				<label class="horizontal inline">
 					<span><cms:text constant="label_color_name" module="shop"/></span>

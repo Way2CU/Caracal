@@ -108,7 +108,7 @@
 					<input
 						type="text"
 						name="discount"
-						style="width: 80px;"
+						style="width: 100px;"
 						maxlength="6"
 						value="$params['discount']"
 						cms:eval="value"
@@ -133,14 +133,14 @@
 						/>
 					<span><cms:text constant="label_item_visible" module="shop"/></span>
 				</label>
-				<div style="clear: both; padding-bottom: 25px;">
+				<div class="box note">
 					<cms:text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
 
 			<!-- Properties -->
 			<div class="page" data-title="tab_properties" cms:constant="data-title">
-				<div class="box left">
+				<div class="box horizontal">
 					<label>
 						<span><cms:text constant="label_text_id" module="shop"/></span>
 						<input
@@ -245,7 +245,7 @@
 					</div>
 				</div>
 
-				<div class="scrollable_list box">
+				<div class="scrollable_list box horizontal-ending">
 					<div class="list_header">
 						<span class="column" style="width: 250px;">
 							<cms:text constant="column_name" module="shop"/>
@@ -309,7 +309,7 @@
 				<input name="colors" type="hidden" value="$params['colors']" cms:eval="value"/>
 				<label class="horizontal inline">
 					<span><cms:text constant="label_color_value" module="shop"/></span>
-					<input name="color_value" class="code" type="color" style="width: 60px"/>
+					<input name="color_value" type="color"/>
 				</label>
 				<label class="horizontal inline">
 					<span><cms:text constant="label_color_name" module="shop"/></span>
