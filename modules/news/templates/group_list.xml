@@ -7,21 +7,24 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_text_id" module="news"/>
-			</span>
-			<span class="column" style="width: 250px;">
-				<cms:text constant="column_title" module="news"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
+	<table class="list" data-height="300">
+		<thead>
+			<tr>
+				<td style="width: 100px;">
+					<cms:text constant="column_text_id" module="news"/>
+				</td>
+				<td style="width: 250px;">
+					<cms:text constant="column_title" module="news"/>
+				</td>
+				<td>
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody>
 			<cms:group_list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 
 </document>
