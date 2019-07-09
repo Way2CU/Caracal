@@ -294,7 +294,7 @@
 					<span class="column" style="width: 250px;">
 						<cms:text constant="column_color_name" module="shop"/>
 					</span>
-					<span class="column" style="width: 100px;">
+					<span class="column" style="width: 120px;">
 						<cms:text constant="column_color_value" module="shop"/>
 					</span>
 					<span class="column">
