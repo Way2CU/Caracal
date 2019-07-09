@@ -774,7 +774,7 @@ class news extends Module {
 									),
 					);
 
-		$template->register_tag_handler('_feed_list', $this, 'tag_FeedList');
+		$template->register_tag_handler('cms:feed_list', $this, 'tag_FeedList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();

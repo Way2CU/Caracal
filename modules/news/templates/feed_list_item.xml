@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
+	<tr>
+		<td>
 			<cms:var name="$params['title'][$language]"/>
-		</span>
-		<span class="column" style="width: 200px;">
+		</td>
+		<td>
 			<cms:var name="$params['group_title'][$language]"/>
-		</span>
-		<span class="column" style="width: 70px; text-align: center;">
+		</td>
+		<td style="text-align: center;">
 			<cms:var name="$params['active_char']"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
