@@ -204,7 +204,7 @@ class SessionManager {
 		Session::change_type();
 
 		// log user out
-		UserManager::get_instance()->logout_user();
+		Session::logout();
 
 		// get message
 		$message = $this->parent->get_language_constant('message_logout_ok');

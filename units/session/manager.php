@@ -279,9 +279,15 @@ final class Manager {
 		$result = null;
 		$name = $_SESSION['login_mechanism'];
 
+		// make sure at least our system mechanism is loaded
+		if (count(self::$login_mechanisms) == 0) {
+			$mechanism = new SystemMechanism();
+			self::register_login_mechanism('system', $mechanism);
+		}
+
 		// make sure mechanism still exists
-		if (!array_key_exists($name, $mechanism))
-			throw MechanismException("Unknown mechanism '{$name}'. Unable to perform logout.");
+		if (!array_key_exists($name, self::$login_mechanisms))
+			throw new MechanismException("Unknown mechanism '{$name}'. Unable to perform logout.");
 
 		// perform logout
 		$mechanism = self::$login_mechanisms[$name];
