@@ -121,7 +121,9 @@ class Mailer extends ContactForm_Mailer {
 					$name = $this->attachment_names[$file]; else
 					$name = basename($file);
 
-				$final_content['files['.$name.']'] = '@'.$file;
+				if (function_exists('curl_file_create'))
+					$final_content['files['.$name.']'] = curl_file_create($file); else  // PHP 5.5+
+					$final_content['files['.$name.']'] = '@'.$file;
 			}
 
 		if (count($this->inline_attachments))
@@ -130,7 +132,9 @@ class Mailer extends ContactForm_Mailer {
 					$name = $this->attachment_names[$file]; else
 					$name = basename($file);
 
-				$final_content['files['.$name.']'] = '@'.$file;
+				if (function_exists('curl_file_create'))
+					$final_content['files['.$name.']'] = curl_file_create($file); else  // PHP 5.5+
+					$final_content['files['.$name.']'] = '@'.$file;
 				$final_content['content['.$name.']'] = $name;
 			}
 
