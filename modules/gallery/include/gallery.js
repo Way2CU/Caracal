@@ -273,7 +273,12 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	var self = this;
 
 	self.images = new Object();
+	self.images.list = new Array();
 	self.controls = new Object();
+	self.controls.next = new Array();
+	self.controls.previous = new Array();
+	self.controls.direct = null;
+	self.controls.constructor = null;
 	self.container = null;
 	self.direction = 1;
 	self.step_size = 1;
@@ -283,25 +288,13 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	self.timer_id = null;
 	self.timeout = null;
 	self.pause_on_hover = true;
-	self.visible_items = null;
+	self.visible_items = visible_items || 3;
 	self.vertical = vertical ? true : false;
 
 	/**
 	 * Complete object initialization.
 	 */
 	self._init = function() {
-		// set number of visible items
-		self.visible_items = visible_items || 3;
-
-		// create image container
-		self.images.list = new Array();
-
-		// create control containers
-		self.controls.next = new Array();
-		self.controls.previous = new Array();
-		self.controls.direct = null;
-		self.controls.constructor = null;
-
 		// detect list direction automatically
 		if (document.querySelector('html').getAttribute('dir') == 'rtl' && !self.vertical)
 			self.direction = -1;
@@ -437,9 +430,13 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 			}
 
 		} else {
-			if (self.spacing == null)
-				result.spacing = result.negative_space / (self.visible_items - 1); else
+			if (self.spacing == null) {
+				if (self.visible_items > 1)  // avoid division by zero
+					result.spacing = result.negative_space / (self.visible_items - 1); else
+					result.spacing = 0;
+			} else {
 				result.spacing = self.spacing;
+			}
 			result.start_position = 0;
 		}
 
