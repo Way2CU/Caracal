@@ -788,6 +788,10 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		if (container)
 			controls = controls.concat(self.container);
 
+		// make sure we have handlers to reset
+		if (controls.length == 0)
+			return;
+
 		// reset click handlers
 		if (next)
 			self.controls.next.forEach(function(control) {
@@ -817,6 +821,10 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 * @return object
 	 */
 	self.controls.attach_next = function(control) {
+		// make sure control is valid before using
+		if (!control)
+			return self;
+
 		// add control to the list
 		self.controls.next.push(control);
 		self.controls._attach_handlers(true, false, false);
@@ -831,6 +839,10 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	 * @return object
 	 */
 	self.controls.attach_previous = function(control) {
+		// make sure control is valid before using
+		if (!control)
+			return self;
+
 		// add control to the list
 		self.controls.previous.push(control);
 		self.controls._attach_handlers(false, true, false);
