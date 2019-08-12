@@ -474,7 +474,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 	self.images._update_visibility = function(image_set) {
 		// update image visibility
 		self.images.list.forEach(function(image) {
-			if (image in image_set)
+			if (image_set.indexOf(image) > -1)
 				image.classList.add('visible'); else
 				image.classList.remove('visible');
 		});
@@ -489,7 +489,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 
 			// update controls
 			self.controls.direct.forEach(function(control) {
-				if (control in control_set)
+				if (control_set.indexOf(control) > -1)
 					control.classList.add('active'); else
 					control.classList.remove('active');
 			});
