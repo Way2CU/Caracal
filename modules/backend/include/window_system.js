@@ -357,7 +357,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 			var caller_icon = null;
 
 			// get icon from caller
-			if (caller)
+			if (caller && 'querySelector' in caller)
 				var caller_icon = caller.querySelector('svg');
 
 			if (caller_icon) {
