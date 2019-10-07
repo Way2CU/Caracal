@@ -27,7 +27,7 @@ Caracal.Shop.open_item_search = function() {
 	Caracal.window_system.open_window(
 					'shop_search_results', 450,
 					Caracal.language.get_text('shop', 'title_search_results'),
-					true, url
+					url
 				);
 };
 
