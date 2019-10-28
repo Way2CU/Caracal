@@ -389,7 +389,7 @@ class shop extends Module {
 			if ($score >= $threshold)
 				$result[] = array(
 					'score'			=> $score,
-					'title'			=> $title,
+					'title'			=> $item->title,
 					'description'	=> limit_words($item->description[$language], 200),
 					'id'			=> $item->id,
 					'type'			=> 'item',
