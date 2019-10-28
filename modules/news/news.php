@@ -25,6 +25,7 @@ class news extends Module {
 		// connect events
 		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
+		Events::connect('search', 'get-results', 'get_search_results', $this);
 	}
 
 	/**
@@ -330,6 +331,87 @@ class news extends Module {
 			));
 
 		$backend->addMenu($this->name, $news_menu);
+	}
+
+	/**
+	 * Get search results when asked by search module
+	 *
+	 * @param array $module_list
+	 * @param string $query
+	 * @param integer $threshold
+	 * @return array
+	 */
+	public function get_search_results($module_list, $query, $threshold) {
+		global $language;
+
+		// make sure shop is in list of modules requested
+		if (!in_array($this->name, $module_list))
+			return array();
+
+		// don't bother searching for empty query string
+		if (empty($query))
+			return array();
+
+		// initialize managers and data
+		$manager = ItemManager::get_instance();
+		$result = array();
+		$conditions = array(
+				'visible' => 1,
+				'deleted' => 0,
+			);
+		$query = mb_strtolower($query);
+		$query_words = mb_split('\s', $query);
+		$query_count = count($query_words);
+
+		// get all items and process them
+		$items = $manager->get_items(array('id', 'title', 'content'), $conditions);
+
+		// make sure we have items to search through
+		if (count($items) == 0)
+			return $result;
+
+		// comparison function
+		$compare = function($a, $b) {
+			$score = String\Distance\Jaro::get($a, $b);
+
+			if ($score >= 0.9)
+				$result = 0; else
+				$result = strcmp($a, $b);
+
+			return $result;
+		};
+
+		foreach ($items as $item) {
+			$title = mb_split('\s', mb_strtolower($item->title[$language]));
+			$content = mb_split('\s', mb_strtolower($item->content[$language]));
+			$score = 0;
+			$title_matches = 0;
+			$content_matches = 0;
+
+			// count number of matching words
+			$title_matches = count(array_uintersect($query_words, $title, $compare));
+			$content_matches = count(array_uintersect($query_words, $content, 'strcmp'));
+
+			// calculate individual scores according to their importance
+			$title_score = 100 * ($title_matches / $query_count);
+			$content_score = 50 * ($content_matches / $query_count);
+
+			// calculate final score
+			$score = (($title_score + $description_score) * 100) / (100 + 50);
+
+			// add item to result list
+			if ($score >= $threshold)
+				$result[] = array(
+					'score'			=> $score,
+					'title'			=> $item->title,
+					'description'	=> limit_words($item->content[$language], 200),
+					'id'			=> $item->id,
+					'type'			=> 'item',
+					'module'		=> $this->name
+				);
+		}
+
+		return $result;
 	}
 
 	/**
