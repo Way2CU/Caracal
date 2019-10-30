@@ -342,8 +342,7 @@ class news extends Module {
 		$manager = NewsManager::get_instance();
 		$result = array();
 		$conditions = array(
-				'visible' => 1,
-				'deleted' => 0,
+				'visible' => 1
 			);
 		$query = mb_strtolower($query);
 		$query_words = mb_split('\s', $query);
