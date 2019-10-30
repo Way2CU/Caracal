@@ -353,7 +353,7 @@ class news extends Module {
 			return array();
 
 		// initialize managers and data
-		$manager = ItemManager::get_instance();
+		$manager = NewsManager::get_instance();
 		$result = array();
 		$conditions = array(
 				'visible' => 1,
