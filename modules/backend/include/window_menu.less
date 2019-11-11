@@ -63,16 +63,16 @@ div.window div.content > nav.window,
 div.window div.content > div.main_menu {
 	display: flex;
 	position: absolute;
-	bottom: @padding_unit;
-	right: @padding_unit;
-	padding: @padding_unit;
+	bottom: @padding_unit * 2;
+	right: @padding_unit * 2;
+	padding: @padding_unit / 2;
 
 	flex-direction: column-reverse;
 	z-index: 1000000;
 
 	border-radius: @padding_unit;
 	background-color: @color_bright;
-	box-shadow: 0px 0px 3px @color_bright;
+	box-shadow: 0px 0px 3px 3px @color_bright;
 
 	html[dir=rtl] & {
 		right: auto;
