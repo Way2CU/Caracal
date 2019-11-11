@@ -6,34 +6,30 @@
 		<cms:var param="link_new"/>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 300px;">
+	<!-- List -->
+	<table class="list" data-height="300">
+		<thead>
+			<td style="width: 300px;">
 				<cms:text constant="column_title" module="articles"/>
-			</span>
-			<span class="column" style="width: 100px;">
+			</td>
+			<td style="width: 100px;">
 				<cms:text constant="column_author" module="articles"/>
-			</span>
-			<span class="column" style="width: 70px;">
+			</td>
+			<td style="width: 70px;">
 				<cms:text constant="column_rating" module="articles"/>
-			</span>
-			<span class="column">
+			</td>
+			<td class="options">
 				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
-			<cms:article_list
-				without_group="1"
-				only_visible="0"
-				/>
-			<cms:group_list
-				template="list_group.xml"
-				local="1"
-				>
+			</td>
+		</thead>
+
+		<tbody>
+			<cms:article_list without_group="1" only_visible="0"/>
+			<cms:group_list template="list_group.xml" local="1">
 				<param name="only_visible" value="0"/>
 			</cms:group_list>
-		</div>
-	</div>
+		</tbody>
+	</table>
+
+	<!-- Page switcher -->
 </document>

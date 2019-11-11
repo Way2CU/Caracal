@@ -10,7 +10,7 @@
 	<table class="list" data-height="300">
 		<thead>
 			<tr>
-				<td class="column" style="width: 350px;">
+				<td style="width: 350px;">
 					<cms:text constant="column_tip" module="tips"/>
 				</td>
 				<td>
