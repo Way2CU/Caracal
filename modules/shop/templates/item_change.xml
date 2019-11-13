@@ -150,6 +150,7 @@
 							maxlength="32"
 							/>
 					</label>
+
 					<label>
 						<span><cms:text constant="label_property_name" module="shop"/></span>
 						<input
@@ -159,20 +160,34 @@
 							maxlength="255"
 							/>
 					</label>
+
 					<label class="property-selector number">
 						<span><cms:text constant="label_property_type" module="shop"/></span>
 						<select
 							name="property_type"
 							onchange="this.parentNode.className = 'property-selector ' + this.value"
 							>
-							<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
-							<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
-							<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
-							<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
-							<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
-							<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
+							<option value="number">
+								<cms:text constant="property_type_number" module="shop"/>
+							</option>
+							<option value="decimal">
+								<cms:text constant="property_type_decimal" module="shop"/>
+							</option>
+							<option value="text">
+								<cms:text constant="property_type_text" module="shop"/>
+							</option>
+							<option value="ml_text">
+								<cms:text constant="property_type_ml_text" module="shop"/>
+							</option>
+							<option value="array">
+								<cms:text constant="property_type_array" module="shop"/>
+							</option>
+							<option value="ml_array">
+								<cms:text constant="property_type_ml_array" module="shop"/>
+							</option>
 						</select>
 					</label>
+
 					<div class="property-container">
 						<label class="property number">
 							<span><cms:text constant="label_property_value" module="shop"/></span>
@@ -245,26 +260,30 @@
 					</div>
 				</div>
 
-				<div class="scrollable_list box horizontal-ending">
-					<div class="list_header">
-						<span class="column" style="width: 250px;">
-							<cms:text constant="column_name" module="shop"/>
-						</span>
-						<span class="column" style="width: 60px;">
-							<cms:text constant="column_type" module="shop"/>
-						</span>
-						<span class="column">
-							<cms:text constant="column_options" module="shop"/>
-						</span>
-					</div>
-					<div class="list_content" style="height: 250px" id="item_properties">
-						<cms:module
-							name="shop"
-							action="show_property_list"
-							item="$params['id']"
-							cms:eval="item"
-							/>
-					</div>
+				<!-- Property list -->
+				<div class="box horizontal-ending">
+					<table class="list with-border" data-height="300">
+						<thead>
+							<td style="width: 250px;">
+								<cms:text constant="column_name" module="shop"/>
+							</td>
+							<td style="width: 60px;">
+								<cms:text constant="column_type" module="shop"/>
+							</td>
+							<td class="options">
+								<cms:text constant="column_options" module="shop"/>
+							</td>
+						</thead>
+
+						<tbody id="item_properties">
+							<cms:module
+								name="shop"
+								action="show_property_list"
+								item="$params['id']"
+								cms:eval="item"
+								/>
+						</tbody>
+					</table>
 				</div>
 
 				<hr/>
@@ -335,18 +354,23 @@
 			</div>
 
 			<!-- Categories -->
-			<div class="scrollable_list page" data-title="tab_category" cms:constant="data-title">
-				<div class="list_header">
-					<cms:text constant="column_categories" module="shop"/>
-				</div>
-				<div class="list_content" style="height: 390px">
+			<div class="page" data-title="tab_category" cms:constant="data-title">
+				<table class="list" data-height="400">
+					<thead>
+						<tr>
+							<td><cms:text constant="column_categories" module="shop"/></td>
+						</tr>
+					</thead>
+
+					<tbody>
 					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
 						item="$params['id']"
 						cms:eval="item"
 						/>
-				</div>
+					</tbody>
+				</table>
 			</div>
 
 			<!-- Related items -->

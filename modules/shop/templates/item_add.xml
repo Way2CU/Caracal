@@ -227,19 +227,23 @@
 					</div>
 				</div>
 
-				<div class="scrollable_list box horizontal-ending">
-					<div class="list_header">
-						<span class="column" style="width: 250px;">
-							<cms:text constant="column_name" module="shop"/>
-						</span>
-						<span class="column" style="width: 60px;">
-							<cms:text constant="column_type" module="shop"/>
-						</span>
-						<span class="column">
-							<cms:text constant="column_options" module="shop"/>
-						</span>
-					</div>
-					<div class="list_content" style="height: 250px" id="item_properties"/>
+				<!-- Property list -->
+				<div class="box horizontal-ending">
+					<table class="list with-border" data-height="300">
+						<thead>
+							<td style="width: 250px;">
+								<cms:text constant="column_name" module="shop"/>
+							</td>
+							<td style="width: 60px;">
+								<cms:text constant="column_type" module="shop"/>
+							</td>
+							<td class="options">
+								<cms:text constant="column_options" module="shop"/>
+							</td>
+						</thead>
+
+						<tbody id="item_properties"/>
+					</table>
 				</div>
 
 				<hr/>
@@ -307,7 +311,7 @@
 
 			<!-- Categories -->
 			<div class="page" data-title="tab_category" cms:constant="data-title">
-				<table class="list" data-height="400">
+				<table class="list with-border" data-height="400">
 					<thead>
 						<tr>
 							<td><cms:text constant="column_categories" module="shop"/></td>
