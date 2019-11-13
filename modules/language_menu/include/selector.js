@@ -167,6 +167,11 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 			if (new_language_is_rtl)
 				field.style.direction = 'rtl'; else
 				field.style.direction = 'ltr';
+
+			// fire an event notifying control of change
+			var changed_event = document.createEvent('HTMLEvents');
+			changed_event.initEvent('change', true, true);
+			field.dispatchEvent(changed_event);
 		}
 
 		// store new language selection
@@ -207,12 +212,12 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		if (!(field_name in self.data.current))
 			self.data.current = new Object();
 
-		for (var i=0, count=self.languages; i<count; i++) {
-			var language = self.languages[i];
+		for (var i=0, count=Caracal.language.languages.length; i<count; i++) {
+			var language = Caracal.language.languages[i];
 
 			if (language.short in values)
-				self.data.current[language.short] = values[language.short]; else
-				self.data.current[language.short] = '';
+				self.data.current[field.name][language.short] = values[language.short]; else
+				self.data.current[field.name][language.short] = '';
 		}
 
 		if (typeof field == 'object' && 'value' in field && self.language in values)
