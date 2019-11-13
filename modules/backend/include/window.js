@@ -353,6 +353,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				wrapper.classList.add('scrolled');
 				wrapper.style.height = desired_height.toString() + 'px';
 
+				if (table.classList.contains('with-border'))
+					wrapper.classList.add('with-border');
+
 				parent_element.insertBefore(wrapper, table);
 				wrapper.appendChild(table);
 			}
