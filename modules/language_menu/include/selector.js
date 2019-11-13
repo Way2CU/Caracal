@@ -83,7 +83,7 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		}
 
 		// connect events
-		for (var i=0, count=self.fields.lenght; i<count; i++)
+		for (var i=0, count=self.fields.length; i<count; i++)
 			self.fields[i].addEventListener('blur', self.handler.field_lost_focus);
 		self.ui.window.ui.content.querySelector('form').addEventListener('reset', self.handler.form_reset);
 
@@ -171,6 +171,63 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 
 		// store new language selection
 		self.language = new_language;
+	};
+
+	/**
+	 * Get language data for specified field. If currently edited values
+	 * are not found, return initial values.
+	 *
+	 * @param string field
+	 * @return object
+	 */
+	self.get_values = function(field) {
+		var result = new Object();
+		var field_name = typeof field == 'string' ? field : field.name;
+
+		if (field_name in self.data.current)
+			result = self.data.current[field_name]; else
+		if (field_name in self.data.initial)
+			result = self.data.initial[field_name];
+
+		return result;
+	};
+
+	/**
+	 * Set language data for specified field.
+	 *
+	 * @param object field
+	 * @param object values
+	 */
+	self.set_values = function(field, values) {
+		var field_name = typeof field == 'string' ? field : field.name;
+
+		if (!(field_name in self.data.initial))
+			self.data.initial = new Object();
+
+		if (!(field_name in self.data.current))
+			self.data.current = new Object();
+
+		for (var i=0, count=self.languages; i<count; i++) {
+			var language = self.languages[i];
+
+			if (language.short in values)
+				self.data.current[language.short] = values[language.short]; else
+				self.data.current[language.short] = '';
+		}
+
+		if (typeof field == 'object' && 'value' in field && self.language in values)
+			field.value = values[self.language];
+	};
+
+	/**
+	 * Clear current language data for the specified field.
+	 *
+	 * @param object field
+	 */
+	self.clear_values = function(field) {
+		if (field.name in self.data.current)
+			self.data.current[field.name] = new Object();
+		field.value = '';
 	};
 
 	/**
