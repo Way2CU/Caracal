@@ -340,7 +340,9 @@ Caracal.Shop.save_property = function(button) {
 			break;
 
 		case 'ml_text':
-			var language_data = current_window.ui.language_selector.get_values('property_ml_text');
+		case 'ml_array':
+			var input_element_name = 'property_' + input_type.value;
+			var language_data = current_window.ui.language_selector.get_values(input_element_name);
 
 			prepared_value = {};
 			for (var index in languages_short) {
@@ -352,16 +354,6 @@ Caracal.Shop.save_property = function(button) {
 		case 'array':
 			var input_value = current_window.ui.content.querySelector('input[name=property_array]');
 			prepared_value = JSON.parse(input_value.value);
-			break;
-
-		case 'ml_array':
-			var language_data = current_window.ui.language_selector.get_values('property_ml_array');
-
-			prepared_value = {};
-			for (var index in languages_short) {
-				var language = languages_short[index];
-				prepared_value[language] = JSON.parse(language_data[language]) || '';
-			}
 			break;
 	}
 
@@ -385,7 +377,6 @@ Caracal.Shop.save_property = function(button) {
 
 		var column_name = document.createElement('td');
 		column_name.innerHTML = data.name[Caracal.language.current_language];
-		column_name.append(data_field);
 
 		var column_type = document.createElement('td');
 		column_type.innerHTML = data.type;
@@ -393,6 +384,7 @@ Caracal.Shop.save_property = function(button) {
 		var column_options = document.createElement('td');
 		column_options.classList.add('options');
 
+		row.append(data_field);
 		row.append(column_name);
 		row.append(column_type);
 		row.append(column_options);
@@ -420,7 +412,7 @@ Caracal.Shop.save_property = function(button) {
 		data_field.value = JSON.stringify(data);
 
 		// update column
-		row.querySelectorAll('td')[0].innerHTML = data.name[Caracal.language.current_language];
+		row.querySelector('td').innerHTML = data.name[Caracal.language.current_language];
 	}
 
 	// clear input fields
@@ -485,14 +477,12 @@ Caracal.Shop.edit_property = function(event) {
 	// configure input elements
 	input_text_id.value = data.text_id;
 	input_type.value = data.type;
+	current_window.ui.language_selector.set_values(input_name, data.name);
 
 	// let the input field know data hase been set
 	var changed_event = document.createEvent('HTMLEvents');
 	changed_event.initEvent('change', true, true);
 	input_type.dispatchEvent(changed_event);
-
-	// assign translations for each language
-	current_window.ui.language_selector.set_values(input_name, data.name);
 
 	// configure data
 	switch(data.type) {
@@ -505,7 +495,9 @@ Caracal.Shop.edit_property = function(event) {
 			break;
 
 		case 'ml_text':
-			var input_value = current_window.ui.content.querySelector('input[name=property_ml_text]');
+		case 'ml_array':
+			var input_element_name = 'property_' + input_type.value;
+			var input_value = current_window.ui.content.querySelector('input[name=' + input_element_name + ']');
 			current_window.ui.language_selector.set_values(input_value, data.value)
 			break;
 
@@ -516,11 +508,6 @@ Caracal.Shop.edit_property = function(event) {
 			var changed_event = document.createEvent('HTMLEvents');
 			changed_event.initEvent('change', true, true);
 			input_value.dispatchEvent(changed_event);
-			break;
-
-		case 'ml_array':
-			var input_value = current_window.ui.content.querySelector('input[name=property_ml_array]');
-			current_window.ui.language_selector.set_values(input_value, data.value)
 			break;
 	}
 
@@ -580,6 +567,28 @@ Caracal.Shop.delete_property = function(event) {
 	if (event instanceof Event)
 		var row = event.target.closest('tr'); else
 		var row = event.closest('tr');
+
+	var window_id = row.closest('.window').getAttribute('id');
+	var current_window = Caracal.window_system.get_window(window_id);
+
+	if (current_window.editing_row == row) {
+		var button_add = current_window.ui.content.querySelector('button[name=add]');
+		var button_reset = current_window.ui.content.querySelector('button[name=reset]');
+		var button_cancel = current_window.ui.content.querySelector('button[name=cancel]');
+		var input_type = current_window.ui.content.querySelector('select[name=property_type]');
+
+		Caracal.Shop.reset_property_fields(button_cancel);
+
+		Caracal.language.load_text(null, 'add', function(constant, value) {
+			button_add.innerHTML = value;
+		});
+
+		button_reset.style.display = 'inline-block';
+		button_cancel.style.display = 'none';
+
+		current_window.editing_row = null;
+		input_type.disabled = false;
+	}
 
 	row.remove();
 };

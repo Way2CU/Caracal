@@ -2,14 +2,14 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<tr>
+		<input
+			type="hidden"
+			name="'property_data_'.$params['index']"
+			value="htmlspecialchars($params['data'])"
+			cms:eval="name,value"
+			/>
 		<td>
 			<cms:var param="name" multilanguage="yes"/>
-			<input
-				type="hidden"
-				name="'property_data_'.$params['index']"
-				value="htmlspecialchars($params['data'])"
-				cms:eval="name,value"
-				/>
 		</td>
 		<td>
 			<cms:var param="type"/>
