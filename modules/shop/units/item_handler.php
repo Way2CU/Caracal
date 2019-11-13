@@ -133,7 +133,7 @@ class Handler {
 										$this->parent->get_language_constant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											700,
+											800,
 											$this->parent->get_language_constant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
@@ -936,7 +936,7 @@ class Handler {
 							$this->parent->get_language_constant('change'),
 							window_Open(
 								'shop_item_change', 	// window id
-								700,				// width
+								800,				// width
 								$this->parent->get_language_constant('title_item_change'), // title
 								true, true,
 								URL::make_query(
