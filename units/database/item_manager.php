@@ -438,37 +438,42 @@ abstract class ItemManager {
 		$temp = $fields;
 
 		if ($has_keys) {
-			foreach ($temp as $field => $data)
-				if (in_array($field, $this->fields) && in_array($this->field_types[$field], Query::$multilanguage_fields)) {
+			foreach ($temp as $field => $data) {
+				if (!in_array($field, $this->fields) || !in_array($this->field_types[$field], Query::$multilanguage_fields))
+					continue;
 
-					if (!$only_current) {
-						// expand multi-language field to all languages
-						foreach($this->languages as $code)
-							$fields["{$field}_{$code}"] = $data[$code];
+				// expand multi-language field to all languages
+				if (!$only_current) {
+					foreach($this->languages as $code)
+						$fields["{$field}_{$code}"] = array_key_exists($code, $data) ? $data[$code] : '';
 
-					} else {
-						$fields["{$field}_{$language}"] = $data[$language];
-					}
-
-					unset($fields[$field]);
+				// expand multi-language field only for current language
+				} else {
+					$fields["{$field}_{$language}"] = $data[$language];
 				}
+
+				// remove specified field from query data
+				unset($fields[$field]);
+			}
 
 		} else {
-			foreach ($temp as $field)
-				if (in_array($field, $this->fields) && in_array($this->field_types[$field], Query::$multilanguage_fields)) {
+			foreach ($temp as $field) {
+				if (!in_array($field, $this->fields) || !in_array($this->field_types[$field], Query::$multilanguage_fields))
+					continue;
 
-					if (!$only_current) {
-						// expand multi-language field to all languages
-						foreach($this->languages as $code)
-							$fields[] = "{$field}_{$code}";
+				// expand multi-language field to all languages
+				if (!$only_current) {
+					foreach($this->languages as $code)
+						$fields[] = "{$field}_{$code}";
 
-					} else {
-						// expand multi-language field only to current language
-						$fields[] = "{$field}_{$language}";
-					}
-
-					unset($fields[array_search($field, $fields)]);
+				// expand multi-language field only to current language
+				} else {
+					$fields[] = "{$field}_{$language}";
 				}
+
+				// remove specified field from query data
+				unset($fields[array_search($field, $fields)]);
+			}
 		}
 	}
 
