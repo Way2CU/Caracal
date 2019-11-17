@@ -704,16 +704,15 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				// fields for each individual language to simulate multi-language
 				// data submission.
 				form.addEventListener('submit', function(event) {
-					// get all multi-language fields
-					var fields = this.querySelectorAll('input.multi-language, textarea.multi-language');
-					var current_language = self.ui.language_selector.language;
-
 					// trigger before submit event
 					self.system.events.trigger('window-before-submit', self);
 
-					// make sure we have data to work with
+					// get all multi-language fields
+					var fields = this.querySelectorAll('input.multi-language, textarea.multi-language');
 					if (fields.length == 0)
 						return;
+
+					var current_language = self.ui.language_selector.language;
 
 					for (var j = 0; j < fields.length; j++) {
 						var field = fields[j];
