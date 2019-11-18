@@ -105,7 +105,7 @@ Caracal.WindowSystem.Dialog = function() {
 	 * Destroy dialog and all the components.
 	 */
 	self.destroy = function() {
-		self.ui.background.parentNode.removeChild(self.ui.background);
+		self.ui.background.remove();
 	};
 
 	/**
