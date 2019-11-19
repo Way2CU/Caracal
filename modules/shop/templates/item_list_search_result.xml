@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
-			<input type="checkbox" name="'related_'.$params['id']" cms:eval="name"/>
-			<cms:var name="$params['name'][$language]"/>
-		</span>
-		<span class="column" style="width: 60px;">
-			<cms:var name="$params['price']"/>
-		</span>
-		<span class="column" style="width: 50px;">
-			<cms:var name="$params['rating']"/>
-		</span>
-	</div>
+	<tr class="with_details">
+		<td>
+			<label class="checkbox">
+				<input type="checkbox" name="'related_'.$params['id']" value="1" cms:eval="name"/>
+				<cms:var param="name" multilanguage="yes"/>
+			</label>
+		</td>
+		<td>
+			<cms:var param="price"/>
+		</td>
+		<td>
+			<cms:var param="rating"/>
+		</td>
+	</tr>
 </document>

@@ -374,39 +374,41 @@
 			</div>
 
 			<!-- Related items -->
-			<div class="scrollable_list page" data-title="tab_related" cms:constant="data-title">
+			<div class="page" data-title="tab_related" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_search_query" module="shop"/></span>
 					<input name="search_query" type="text"/>
-					<button
-						type="button"
-						onclick="javascript: Caracal.Shop.open_item_search();"
-						>
+					<button type="button" onclick="javascript: Caracal.Shop.open_item_search(this);">
 						<cms:text constant="search"/>
 					</button>
 				</label>
-				<div class="list_header">
-					<span class="column" style="width: 250px;">
-						<cms:text constant="column_name" module="shop"/>
-					</span>
-					<span class="column" style="width: 60px;">
-						<cms:text constant="column_price" module="shop"/>
-					</span>
-					<span class="column" style="width: 50px;">
-						<cms:text constant="column_rating" module="shop"/>
-					</span>
-					<span class="column">
-						<cms:text constant="column_options"/>
-					</span>
-				</div>
-				<div class="list_content" style="height: 350px" id="related_items">
-					<cms:item_list
-						related="$params['id']"
-						cms:eval="related"
-						template="item_list_option.xml"
-						local="1"
-						/>
-				</div>
+
+				<table class="list with-border" data-height="350">
+					<thead>
+						<td style="width: 250px;">
+							<cms:text constant="column_name" module="shop"/>
+						</td>
+						<td style="width: 60px;">
+							<cms:text constant="column_price" module="shop"/>
+						</td>
+						<td style="width: 50px;">
+							<cms:text constant="column_rating" module="shop"/>
+						</td>
+						<td class="options">
+							<cms:text constant="column_options"/>
+						</td>
+					</thead>
+
+					<tbody id="related_items">
+						<cms:item_list
+							related="$params['id']"
+							cms:eval="related"
+							template="item_list_option.xml"
+							local="1"
+							/>
+					</tbody>
+				</table>
+
 			</div>
 
 			<!-- Remarks -->

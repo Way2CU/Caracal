@@ -1,75 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 250px;">
+	<nav class="window">
+		<a onclick="javascript: Caracal.Shop.add_related_items(this);">
+			<cms:text constant="add"/>
+		</a>
+	</nav>
+
+	<table class="list" data-height="350">
+		<thead>
+			<td>
 				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 60px;">
+			</td>
+			<td style="width: 60px;">
 				<cms:text constant="column_price" module="shop"/>
-			</span>
-			<span class="column" style="width: 50px;">
+			</td>
+			<td style="width: 50px;">
 				<cms:text constant="column_rating" module="shop"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 340px" id="result_list">
+			</td>
+		</thead>
+
+		<tbody id="result_list">
 			<cms:item_list
 				template="item_list_search_result.xml"
 				local="1"
 				filter="$params['query']"
 				cms:eval="filter"
-			/>
-		</div>
-
-		<div class="button_bar">
-			<button
-				type="button"
-				onclick="javascript: shop_AddRelatedItems();"
-			>
-				<cms:text constant="add"/>
-			</button>
-
-			<button
-				type="button"
-				onclick="javascript: Caracal.window_system.close_window('shop_search_results');"
-			>
-				<cms:text constant="close"/>
-			</button>
-		</div>
-	</div>
-	<script type="text/javascript"><![CDATA[
-		function shop_AddRelatedItems() {
-			var items = $('#result_list').children('div.list_item');
-			var target = $('#related_items');
-
-			items.each(function(index) {
-				var checkbox = $(this).find('input');
-
-				if (checkbox.is(':checked')) {
-					var new_item = $(this).clone();
-					var name = checkbox.attr('name');
-
-					new_item
-						.appendTo(target)
-						.append(
-							$('<input>',
-							{
-								type: 'hidden',
-								name: name,
-								value: 1
-							})
-						)
-						.find('input[type=checkbox]').remove();
-
-					checkbox.removeAttr('checked');
-				}
-			});
-
-			Caracal.window_system.get_window('shop_search_results').close();
-		}
-
-		Caracal.window_system.get_window('shop_search_results').focus();
-		]]>
-	</script>
+				/>
+		</tbody>
+	</table>
 </document>

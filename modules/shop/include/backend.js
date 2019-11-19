@@ -12,23 +12,76 @@ Caracal.Shop = Caracal.Shop || {};
 /**
  * Show search results window.
  */
-Caracal.Shop.open_item_search = function() {
-	var value = $('input[name=search_query]').val();
-	var data = {
-			section: 'backend_module',
-			action: 'transfer_control',
-			module: 'shop',
-			backend_action: 'items',
-			sub_action: 'search_results',
-			query: value
-		};
-	var url = $('meta[property=base-url]').attr('content') + '?' + $.param(data);
+Caracal.Shop.open_item_search = function(button) {
+	var window_page = button.closest('.page');
+	var value = window_page.querySelector('input[name=search_query]').value;
+	var raw_url = document.querySelector('meta[property=base-url]').getAttribute('content');
 
-	Caracal.window_system.open_window(
-					'shop_search_results', 450,
-					Caracal.language.get_text('shop', 'title_search_results'),
-					url
-				);
+	// prepare parameters for search
+	var url = new URL(raw_url);
+	var params = new URLSearchParams();
+	params.set('section', 'backend_module');
+	params.set('action', 'transfer_control');
+	params.set('module', 'shop');
+	params.set('backend_action', 'items');
+	params.set('sub_action', 'search_results');
+	params.set('query', value);
+	url.search = params.toString();
+
+	// load language constant and open window
+	Caracal.language.load_text('shop', 'title_search_results', function(constant, value) {
+		Caracal.window_system.open_window('shop_search_results', 450, value, url.toString(), button);
+	});
+};
+
+/**
+ * Add selected related items to the editing window.
+ */
+Caracal.Shop.add_related_items = function(button) {
+	var current_window_id = button.closest('div.window').getAttribute('id');
+	var current_window = Caracal.window_system.get_window(current_window_id);
+	var caller_window_id = current_window.caller.closest('div.window').getAttribute('id');
+	var caller_window = Caracal.window_system.get_window(caller_window_id);
+	var selected_items = current_window.ui.content.querySelectorAll('input:checked');
+	var related_items = caller_window.ui.content.querySelector('#related_items');
+
+	// make sure there are items selected
+	if (selected_items.length == 0)
+		return;
+
+	// add selected items to the list
+	var options = new Array();
+
+	for (var i=0, count=selected_items.length; i<count; i++) {
+		var item = selected_items[i];
+		var existing = related_items.querySelector('input[name="' + item.name + '"]');
+
+		if (existing)
+			continue;
+
+		var row = item.closest('tr').cloneNode(true);
+		var column_options = document.createElement('td');
+		column_options.classList.add('options');
+		row.append(column_options);
+
+		var option_delete = document.createElement('a');
+		option_delete.addEventListener('click', Caracal.Shop.remove_related_item);
+		column_options.append(option_delete);
+		options.push(option_delete);
+
+		row.querySelector('input[type="checkbox"]').type = 'hidden';
+		row.querySelector('td:first-child svg').remove();
+
+		related_items.append(row);
+	}
+
+	// load language constant for options
+	Caracal.language.load_text(null, 'delete', function(constant, value) {
+		for (var i=0, count=options.length; i<count; i++)
+			options[i].innerText = value;
+	});
+
+	current_window.close();
 };
 
 /**
@@ -36,8 +89,13 @@ Caracal.Shop.open_item_search = function() {
  *
  * @param object caller
  */
-Caracal.Shop.remove_related_item = function(caller) {
-	$(caller).closest('div.list_item').remove();
+Caracal.Shop.remove_related_item = function(button) {
+	if (event instanceof Event)
+		var row = event.target.closest('tr'); else
+		var row = event.closest('tr');
+
+	if (row)
+		row.remove();
 };
 
 /**

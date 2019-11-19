@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
-			<input type="hidden" name="'related_'.$params['id']" cms:eval="name" value="1"/>
+	<tr>
+		<input type="hidden" name="'related_'.$params['id']" cms:eval="name" value="1"/>
+		<td>
 			<cms:var name="$params['name'][$language]"/>
-		</span>
-		<span class="column" style="width: 60px;">
+		</td>
+		<td>
 			<cms:var name="$params['price']"/>
-		</span>
-		<span class="column" style="width: 50px;">
+		</td>
+		<td>
 			<cms:var name="$params['rating']"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<a href="javascript: void(0);" onclick="javascript: Caracal.Shop.remove_related_item(this);">
 				<cms:text constant="delete"/>
 			</a>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
