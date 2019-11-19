@@ -9,9 +9,10 @@
 					name="'category_id_'.$params['id']"
 					data-id="$params['id']"
 					data-text-id="$params['text_id']"
+					data-parent="$params['parent']"
 					value="1"
 					checked="$params['in_category'] ? 'checked' : false"
-					cms:eval="name,data-id,data-text-id"
+					cms:eval="name,data-id,data-text-id,data-parent"
 					cms:optional="checked"
 					/>
 				<cms:var name="$params['title'][$language]"/>
