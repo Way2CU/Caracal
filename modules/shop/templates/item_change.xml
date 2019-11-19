@@ -355,7 +355,7 @@
 
 			<!-- Categories -->
 			<div class="page" data-title="tab_category" cms:constant="data-title">
-				<table class="list" data-height="400">
+				<table class="list with-border" data-height="400">
 					<thead>
 						<tr>
 							<td><cms:text constant="column_categories" module="shop"/></td>
