@@ -343,11 +343,13 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		if (self.window_exists(id)) {
 			// window already exists, reload content and show it
 			result = self.get_window(id);
+			result.caller = caller;
 			result.focus().load_content(url);
 
 		} else {
 			// window does not exist, create it
 			result = new Caracal.WindowSystem.Window(id, width, title, url);
+			result.caller = caller;
 
 			// preconfigure window
 			self.list[id] = result;
@@ -383,7 +385,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	 */
 	self.attach_window = function(element) {
 		var id = element.getAttribute('id');
-		var url = element.dataset['url'];
+		var url = element.dataset.url;
 
 		result = new Caracal.WindowSystem.Window(id, null, null, url, element);
 

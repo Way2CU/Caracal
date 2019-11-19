@@ -21,7 +21,7 @@ Caracal.WindowSystem = Caracal.WindowSystem || new Object();
  * @param integer width
  * @param string title
  * @param string url
- * @param boolean structure
+ * @param object structure
  */
 Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	var self = this;
@@ -30,6 +30,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	self.url = url;
 	self.visible = false;
 	self.predefined = structure !== undefined;
+	self.caller = null;
 	self.stack_position = 1000;  // position of window in stack used by System
 	self.icon = null;
 
@@ -659,6 +660,25 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 	 */
 	self._attach_events = function() {
 		var forms = self.ui.content.querySelectorAll('form:not([target])');
+		var checkboxes = self.ui.content.querySelectorAll('input[type="checkbox"]');
+		var radio_buttons = self.ui.content.querySelectorAll('input[type="radio"]');
+
+		// integrate vector icons in checkboxes and radio buttons
+		for (var j = 0; j < checkboxes.length; j++) {
+			var checkbox = checkboxes[j];
+			var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			sprite.innerHTML = '<use xlink:href="#icon-checkmark"/>';
+
+			checkbox.parentNode.insertBefore(sprite, checkbox.nextSibling);
+		}
+
+		for (var j = 0; j < radio_buttons.length; j++) {
+			var radio_button = radio_buttons[j];
+			var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			sprite.innerHTML = '<use xlink:href="#icon-radio"/>';
+
+			radio_button.parentNode.insertBefore(sprite, radio_button.nextSibling);
+		}
 
 		// make sure we have forms to attach events to
 		if (forms.length == 0)
@@ -668,26 +688,6 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		for (var i = 0; i < forms.length; i++) {
 			var form = forms[i];
 			var file_inputs = form.querySelectorAll('input[type="file"]');
-
-			// integrate vector icons in checkboxes and radio buttons
-			var checkboxes = form.querySelectorAll('input[type="checkbox"]');
-			var radio_buttons = form.querySelectorAll('input[type="radio"]');
-
-			for (var j = 0; j < checkboxes.length; j++) {
-				var checkbox = checkboxes[j];
-				var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-				sprite.innerHTML = '<use xlink:href="#icon-checkmark"/>';
-
-				checkbox.parentNode.insertBefore(sprite, checkbox.nextSibling);
-			}
-
-			for (var j = 0; j < radio_buttons.length; j++) {
-				var radio_button = radio_buttons[j];
-				var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-				sprite.innerHTML = '<use xlink:href="#icon-radio"/>';
-
-				radio_button.parentNode.insertBefore(sprite, radio_button.nextSibling);
-			}
 
 			// integrate form event listeners
 			if (file_inputs.length == 0) {
