@@ -65,20 +65,20 @@ div.window {
 
 				@unit: @padding_unit * 2;
 
-				&.level_0 td:first-child { padding-left: @unit * 1; }
-				&.level_1 td:first-child { padding-left: @unit * 2; }
-				&.level_2 td:first-child { padding-left: @unit * 3; }
-				&.level_3 td:first-child { padding-left: @unit * 4; }
-				&.level_4 td:first-child { padding-left: @unit * 5; }
-				&.level_5 td:first-child { padding-left: @unit * 6; }
+				&.level_0 td:first-child { padding-left: @padding_unit + @unit * 0; }
+				&.level_1 td:first-child { padding-left: @padding_unit + @unit * 1; }
+				&.level_2 td:first-child { padding-left: @padding_unit + @unit * 2; }
+				&.level_3 td:first-child { padding-left: @padding_unit + @unit * 3; }
+				&.level_4 td:first-child { padding-left: @padding_unit + @unit * 4; }
+				&.level_5 td:first-child { padding-left: @padding_unit + @unit * 5; }
 
 				html[dir=rtl] & {
-					&.level_0 td:first-child { padding-right: @unit * 1; padding-left: @padding_unit; }
-					&.level_1 td:first-child { padding-right: @unit * 2; padding-left: @padding_unit; }
-					&.level_2 td:first-child { padding-right: @unit * 3; padding-left: @padding_unit; }
-					&.level_3 td:first-child { padding-right: @unit * 4; padding-left: @padding_unit; }
-					&.level_4 td:first-child { padding-right: @unit * 5; padding-left: @padding_unit; }
-					&.level_5 td:first-child { padding-right: @unit * 6; padding-left: @padding_unit; }
+					&.level_0 td:first-child { padding-right: @padding_unit + @unit * 0; padding-left: @padding_unit; }
+					&.level_1 td:first-child { padding-right: @padding_unit + @unit * 1; padding-left: @padding_unit; }
+					&.level_2 td:first-child { padding-right: @padding_unit + @unit * 2; padding-left: @padding_unit; }
+					&.level_3 td:first-child { padding-right: @padding_unit + @unit * 3; padding-left: @padding_unit; }
+					&.level_4 td:first-child { padding-right: @padding_unit + @unit * 4; padding-left: @padding_unit; }
+					&.level_5 td:first-child { padding-right: @padding_unit + @unit * 5; padding-left: @padding_unit; }
 				}
 			}
 

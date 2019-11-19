@@ -6,46 +6,85 @@
  * Author: Mladen Mijatov
  */
 
-div.content input {
-	padding: @input_padding;
+div.content {
+	label.checkbox {
+		> input {
+			display: none;
+		}
 
-	border: 1px solid @color_input_border;
-	border-radius: @input_radius;
-	outline: 0;
-	background-color: @color_input_background;
+		> svg {
+			display: inline-block;
+			vertical-align: middle;
+			width: 1em;
+			height: 1em;
+			margin-right: @input_spacing * 2;
+			padding: 0.1rem;
 
-	font-size: 1rem;
-	font-family: generic;
+			border: 1px solid @color_input_border;
+			border-radius: @control_radius;
+			background-color: @color_input_background;
+			fill: @color_input_background;
 
-	.input-transition();
+			.control-transition();
 
-	&.ltr {
-		direction: ltr;
+			html[dir=rtl] & {
+				margin-left: @input_spacing * 2;
+				margin-right: 0;
+			}
+		}
+
+		> input:checked + svg {
+			border-color: @color_input_active;
+			fill: @color_input_active;
+		}
+
+		> span {
+			display: inline-block;
+			vertical-align: middle;
+		}
 	}
 
-	&.code {
+	input {
+		padding: @input_padding;
+
+		border: 1px solid @color_input_border;
+		border-radius: @input_radius;
+		outline: 0;
+		background-color: @color_input_background;
+
 		font-size: 1rem;
-		font-family: generic-mono;
-	}
-
-	&[type=file] {
-		max-width: 100%;
-		border-style: dotted;
-	}
-
-	&[type=color] {
-		height: 1em;
 		font-family: generic;
-		box-sizing: content-box;
-	}
 
-	&:disabled {
-		border-color: lighten(@color_input_border, 50);
-		color: lighten(@color_input_border, 50);
-	}
+		.input-transition();
 
-	&:focus {
-		border-color: @color_input_active;
-		color: @color_input_active;
+		&.ltr {
+			direction: ltr;
+		}
+
+		&.code {
+			font-size: 1rem;
+			font-family: generic-mono;
+		}
+
+		&[type=file] {
+			max-width: 100%;
+			border-style: dotted;
+		}
+
+		&[type=color] {
+			height: 1em;
+			font-family: generic;
+			box-sizing: content-box;
+		}
+
+		&:disabled {
+			border-color: lighten(@color_input_border, 50);
+			color: lighten(@color_input_border, 50);
+		}
+
+		&:focus {
+			border-color: @color_input_active;
+			color: @color_input_active;
+		}
 	}
 }
