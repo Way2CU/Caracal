@@ -2,15 +2,15 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<tr>
-		<td>
+		<td style="text-align: left">
 			<cms:var param="url"/>
 		</td>
 		<td style="text-align: center;">
 			<cms:var param="filled"/>
 		</td>
 		<td class="options">
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_open']"/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_open"/>
 		</td>
 	</tr>
 </document>
