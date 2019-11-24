@@ -6,7 +6,10 @@
 			<cms:var param="url"/>
 		</td>
 		<td style="text-align: center;">
-			<cms:var param="filled"/>
+			<cms:var param="filled_title"/>
+		</td>
+		<td style="text-align: center;">
+			<cms:var param="filled_content"/>
 		</td>
 		<td class="options">
 			<cms:var param="item_change"/>

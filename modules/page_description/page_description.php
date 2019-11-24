@@ -108,7 +108,7 @@ class page_description extends Module {
 				$this->path.'images/icon.svg',
 				window_Open(
 						'page_descriptions',
-						600,
+						800,
 						$this->get_language_constant('title_manage'),
 						true, true,
 						backend_UrlMake($this->name, 'show')
@@ -273,12 +273,13 @@ class page_description extends Module {
 		// parse template
 		foreach ($items as $item) {
 			$params = array(
-				'id'          => $item->id,
-				'url'         => $item->url,
-				'title'       => $item->title,
-				'content'     => $item->content,
-				'filled'      => empty($item->content[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
-				'item_change' => URL::make_hyperlink(
+				'id'             => $item->id,
+				'url'            => $item->url,
+				'title'          => $item->title,
+				'content'        => $item->content,
+				'filled_title'   => empty($item->title[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
+				'filled_content' => empty($item->content[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
+				'item_change'    => URL::make_hyperlink(
 									$this->get_language_constant('change'),
 									window_Open(
 										'page_descriptions_change_'.$item->id, 	// window id
@@ -294,7 +295,7 @@ class page_description extends Module {
 										)
 									)
 								),
-				'item_open'   => URL::make_hyperlink(
+				'item_open'      => URL::make_hyperlink(
 									$this->get_language_constant('open'),
 									URL::get_base().$item->url, null, null, '_blank'
 								));

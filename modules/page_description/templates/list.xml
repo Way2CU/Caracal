@@ -25,7 +25,10 @@
 					<cms:text constant="column_url" module="page_description"/>
 				</td>
 				<td style="width: 50px; text-align: center;">
-					<cms:text constant="column_done" module="page_description"/>
+					<cms:text constant="column_done_title" module="page_description"/>
+				</td>
+				<td style="width: 50px; text-align: center;">
+					<cms:text constant="column_done_description" module="page_description"/>
 				</td>
 				<td>
 					<cms:text constant="column_options"/>
