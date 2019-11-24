@@ -21,7 +21,7 @@
 		<!-- Header -->
 		<thead>
 			<tr>
-				<td style="width: 400px;">
+				<td style="width: 480px;">
 					<cms:text constant="column_url" module="page_description"/>
 				</td>
 				<td style="width: 50px; text-align: center;">
