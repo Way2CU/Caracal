@@ -15,6 +15,7 @@
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
     "message_server_error": "השרת חווה את הבעיה הבאה:",
+    "message_client_error_400": "Invalid request! Please check your syntax or request body for issues.",
     "message_client_error_404": "העמוד או הקובץ שבקשתם לא נמצא. עמכם הסליחה.",
     "new": "חדש",
     "next": "הבא",

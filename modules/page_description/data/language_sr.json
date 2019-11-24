@@ -1,9 +1,12 @@
 {
 	"menu_page_descriptions": "Описи страница",
 	"column_url": "URL",
+	"column_done_title": "Title",
+	"column_done_description": "Desc.",
 	"label_url": "URL:",
 	"label_title": "Title:",
 	"label_description": "Опис:",
+	"label_search": "Search:",
 	"message_saved": "Page title and description for selected URL has been saved.",
 	"title_manage": "Описи страница",
 	"title_change": "Описи страница: Измена",

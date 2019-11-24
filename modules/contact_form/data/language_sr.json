@@ -49,7 +49,7 @@
     "label_address": "Email адреса:",
     "label_autocomplete": "Дозволи прегледачу да попуни поље?",
     "label_disabled": "Поље је искључено?",
-    "label_domain": "Домен:",
+    "label_domain": "Domain with protocol:",
     "label_export_filename": "Датотека:",
     "label_export_include_headers": "Додај скривене вредности?",
     "label_export_ip": "Додај IP адресу?",

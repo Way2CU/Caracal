@@ -49,7 +49,7 @@
     "label_address": "כתובת מייל:",
     "label_autocomplete": "מרשים לדפדפן להשלים אוטומאטית?",
     "label_disabled": "האם להשבית את השדה?",
-    "label_domain": "דומיין:",
+    "label_domain": "Domain with protocol:",
     "label_export_filename": "שם קובץ:",
     "label_export_include_headers": "לכלול כותרות?",
     "label_export_ip": "לכלול כתובת IP?",

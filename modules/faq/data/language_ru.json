@@ -4,7 +4,6 @@
     "label_question": "Question:",
     "label_visible": "Question is visible",
     "menu_faq": "FAQ",
-    "menu_manage_questions": "Manage questions",
     "message_question_delete": "You are about to remove the following question. Are you sure?",
     "message_question_deleted": "Question was deleted!",
     "message_question_saved": "Question data was saved!",

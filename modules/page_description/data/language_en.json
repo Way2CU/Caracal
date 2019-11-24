@@ -1,7 +1,8 @@
 {
 	"menu_page_descriptions": "Page descriptions",
 	"column_url": "URL",
-	"column_done": "Done",
+	"column_done_title": "Title",
+	"column_done_description": "Desc.",
 	"label_url": "URL:",
 	"label_title": "Title:",
 	"label_description": "Description:",
