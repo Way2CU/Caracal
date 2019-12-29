@@ -260,6 +260,8 @@ class page_description extends Module {
 					'value'    => '%'.escape_chars($_REQUEST['query']).'%'
 				);
 
+		$only_empty = $this->get_boolean_field('only_empty');
+
 		// get page descriptions from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions, array('id'), false, 1000);
 
@@ -272,6 +274,9 @@ class page_description extends Module {
 
 		// parse template
 		foreach ($items as $item) {
+			if ($only_empty && !empty($item->title[$language]) && !empty($item->content[$language]))
+				continue;
+
 			$params = array(
 				'id'             => $item->id,
 				'url'            => $item->url,

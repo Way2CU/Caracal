@@ -3,7 +3,7 @@
 <document>
 	<!-- Search interface -->
 	<nav class="window">
-		<form action="$params['form_action']" method="post" cms:eval="action" class="search">
+		<form action="$params['form_action']" method="get" cms:eval="action" class="search">
 			<label>
 				<span><cms:text constant="label_search" module="page_description"/></span>
 				<input
@@ -13,12 +13,21 @@
 					cms:optional="value"
 					/>
 			</label>
+			<label class="checkbox">
+				<span><cms:text constant="label_only_empty" module="page_description"/></span>
+				<input
+					type="checkbox"
+					name="only_empty"
+					checked="isset($_REQUEST['only_empty']) ? 'checked': false"
+					cms:optional="checked"
+					/>
+			</label>
 			<button type="submit"><cms:text constant="search"/></button>
 		</form>
 	</nav>
 
+	<!-- List -->
 	<table class="list" data-height="500">
-		<!-- Header -->
 		<thead>
 			<tr>
 				<td style="width: 480px;">
@@ -36,7 +45,6 @@
 			</tr>
 		</thead>
 
-		<!-- List Content -->
 		<tbody>
 			<cms:list/>
 		</tbody>
