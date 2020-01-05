@@ -46,6 +46,11 @@ $memcached_config = array(
 		'port'	=> 11211
 	);
 
+// Custom configuration for self-hosted Closure compiler. Value
+// needs to be in following format:
+//     `array('hostname' => '...', 'endpoint' => '...')`.
+$closure_compiler_config = null;
+
 // security
 $force_https = false;
 

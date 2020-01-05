@@ -40,7 +40,7 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $scripts_path;
+		global $scripts_path, $closure_compiler_config;
 
 		$less_options = array(
 				'compress'		=> false,
@@ -53,6 +53,12 @@ class CodeOptimizer {
 		$this->closure_compiler = new Closure();
 		$this->closure_compiler->set_secure(true);
 		$this->closure_compiler->set_level(ClosureLevel::SIMPLE);
+
+		if (!is_null($closure_compiler_config))
+			$this->closure_compiler_config(
+					$closure_compiler_config['hostname'],
+					$closure_compiler_config['endpoint']
+				);
 
 		if (file_exists($scripts_path.'externals.js'))
 			$this->closure_compiler->set_externals(file_get_contents($scripts_path.'externals.js'));
