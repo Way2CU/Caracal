@@ -49,6 +49,11 @@ $memcached_config = array(
 $include_styles = false;
 $optimize_code = false;
 
+// Custom configuration for self-hosted Closure compiler. Value
+// needs to be in following format:
+//     `array('hostname' => '...', 'endpoint' => '...')`.
+$closure_compiler_config = null;
+
 // security
 $force_https = false;
 $referrer_policy = 'strict-origin-when-cross-origin';
