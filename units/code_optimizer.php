@@ -55,7 +55,7 @@ class CodeOptimizer {
 		$this->closure_compiler->set_level(ClosureLevel::SIMPLE);
 
 		if (!is_null($closure_compiler_config))
-			$this->set_endpoint(
+			$this->closure_compiler->set_endpoint(
 					$closure_compiler_config['hostname'],
 					$closure_compiler_config['endpoint']
 				);
