@@ -29,7 +29,10 @@ class CodeOptimizer {
 	private $style_secondary_list = array();  // list populated with @import
 
 	// compilers
-	private $less_compiler = null;
+	private $less_options = array(
+				'compress'     => false,
+				'relativeUrls' => false,
+			);
 	private $closure_compiler = null;
 
 	const LEVEL_NONE = 0;
@@ -42,12 +45,7 @@ class CodeOptimizer {
 	protected function __construct() {
 		global $scripts_path, $closure_compiler_config;
 
-		$less_options = array(
-				'compress'		=> false,
-				'relativeUrls'	=> false,
-			);
 		Less_Autoloader::register();
-		$this->less_compiler = new Less_Parser($less_options);
 
 		// configure JavaScript compiler
 		$this->closure_compiler = new Closure();
@@ -101,13 +99,17 @@ class CodeOptimizer {
 	}
 
 	/**
-	 * Inlude style file.
+	 * Include style file. Less compiler is optional parameter. If omitted it will be automatically
+	 * created when needed. By providing your own compiler you ensure data can be shared between files.
+	 *
+	 * Note: Sharing compiler between files can lead to some unexpected behaviors.
 	 *
 	 * @param string $file_name
 	 * @param array $priority_commands
+	 * @param object $compiler
 	 * @return string
 	 */
-	private function include_style($file_name, &$priority_commands) {
+	private function include_style($file_name, &$priority_commands, &$compiler=null) {
 		global $system_module_path, $styles_path, $site_path;
 
 		$result = array();
@@ -119,10 +121,14 @@ class CodeOptimizer {
 
 		switch ($extension) {
 			case 'less':
+				// create compiler if needed
+				if (is_null($compiler))
+					$compiler = new Less_Parser($this->less_options);
+
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
-					$data = $this->less_compiler->getCss();
+					$compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
+					$data = $compiler->getCss();
 
 				} catch (Exception $error) {
 					trigger_error('Error compiling: '.$file_name.' - '.$error, E_USER_NOTICE);
@@ -189,7 +195,7 @@ class CodeOptimizer {
 
 					} else {
 						// in place import of styles
-						$data = $this->include_style(trim($command[1], '\'";'), $priority_commands);
+						$data = $this->include_style(trim($command[1], '\'";'), $priority_commands, $compiler);
 						$result = array_merge($result, $data);
 					}
 
