@@ -608,7 +608,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 					} else if (type == 'radio') {
 						// radio button
 						if (data[name] == undefined) {
-							var value = form.querySelector('input:radio[name='+name+']:checked').value;
+							var value = form.querySelector('input[type=radio][name='+name+']:checked').value;
 							data[name] = encodeURIComponent(value);
 						}
 
