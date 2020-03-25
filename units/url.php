@@ -364,8 +364,8 @@ final class URL {
 	 *
 	 * @return string
 	 */
-	public static function get_current() {
-		return self::get_base().self::get_request_path();
+	public static function get_current($secure=false) {
+		return self::get_base($secure).self::get_request_path();
 	}
 
 	/**
