@@ -77,8 +77,8 @@ define('_AJAX_REQUEST',
 define('_BROWSER_OK', is_browser_ok());
 
 // force secure connection if requested
-if (!_SECURE && $force_https) {
-	$url = URL::get_base(true);
+if (should_force_https()) {
+	$url = URL::get_current(true);
 	header('Location: '.$url, true, 301);
 	exit();
 }
