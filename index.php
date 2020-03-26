@@ -98,7 +98,7 @@ Session::start();
 $page_match = SectionHandler::prepare();
 URL::unpack_values();
 
-// set default values for variables
+// set legacy variable values
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? null: fix_chars($_REQUEST['section']);
 
 // initialize language system and apply language
@@ -108,26 +108,21 @@ Language::apply_for_session();
 if ($db_type !== DatabaseType::NONE && !database_connect())
 	die('There was an error while trying to connect database.');
 
-// transfer display control
 $cache = Cache::get_instance();
 $module_handler = ModuleHandler::get_instance();
 
+// show cached content
 if ($cache->is_cached()) {
-	// only include specified modules
 	$module_handler->load_modules(true);
-
-	// show cached content
 	$cache->show_cached_page();
 
+// render regular page
 } else {
-	// load all the modules
 	$module_handler->load_modules(false);
 
-	// handle preflight requests and exit
+	// handle cross-origin resource sharing
 	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
 		CORS::handle_preflight_request();
-
-	// include response headers for regular and simple requests
 	CORS::add_response_headers();
 
 	// check if module is being requested and is available
