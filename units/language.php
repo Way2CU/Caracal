@@ -252,8 +252,7 @@ final class Language {
 	 * language or use site's default.
 	 */
 	public static function apply_for_session() {
-		global $section, $language, $default_language, $available_languages, $language_rtl,
-	 		$data_path, $system_path;
+		global $language, $default_language, $available_languages, $language_rtl, $data_path, $system_path;
 
 		// load language definitions
 		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
