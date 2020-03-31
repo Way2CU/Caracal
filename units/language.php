@@ -270,13 +270,13 @@ final class Language {
 		// redirect user first time to configured language if needed
 		if (!isset($_COOKIE[self::COOKIE_MATCHED]) || $_COOKIE[self::COOKIE_MATCHED] != 1) {
 			setcookie(
-				self::COOKIE_MATCHED,       // name
-				1,                          // value
-				self::MATCH_DURATION * 60,  // duration
-				SessionManager::get_path(), // path
-				'',                         // domain
-				false,                      // transmit only over HTTPS
-				true                        // available only to server
+				self::COOKIE_MATCHED,               // name
+				1,                                  // value
+				time() + self::MATCH_DURATION * 60, // duration
+				SessionManager::get_path(),         // path
+				'',                                 // domain
+				false,                              // transmit only over HTTPS
+				true                                // available only to server
 			);
 
 			$browser_language = self::match_browser_language($available_languages, $language);
