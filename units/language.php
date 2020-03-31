@@ -10,9 +10,6 @@ class LanguageHandler {
 	private $list = null;
 	private $file;
 
-	const COOKIE_MATCHED = 'Caracal_LanguageMatched';
-	const MATCH_DURATION = 525600;  // 365 days
-
 	/**
 	 * Constructor
 	 *
@@ -118,6 +115,9 @@ final class Language {
 	private static $system_handler = null;
 	private static $site_handler = null;
 	private static $list;
+
+	const COOKIE_MATCHED = 'Caracal_LanguageMatched';
+	const MATCH_DURATION = 525600;  // 365 days
 
 	/**
 	 * Get localized value for specified constant and language.
