@@ -15,7 +15,7 @@ final class URL {
 	 * @param string $template_file
 	 * @return string
 	 */
-	public static function make($params=array(), $file=null) {
+	public static function make($params=array(), $file=null, $force_secure=false) {
 		global $url_rewrite, $language, $default_language;
 
 		$result = '';
@@ -60,7 +60,7 @@ final class URL {
 			$result = '/'.$language_to_add.$result;
 
 		// add URL base
-		$result = self::get_base().($url_rewrite ? '' : '?').$result;
+		$result = self::get_base($force_secure).($url_rewrite ? '' : '?').$result;
 
 		return $result;
 	}
@@ -143,11 +143,11 @@ final class URL {
 	 * Get base URL where site is located. This includes domain, path
 	 * and potentially script name.
 	 *
-	 * @param boolean $secure
+	 * @param boolean $force_secure
 	 * @return string
 	 */
-	public static function get_base($secure=false) {
-		$base = (_SECURE || $secure ? 'https://' : 'http://')._DOMAIN;
+	public static function get_base($force_secure=false) {
+		$base = (_SECURE || $force_secure ? 'https://' : 'http://')._DOMAIN;
 
 		$port = $_SERVER['SERVER_PORT'];
 		if ($port != 80 && $port != 443)
