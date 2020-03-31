@@ -1,5 +1,7 @@
 <?php
 
+use Core\Session\Manager as SessionManager;
+
 
 class LanguageHandler {
 	private $active = false;
@@ -7,6 +9,9 @@ class LanguageHandler {
 	private $data = array();
 	private $list = null;
 	private $file;
+
+	const COOKIE_MATCHED = 'Caracal_LanguageMatched';
+	const MATCH_DURATION = 525600;  // 365 days
 
 	/**
 	 * Constructor
@@ -261,6 +266,31 @@ final class Language {
 		$language = isset($_REQUEST['language']) ? $_REQUEST['language'] : $default_language;
 		if (!in_array($language, $available_languages))
 			$language = $default_language;
+
+		// redirect user first time to configured language if needed
+		if (!isset($_COOKIE[self::COOKIE_MATCHED]) || $_COOKIE[self::COOKIE_MATCHED] != 1) {
+			setcookie(
+				self::COOKIE_MATCHED,       // name
+				1,                          // value
+				self::MATCH_DURATION * 60,  // duration
+				SessionManager::get_path(), // path
+				'',                         // domain
+				false,                      // transmit only over HTTPS
+				true                        // available only to server
+			);
+
+			$browser_language = self::match_browser_language($available_languages, $language);
+			if ($browser_language != $language) {
+				$params = array();
+				foreach (SectionHandler::get_matched_params() as $name)
+					$params[$name] = $_REQUEST[$name];
+				$params['language'] = $browser_language;
+				$url = URL::make($params, SectionHandler::get_matched_file());
+				header('Location: '.$url, true, 302);
+			}
+		}
+
+		// assign direction to global variable
 		$language_rtl = self::is_rtl($language);
 
 		// create language handlers
