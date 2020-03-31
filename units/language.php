@@ -1,7 +1,5 @@
 <?php
 
-use Core\Session\Manager as SessionManager;
-
 
 class LanguageHandler {
 	private $active = false;
@@ -273,7 +271,7 @@ final class Language {
 				self::COOKIE_MATCHED,               // name
 				1,                                  // value
 				time() + self::MATCH_DURATION * 60, // duration
-				SessionManager::get_path(),         // path
+				Session::get_path(),                // path
 				'',                                 // domain
 				false,                              // transmit only over HTTPS
 				true                                // available only to server
