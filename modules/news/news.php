@@ -382,7 +382,7 @@ class news extends Module {
 			$content_score = 50 * ($content_matches / $query_count);
 
 			// calculate final score
-			$score = (($title_score + $description_score) * 100) / (100 + 50);
+			$score = (($title_score + $content_score) * 100) / (100 + 50);
 
 			// add item to result list
 			if ($score >= $threshold)
