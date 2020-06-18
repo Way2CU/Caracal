@@ -5,18 +5,17 @@
 		<div style="margin-bottom: 10px;" class="notebook">
 			<!-- Export fields tab -->
 			<div class="page" data-title="tab_export_fields" cms:constant="data-title">
-				<div class="scrollable_list">
-					<div class="list_header">
-						<span class="column" style="width: 150px;">
+				<table class="list with-border" data-height="200">
+					<thead>
+						<td style="width: 150px;">
 							<cms:text constant="column_field_name" module="contact_form"/>
-						</span>
-
-						<span class="column">
+						</td>
+						<td class="options">
 							<cms:text constant="column_header" module="contact_form"/>
-						</span>
-					</div>
+						</td>
+					</thead>
 
-					<div class="list_content" style="height: 200px">
+					<tbody>
 						<cms:fields
 							template="export_options_field.xml"
 							local="1"
@@ -24,8 +23,8 @@
 							form="$params['form']"
 							cms:eval="form"
 							/>
-					</div>
-				</div>
+					</tbody>
+				</table>
 				<div style="padding-bottom: 10px;">
 					<cms:text constant="selected_fields_export" module="contact_form"/>
 				</div>
@@ -48,7 +47,7 @@
 
 				<hr/>
 
-				<div class="box left" style="width: 200px;">
+				<div class="box horizontal" style="width: 200px;">
 					<label class="checkbox" cms:tooltip="tooltip_include_headers">
 						<input type="checkbox" name="headers_included" checked="checked"/>
 						<span><cms:text constant="label_export_include_headers" module="contact_form"/></span>
@@ -65,23 +64,23 @@
 					</label>
 				</div>
 
-				<div class="box right" style="width: 150px;">
+				<div class="box horizontal-ending" style="width: 150px;">
 					<fieldset>
 						<legend><cms:text constant="legend_separator_type" module="contact_form"/></legend>
 
 						<label class="radio">
-							<span><cms:text constant="label_separator_tab" module="contact_form"/></span>
 							<input type="radio" name="separator_type" value="0"/>
+							<span><cms:text constant="label_separator_tab" module="contact_form"/></span>
 						</label>
 
 						<label class="radio">
-							<span><cms:text constant="label_separator_semi" module="contact_form"/></span>
 							<input type="radio" name="separator_type" value="1"/>
+							<span><cms:text constant="label_separator_semi" module="contact_form"/></span>
 						</label>
 
 						<label class="radio">
-							<span><cms:text constant="label_separator_comma" module="contact_form"/></span>
 							<input type="radio" name="separator_type" value="2" checked="checked"/>
+							<span><cms:text constant="label_separator_comma" module="contact_form"/></span>
 						</label>
 					</fieldset>
 				</div>
@@ -97,5 +96,5 @@
 		</div>
 	</form>
 
-	<iframe name="contact_form_export_target" class="target"/>
+	<iframe name="contact_form_export_target" style="display: none"/>
 </document>

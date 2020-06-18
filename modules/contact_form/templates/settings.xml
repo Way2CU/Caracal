@@ -106,7 +106,6 @@
 				<hr/>
 
 				<label class="radio">
-					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
 					<input
 						type="radio"
 						name="smtp_authenticate"
@@ -114,9 +113,9 @@
 						checked="$settings['smtp_authenticate'] == 0 ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
 				</label>
 				<label class="radio">
-					<span><cms:text constant="label_smtp_authenticate" module="contact_form"/></span>
 					<input
 						type="radio"
 						name="smtp_authenticate"
@@ -124,6 +123,7 @@
 						checked="$settings['smtp_authenticate'] == 1 ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_smtp_authenticate" module="contact_form"/></span>
 				</label>
 
 				<label class="horizontal">
