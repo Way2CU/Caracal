@@ -12,7 +12,7 @@
 			<cms:var name="$params['fields'][2]['value']"/>
 		</td>
 		<td class="options">
-			<cms:var name="$params['item_details']"/>
+			<cms:var param="item_details"/>
 		</td>
 	</tr>
 </document>
