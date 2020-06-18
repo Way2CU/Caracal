@@ -3239,6 +3239,8 @@ class contact_form extends Module {
 		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 		$fields = array();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = false;
 
 		// get parameters
 		$conditions['form'] = -1;
@@ -3253,7 +3255,9 @@ class contact_form extends Module {
 		// get submissions
 		$items = $submission_manager->get_items(
 				$submission_manager->get_field_names(),
-				$conditions
+				$conditions,
+				$order_by,
+				$order_asc
 			);
 
 		// load field definitions
