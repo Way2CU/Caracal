@@ -6,15 +6,15 @@
 			submission="$params['id']"
 			cms:eval="submission"
 			/>
-	</form>
 
-	<div class="button_bar">
-		<button
-			type="button"
-			onclick="$params['button_action']"
-			cms:eval="onclick"
-			>
-			<cms:text constant="close"/>
-		</button>
-	</div>
+		<div class="button_bar">
+			<button
+				type="button"
+				onclick="$params['button_action']"
+				cms:eval="onclick"
+				>
+				<cms:text constant="close"/>
+			</button>
+		</div>
+	</form>
 </document>
