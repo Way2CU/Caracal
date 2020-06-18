@@ -675,7 +675,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		for (var j = 0; j < radio_buttons.length; j++) {
 			var radio_button = radio_buttons[j];
 			var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			sprite.innerHTML = '<use xlink:href="#icon-radio"/>';
+			sprite.innerHTML = '<use xlink:href="#icon-checkmark"/>';
 
 			radio_button.parentNode.insertBefore(sprite, radio_button.nextSibling);
 		}
