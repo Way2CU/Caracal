@@ -4,13 +4,15 @@
 	<cms:if condition="$params['type'] != 'honey-pot'">
 		<tr>
 			<td>
-				<input
-					type="checkbox"
-					name="'include_'.$params['name']"
-					checked="checked"
-					cms:eval="name"
-					/>
-				<cms:var name="$params['name']"/>
+				<label class="radio">
+					<input
+						type="checkbox"
+						name="'include_'.$params['name']"
+						checked="checked"
+						cms:eval="name"
+						/>
+					<cms:var name="$params['name']"/>
+				</label>
 			</td>
 			<td>
 				<input
@@ -18,7 +20,7 @@
 					name="'header_'.$params['name']"
 					style="width: 170px;"
 					cms:eval="name"
-				/>
+					/>
 			</td>
 		</tr>
 	</cms:if>
