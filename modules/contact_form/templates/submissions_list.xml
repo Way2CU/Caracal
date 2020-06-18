@@ -25,8 +25,8 @@
 
 	<!-- Header -->
 	<cms:if condition="isset($_REQUEST['form']) and !empty($_REQUEST['form'])">
-		<div class="scrollable_list">
-			<div class="list_header">
+		<table class="list" data-height="450">
+			<thead>
 				<cms:field_list
 					form="$_REQUEST['form']"
 					limit="3"
@@ -37,21 +37,19 @@
 					cms:eval="form"
 					/>
 
-				<span class="column">
+				<td class="options">
 					<cms:text constant="column_options"/>
-				</span>
-			</div>
-			<div class="list_content" style="height: 250px">
-				<cms:list
-					form="$_REQUEST['form']"
-					cms:eval="form"
-					/>
-			</div>
+				</td>
+			</thead>
+
+			<tbody>
+				<cms:list form="$_REQUEST['form']" cms:eval="form"/>
+			</tbody>
 		</div>
 	</cms:if>
 
 	<cms:if condition="!isset($_REQUEST['form']) or empty($_REQUEST['form'])">
-		<div class="window_message">
+		<div class="window_message" style="height: 450px">
 			<cms:text constant="message_no_form_selected" module="contact_form"/>
 		</div>
 	</cms:if>

@@ -484,7 +484,7 @@ class contact_form extends Module {
 
 							window_Open( // on click open window
 										'contact_form_submissions',
-										650,
+										750,
 										$this->get_language_constant('title_submissions'),
 										true, true,
 										backend_UrlMake($this->name, 'submissions')

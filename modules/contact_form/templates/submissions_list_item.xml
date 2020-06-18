@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 170px;">
+	<tr>
+		<td>
 			<cms:var name="$params['fields'][0]['value']"/>
-		</span>
-		<span class="column" style="width: 170px;">
+		</td>
+		<td>
 			<cms:var name="$params['fields'][1]['value']"/>
-		</span>
-		<span class="column" style="width: 170px;">
+		</td>
+		<td>
 			<cms:var name="$params['fields'][2]['value']"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var name="$params['item_details']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<span class="column" style="width: 170px;">
+	<td>
 		<cms:var name="$params['name']"/>
-	</span>
+	</td>
 </document>
