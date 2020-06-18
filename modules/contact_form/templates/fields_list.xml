@@ -3,25 +3,25 @@
 <document>
 	<!-- Window Menu -->
 	<nav class="window">
-		<cms:var name="$params['link_new']"/>
-		<cms:var name="$params['link_fieldsets']"/>
+		<cms:var param="link_new"/>
+		<cms:var param="link_fieldsets"/>
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 200px;">
+	<table class="list" data-height="350">
+		<thead>
+			<td style="width: 200px;">
 				<cms:text constant="column_name" module="contact_form"/>
-			</span>
-			<span class="column" style="width: 100px;">
+			</td>
+			<td style="width: 100px;">
 				<cms:text constant="column_type" module="contact_form"/>
-			</span>
-			<span class="column">
+			</td>
+			<td class="options">
 				<cms:text constant="column_options"/>
-			</span>
-		</div>
+			</td>
+		</thead>
 
-		<div class="list_content" style="height: 350px">
+		<tbody>
 			<cms:list
 				template="fields_list_item.xml"
 				local="1"
@@ -29,6 +29,6 @@
 				form="$params['form']"
 				cms:eval="form"
 				/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

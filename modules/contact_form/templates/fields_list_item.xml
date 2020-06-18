@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 200px;">
+	<tr>
+		<td>
 			<cms:var name="$params['name']"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<cms:var name="$params['type']"/>
-		</span>
-		<span class="column">
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_delete']"/>
+		</td>
+		<td class="options">
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 
 			<cms:if condition="$params['type'] == 'select'">
-				<cms:var name="$params['item_values']"/>
+				<cms:var param="item_values"/>
 			</cms:if>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
