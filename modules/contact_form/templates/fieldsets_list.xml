@@ -7,23 +7,23 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 200px;">
+	<table class="list" data-height="300">
+		<thead>
+			<td style="width: 200px;">
 				<cms:text constant="column_name" module="contact_form"/>
-			</span>
-			<span class="column">
+			</td>
+			<td class="options" class="column">
 				<cms:text constant="column_options"/>
-			</span>
-		</div>
+			</td>
+		</thead>
 
-		<div class="list_content" style="height: 250px">
+		<tbody>
 			<cms:list
 				template="fieldsets_list_item.xml"
 				local="1"
 				form="$params['form']"
 				cms:eval="form"
 				/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>
