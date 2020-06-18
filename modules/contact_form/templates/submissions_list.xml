@@ -49,7 +49,7 @@
 	</cms:if>
 
 	<cms:if condition="!isset($_REQUEST['form']) or empty($_REQUEST['form'])">
-		<div class="window_message" style="height: 450px">
+		<div class="empty-message" style="height: 450px">
 			<cms:text constant="message_no_form_selected" module="contact_form"/>
 		</div>
 	</cms:if>
