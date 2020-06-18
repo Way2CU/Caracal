@@ -23,22 +23,22 @@
 				/>
 		</label>
 
-		<div class="scrollable_list">
-			<div class="list_header">
-				<span class="column">
+		<table class="list with-border" data-height="200">
+			<thead>
+				<td>
 					<cms:text constant="column_fields" module="contact_form"/>
-				</span>
-			</div>
+				</td>
+			</thead>
 
-			<div class="list_content" style="height: 200px">
+			<tbody>
 				<cms:field_list
 					form="$params['form']"
 					template="field_checkbox_list_item.xml"
 					local="1"
 					cms:eval="form"
 					/>
-			</div>
-		</div>
+			</tbody>
+		</table>
 
 		<div class="button_bar">
 			<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>

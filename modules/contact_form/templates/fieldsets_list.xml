@@ -3,7 +3,7 @@
 <document>
 	<!-- Window Menu -->
 	<nav class="window">
-		<cms:var name="$params['link_new']"/>
+		<cms:var param="link_new"/>
 	</nav>
 
 	<!-- Header -->
@@ -12,7 +12,7 @@
 			<td style="width: 200px;">
 				<cms:text constant="column_name" module="contact_form"/>
 			</td>
-			<td class="options" class="column">
+			<td class="options">
 				<cms:text constant="column_options"/>
 			</td>
 		</thead>

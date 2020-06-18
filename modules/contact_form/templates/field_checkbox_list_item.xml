@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
+	<tr>
 		<label class="column">
 			<input
 				type="checkbox"
@@ -10,7 +10,7 @@
 				cms:eval="name"
 				cms:optional="checked"
 				/>
-			<cms:var name="$params['name']"/>
+			<cms:var param="name"/>
 		</label>
-	</div>
+	</tr>
 </document>
