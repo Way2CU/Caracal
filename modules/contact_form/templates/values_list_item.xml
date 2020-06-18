@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 150px;">
-			<cms:var name="$params['name'][$language]"/>
-		</span>
-		<span class="column" style="width: 150px;">
-			<cms:var name="$params['value']"/>
-		</span>
-		<span class="column">
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+	<tr>
+		<td>
+			<cms:var name="name" multilanguage="yes"/>
+		</td>
+		<td>
+			<cms:var params="value"/>
+		</td>
+		<td class="options">
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
+		</td>
+	</tr>
 </document>
