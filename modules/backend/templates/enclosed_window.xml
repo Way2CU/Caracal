@@ -24,7 +24,7 @@
 				>
 				<div
 					class="window"
-					id="$params['window'] : false"
+					id="$params['window']"
 					cms:optional="id"
 					>
 					<!-- Title content -->
