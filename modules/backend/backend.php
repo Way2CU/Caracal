@@ -13,7 +13,6 @@ use Core\Module;
 use Core\Exports\File;
 use Core\Cache\Manager as Cache;
 use Core\CSP\Parser as CSP;
-use Core\CSP\Element as CSP_Element;
 use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
@@ -191,12 +190,12 @@ class backend extends Module {
 							$source = filter_var(urldecode($_REQUEST['enclose']), FILTER_VALIDATE_URL);
 							if ($source !== FALSE) {
 								$params['source'] = $source;
-								$frame_options = 'ALLOW-FROM '.$source;
 
 								// update content security policy
-								CSP::add_value(CSP_Element::SCRIPTS, "'unsafe-inline'");
-								CSP::add_value(CSP_Element::STYLES, "'unsafe-inline'");
-								CSP::add_value(CSP_Element::STYLES, $source);
+								CSP::add_value('frame-ancestors', $source);
+								CSP::add_value('script-src', "'unsafe-inline'");
+								CSP::add_value('style-src', "'unsafe-inline'");
+								CSP::add_value('style-src', $source);
 							}
 
 							// call for modules to add required tags
