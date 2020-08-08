@@ -391,10 +391,16 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		if (url === null) {
 			var current_url = new URL(window.location.toString());
 
+			// extract window url from redirect url
 			if (current_url.searchParams.has('redirect_url')) {
 				var redirect_url = new URL(current_url.searchParams.get('redirect_url'));
 				redirect_url.searchParams.delete('enclose');
 				url = redirect_url.toString();
+
+			// extract window url from current location
+			} else if (current_url.searchParams.has('enclose')) {
+				current_url.searchParams.delete('enclose');
+				url = current_url.toString();
 			}
 		}
 
