@@ -385,7 +385,17 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	 */
 	self.attach_window = function(element) {
 		var id = element.getAttribute('id');
-		var url = element.dataset.url || window.location.toString();
+		var url = element.dataset.url;
+
+		// take url from current location and extract it
+		if (url === null) {
+			var current_url = new URL(window.location.toString());
+			if (current_url.searchParams.has('redirect_url')) {
+				var redirect_url = new URL(current_url.searchParams.get('redirect_url'));
+				redirect_url.searchParams.delete('enclose');
+				url = redirect_url.toString();
+			}
+		}
 
 		result = new Caracal.WindowSystem.Window(id, null, null, url, element);
 
