@@ -130,7 +130,7 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			}
 
 			// window elements
-			self.ui.menu = self.ui.container.querySelector('> nav');
+			self.ui.menu = self.ui.container.querySelector('nav');
 			self.ui.content = self.ui.container.querySelector('div.content')
 		}
 
