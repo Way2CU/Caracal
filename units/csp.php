@@ -10,24 +10,15 @@
  *
  * Usage example:
  *
- *	Parser::add_value(Element::SCRIPTS, 'domain.com/scripts/something.js');
+ *	Parser::add_value('script-src', 'domain.com/scripts/something.js');
  *
  * Author: Mladen Mijatov
  */
 namespace Core\CSP;
 
-final class Element {
-	const DEF = 'default-src';
-	const SCRIPTS = 'script-src';
-	const STYLES = 'style-src';
-	const IMAGES = 'img-src';
-	const FONTS = 'font-src';
-	const MEDIA = 'media-src';
-}
-
 
 final class Parser {
-	private static $default_policy = 'script-src \'self\'';
+	private static $default_policy = "script-src 'self'";
 	private static $policy = null;
 
 	/**
