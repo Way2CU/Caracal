@@ -385,7 +385,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	 */
 	self.attach_window = function(element) {
 		var id = element.getAttribute('id');
-		var url = element.dataset.url;
+		var url = element.dataset.url || window.location.toString();
 
 		result = new Caracal.WindowSystem.Window(id, null, null, url, element);
 
