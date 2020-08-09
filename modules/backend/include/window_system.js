@@ -388,7 +388,7 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 		var url = element.dataset.url;
 
 		// take url from current location and extract it
-		if (url === null) {
+		if (!url) {
 			var current_url = new URL(window.location.toString());
 
 			// extract window url from redirect url
