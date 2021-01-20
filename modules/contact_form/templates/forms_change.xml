@@ -70,7 +70,6 @@
 					</select>
 				</label>
 
-
 				<hr/>
 
 				<label class="checkbox" cms:tooltip="tooltip_include_reply_to">
