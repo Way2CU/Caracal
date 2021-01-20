@@ -7,6 +7,6 @@
 		cms:optional="selected"
 		cms:eval="value"
 		>
-		<cms:var name="$params['name']"/>
+		<cms:var param="name" multilanguage="yes"/>
 	</option>
 </document>
