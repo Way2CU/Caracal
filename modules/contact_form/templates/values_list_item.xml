@@ -3,10 +3,10 @@
 <document>
 	<tr>
 		<td>
-			<cms:var name="name" multilanguage="yes"/>
+			<cms:var param="name" multilanguage="yes"/>
 		</td>
 		<td>
-			<cms:var params="value"/>
+			<cms:var param="value"/>
 		</td>
 		<td class="options">
 			<cms:var param="item_change"/>
