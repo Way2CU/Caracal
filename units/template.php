@@ -940,7 +940,8 @@ class TemplateHandler {
 			header('X-Content-Type-Options: nosniff');
 
 			// prevent site loading from different origins
-			header('X-Frame-Options: '.$frame_options);
+			if (!is_null($frame_options))
+				header('X-Frame-Options: '.$frame_options);
 
 			// enforce cross-site scripting protection
 			header('X-Xss-Protection: 1; mode=block');
