@@ -816,7 +816,7 @@ class TemplateHandler {
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
 
-						if (count($tag->tagData) > 0)
+						if (strlen($tag->tagData) > 0)
 							echo $tag->tagData;
 
 						// check if tag needs to be closed
