@@ -60,7 +60,7 @@ function escape_chars($string, $strip_tags=true) {
 
 	if (!is_array($string)) {
 		// get rid of slashes
-		if (get_magic_quotes_gpc())
+		if (version_compare(PHP_VERSION, '7.4.0') <= 0 && get_magic_quotes_gpc())
 			$string = stripcslashes($string);
 
 		// remove tags
