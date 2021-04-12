@@ -188,7 +188,7 @@ class callbox extends Module {
 				'caller_name'
 			);
 		$data = array();
-		$strip_slashes = get_magic_quotes_gpc();
+		$strip_slashes = version_compare(PHP_VERSION, '7.4.0') <= 0 && get_magic_quotes_gpc();
 
 		foreach($params as $param) {
 			$value = $_REQUEST[$param];
