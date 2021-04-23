@@ -177,7 +177,6 @@ class callbox extends Module {
 		// exit if we are missing data
 		if (empty($account_key) || empty($account_secret)) {
 			trigger_error('Account key and/or secret are not properly configured!', E_USER_ERROR);
-			print json_encode($result);
 			return;
 		}
 
