@@ -26,7 +26,7 @@ Caracal.WindowSystem.Dialog = function() {
 	self._init = function() {
 		// create container element for dialog
 		self.ui.background = document.createElement('div');
-		self.ui.background.classList.add('dialog');
+		self.ui.background.classList.add('backend-dialog');
 
 		self.ui.container = document.createElement('div');
 		self.ui.container.classList.add('container');

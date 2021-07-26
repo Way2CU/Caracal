@@ -90,7 +90,7 @@ div.list_content.thumbnails div.list_item span.title {
 /**
  * Dialog Thumbnail
  */
-div.dialog div.thumbnail {
+div.backend-dialog div.thumbnail {
 	display: block;
 	width: 102px;
 	height: 125px;
@@ -108,15 +108,15 @@ div.dialog div.thumbnail {
 	cursor: pointer;
 }
 
-html[dir=rtl] div.dialog div.thumbnail {
+html[dir=rtl] div.backend-dialog div.thumbnail {
 	float: right;
 }
 
-div.dialog div.thumbnail:hover {
+div.backend-dialog div.thumbnail:hover {
 	background-color: #EBEBEB;
 }
 
-div.dialog div.thumbnail div.image_holder {
+div.backend-dialog div.thumbnail div.image_holder {
 	display: block;
 	width: 100px;
 	height: 100px;
@@ -131,7 +131,7 @@ div.dialog div.thumbnail div.image_holder {
 	vertical-align: middle;
 }
 
-div.dialog div.thumbnail span.title {
+div.backend-dialog div.thumbnail span.title {
 	display: block;
 	padding-top: 2px;
 
