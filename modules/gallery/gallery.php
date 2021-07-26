@@ -1356,47 +1356,52 @@ class gallery extends Module {
 
 			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
-											$this->get_language_constant('change'),
-											window_Open(
-												'gallery_images_change', 	// window id
-												400,						// width
-												$this->get_language_constant('title_images_change'), // title
-												false, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'images_change'),
-													array('id', $item->id)
-												)));
+					$this->get_language_constant('change'),
+					window_Open(
+						'gallery_images_change', 	// window id
+						400,						// width
+						$this->get_language_constant('title_images_change'), // title
+						false, false,
+						URL::make_query(
+							'backend_module',
+							'transfer_control',
+							array('module', $this->name),
+							array('backend_action', 'images_change'),
+							array('id', $item->id)
+						)));
 				$params['item_delete'] = URL::make_hyperlink(
-											$this->get_language_constant('delete'),
-											window_Open(
-												'gallery_images_delete', 	// window id
-												400,						// width
-												$this->get_language_constant('title_images_delete'), // title
-												false, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'images_delete'),
-													array('id', $item->id)
-												)));
+					$this->get_language_constant('delete'),
+					window_Open(
+						'gallery_images_delete', 	// window id
+						400,						// width
+						$this->get_language_constant('title_images_delete'), // title
+						false, false,
+						URL::make_query(
+							'backend_module',
+							'transfer_control',
+							array('module', $this->name),
+							array('backend_action', 'images_delete'),
+							array('id', $item->id)
+						)));
 				$params['item_set_default'] = URL::make_hyperlink(
-											$this->get_language_constant('menu_set_default'),
-											window_Open(
-												'gallery_groups_set_thumbnail', 	// window id
-												320,						// width
-												$this->get_language_constant('title_groups_set_thumbnail'), // title
-												false, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'groups_set_thumbnail'),
-													array('id', $item->id)
-												)));
+					$this->get_language_constant('menu_set_default'),
+					window_Open(
+						'gallery_groups_set_thumbnail', 	// window id
+						320,						// width
+						$this->get_language_constant('title_groups_set_thumbnail'), // title
+						false, false,
+						URL::make_query(
+							'backend_module',
+							'transfer_control',
+							array('module', $this->name),
+							array('backend_action', 'groups_set_thumbnail'),
+							array('id', $item->id)
+						)));
+				$params['item_download'] = URL::make_hyperlink(
+					$this->get_language_constant('download'),
+					self::get_raw_image($item),
+					null, null, '_blank'
+				);
 			}
 
 			// set template parameters and render it
