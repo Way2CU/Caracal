@@ -19,7 +19,7 @@
 				name="content"
 				class="multi-language"
 				data-toolbar="all"
-				style="width: 620px; height: 150px;"
+				style="width: 610px; height: 150px;"
 				/>
 		</label>
 		<label class="checkbox">
