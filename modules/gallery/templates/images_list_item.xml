@@ -11,6 +11,7 @@
 			<cms:if condition="!$params['default']">
 				<cms:var param="item_set_default"/>
 			</cms:if>
+			<cms:var param="item_download"/>
 		</div>
 
 		<div
