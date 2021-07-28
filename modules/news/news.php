@@ -443,7 +443,7 @@ class news extends Module {
 									)
 					);
 
-		$template->register_tag_handler('_news_list', $this, 'tag_NewsList');
+		$template->register_tag_handler('cms:news_list', $this, 'tag_NewsList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
