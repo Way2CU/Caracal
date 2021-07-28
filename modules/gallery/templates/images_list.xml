@@ -40,29 +40,29 @@
 				show_invisible="1"
 				group_id="isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0"
 				cms:eval="group_id"
-			/>
+				/>
 		</div>
 		<script type="text/javascript">
-			$('#gallery_images div.list_content').children('div.list_item').each(function() {
+			var images = document.querySelectorAll('#gallery_images div.list_item');
+			for	(var i=0; count=images.length; i<count; i++) {
+				var image = images[i];
 
-				// on click display options
-				$(this).one('click', function() {
-					$(this).children('div.options').css({display: 'block', opacity: 0}).animate({opacity: 1}, 300);
+				image.addEventListener('click', function(event) {
+					if (event.currentTarget.dataset['menu_visible'])
+						return;
+
+					var menu = event.currentTarget.querySelector('div.options');
+					menu.style.display = 'block';
+					event.currentTarget.dataset['menu_visible'] = 1;
+					event.preventDefault();
 				});
 
-				// on mouse out hide options
-				$(this).mouseleave(function () {
-					$(this).one('click', function() {
-						$(this).children('div.options').css({display: 'block', opacity: 0}).animate({opacity: 1}, 300);
-					});
-
-					$(this).children('div.options').animate(
-						{opacity: 0}, 300,
-						function () {
-							$(this).css({display: 'none'});
-						});
+				image.addEventListener('mouseleave', function(event) {
+					var menu = event.currentTarget.querySelector('div.options');
+					menu.style.display = 'none';
+					event.currentTarget.dataset['menu_visible'] = 0;
 				});
-			});
+			}
 		</script>
 	</div>
 </document>
