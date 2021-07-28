@@ -47,7 +47,7 @@
 
 	<script type="text/javascript">
 		var images = document.querySelectorAll('#gallery_images div.list_item');
-		for	(var i=0; count=images.length; i<count; i++) {
+		for	(var i=0; count=images.length; i&lt;count; i++) {
 			var image = images[i];
 			var menu = image.querySelector('div.options');
 
