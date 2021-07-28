@@ -3,18 +3,18 @@
 <document>
 	<tr>
 		<td>
-			<cms:var name="$params['title'][$language]"/>
+			<cms:var param="title" multilanguage="yes"/>
 		</td>
 		<td>
 			<small>
-				<cms:var name="$params['time']"/>
+				<cms:var param="time"/>
 				<br/>
-				<cms:var name="$params['date']"/>
+				<cms:var param="date"/>
 			</small>
 		</td>
 		<td>
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_delete']"/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 		</td>
 	</tr>
 </document>
