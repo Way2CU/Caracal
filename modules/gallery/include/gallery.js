@@ -388,7 +388,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 
 		// trigger reflow and enable transitions
 		incoming.forEach(function(image) {
-			window.getComputedStyle(image).opacity;  // force restyle
+			void(image.offsetHeight);  // force reflow
 			image.classList.remove('transit');
 		});
 	};
