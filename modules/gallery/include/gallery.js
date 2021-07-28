@@ -365,7 +365,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 
 		// disable transitions for a moment
 		incoming.forEach(function(image) {
-			image.classList.remove('transit');
+			image.classList.add('transit');
 		});
 
 		// position elements
