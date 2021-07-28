@@ -8,10 +8,10 @@
 	</nav>
 
 	<!-- Header -->
-	<table class="list" data-height="300">
+	<table class="list" data-height="400">
 		<thead>
 			<tr>
-				<td style="width: 200px"><cms:text constant="column_title" module="news"/></td>
+				<td style="width: 400px"><cms:text constant="column_title" module="news"/></td>
 				<td><cms:text constant="column_time" module="news"/></td>
 				<td><cms:text constant="column_options"/></td>
 			</tr>

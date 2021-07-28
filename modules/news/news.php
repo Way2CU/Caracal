@@ -297,7 +297,7 @@ class news extends Module {
 				$this->path.'images/manage_news.svg',
 				window_Open( // on click open window
 							'news',
-							520,
+							700,
 							$this->get_language_constant('title_manage_news'),
 							true, true,
 							backend_UrlMake($this->name, 'news')
