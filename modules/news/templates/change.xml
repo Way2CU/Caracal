@@ -14,7 +14,7 @@
 				name="content"
 				class="multi-language"
 				data-toolbar="all"
-				style="width: 610px; height: 150px;"
+				style="height: 200px;"
 				/>
 			<cms:language_data param="content"/>
 		</label>
