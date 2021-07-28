@@ -366,7 +366,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		// disable transitions for a moment
 		incoming.forEach(function(image) {
 			image.classList.remove('transit');
-			image.offsetHeight;
+			void(image.offsetHeight);
 		});
 
 		// position elements
@@ -390,7 +390,7 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		// trigger reflow and enable transitions
 		incoming.forEach(function(image) {
 			image.classList.remove('transit');
-			image.offsetHeight;
+			void(image.offsetHeight);
 		});
 	};
 
