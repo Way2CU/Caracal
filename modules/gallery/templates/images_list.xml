@@ -42,27 +42,28 @@
 				cms:eval="group_id"
 				/>
 		</div>
-		<script type="text/javascript">
-			var images = document.querySelectorAll('#gallery_images div.list_item');
-			for	(var i=0; count=images.length; i<count; i++) {
-				var image = images[i];
-
-				image.addEventListener('click', function(event) {
-					if (event.currentTarget.dataset['menu_visible'])
-						return;
-
-					var menu = event.currentTarget.querySelector('div.options');
-					menu.style.display = 'block';
-					event.currentTarget.dataset['menu_visible'] = 1;
-					event.preventDefault();
-				});
-
-				image.addEventListener('mouseleave', function(event) {
-					var menu = event.currentTarget.querySelector('div.options');
-					menu.style.display = 'none';
-					event.currentTarget.dataset['menu_visible'] = 0;
-				});
-			}
-		</script>
 	</div>
+
+	<script type="text/javascript">
+		var images = document.querySelectorAll('#gallery_images div.list_item');
+		for	(var i=0; count=images.length; i<count; i++) {
+			var image = images[i];
+
+			image.addEventListener('click', function(event) {
+				if (event.currentTarget.dataset['menu_visible'])
+					return;
+
+				var menu = event.currentTarget.querySelector('div.options');
+				menu.style.display = 'block';
+				event.currentTarget.dataset['menu_visible'] = 1;
+				event.preventDefault();
+			});
+
+			image.addEventListener('mouseleave', function(event) {
+				var menu = event.currentTarget.querySelector('div.options');
+				menu.style.display = 'none';
+				event.currentTarget.dataset['menu_visible'] = 0;
+			});
+		}
+	</script>
 </document>
