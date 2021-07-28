@@ -283,7 +283,7 @@ class news extends Module {
 							$this->path.'images/add_news.svg',
 							window_Open( // on click open window
 										'news_add',
-										590,
+										650,
 										$this->get_language_constant('title_news_add'),
 										true, true,
 										backend_UrlMake($this->name, 'news_add')
@@ -428,7 +428,7 @@ class news extends Module {
 										$this->get_language_constant('add_news'),
 										window_Open( // on click open window
 											'news_add',
-											590,
+											650,
 											$this->get_language_constant('title_news_add'),
 											true, true,
 											backend_UrlMake($this->name, 'news_add')
@@ -1166,7 +1166,7 @@ class news extends Module {
 													$this->get_language_constant('change'),
 													window_Open(
 														'news_change', 	// window id
-														590,			// width
+														650,			// width
 														$this->get_language_constant('title_news_change'), // title
 														false, false,
 														URL::make_query(
