@@ -54,12 +54,13 @@
 			menu.style.display = 'none';
 
 			image.addEventListener('click', function(event) {
-				if (event.currentTarget.dataset['menu_visible'])
+				var item = event.currentTarget;
+				if (item.dataset['menu_visible'] &amp;&amp; item.dataset['menu_visible'] == 1)
 					return;
 
-				var menu = event.currentTarget.querySelector('div.options');
+				var menu = item.querySelector('div.options');
 				menu.style.display = 'block';
-				event.currentTarget.dataset['menu_visible'] = 1;
+				item.dataset['menu_visible'] = 1;
 				event.preventDefault();
 			});
 
