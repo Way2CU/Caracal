@@ -35,7 +35,6 @@ div.list_content.thumbnails div.list_item:hover {
 }
 
 div.list_content.thumbnails div.list_item div.options {
-	display: none;
 	width: 100%;
 	height: 100%;
 
