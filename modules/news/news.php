@@ -258,7 +258,10 @@ class news extends Module {
 	 */
 	public function add_tags() {
 		$head_tag = head_tag::get_instance();
-		$head_tag->add_tag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
+		$head_tag->add_tag('script', array(
+			'src'  => URL::from_file_path($this->path.'include/news_system.js'),
+			'type' => 'text/javascript'
+		));
 		$this->createFeedLinks();
 	}
 
@@ -280,7 +283,7 @@ class news extends Module {
 							$this->path.'images/add_news.svg',
 							window_Open( // on click open window
 										'news_add',
-										490,
+										590,
 										$this->get_language_constant('title_news_add'),
 										true, true,
 										backend_UrlMake($this->name, 'news_add')
@@ -425,7 +428,7 @@ class news extends Module {
 										$this->get_language_constant('add_news'),
 										window_Open( // on click open window
 											'news_add',
-											490,
+											590,
 											$this->get_language_constant('title_news_add'),
 											true, true,
 											backend_UrlMake($this->name, 'news_add')
@@ -470,7 +473,8 @@ class news extends Module {
 	 * Change news
 	 */
 	private function changeNews() {
-		if (!isset($_REQUEST['id'])) return;
+		if (!isset($_REQUEST['id']))
+			return;
 
 		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::get_instance();
@@ -1162,7 +1166,7 @@ class news extends Module {
 													$this->get_language_constant('change'),
 													window_Open(
 														'news_change', 	// window id
-														490,			// width
+														590,			// width
 														$this->get_language_constant('title_news_change'), // title
 														false, false,
 														URL::make_query(
