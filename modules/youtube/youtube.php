@@ -27,6 +27,8 @@ class youtube extends Module {
 		// connect events
 		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
+		Events::connect('backend', 'sprite-include', 'include_sprite', $this);
+		Events::connect('backend', 'add-tags', 'add_backend_tags', $this);
 	}
 
 	/**
@@ -246,6 +248,18 @@ class youtube extends Module {
 	}
 
 	/**
+	 * Include tags needed for backend.
+	 */
+	public function add_backend_tags() {
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag('script',
+				array(
+					'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
+					'type' => 'text/javascript'
+				));
+	}
+
+	/**
 	 * Add items to backend menu.
 	 */
 	public function add_menu_items() {
@@ -285,6 +299,13 @@ class youtube extends Module {
 						));
 
 		$backend->addMenu($this->name, $youtube_menu);
+	}
+
+	/**
+	 * Include sprite image for use in backend.
+	 */
+	public function include_sprite() {
+		print file_get_contents($this->path.'images/sprite.svg');
 	}
 
 	/**
