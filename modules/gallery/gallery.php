@@ -1295,13 +1295,7 @@ class gallery extends Module {
 		}
 
 		// get items from the database
-		$items = $manager->get_items(
-							$manager->get_field_names(),
-							$conditions,
-							$order_by,
-							$order_asc,
-							$limit
-						);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// load template
 		$template = $this->load_template($tag_params, 'images_list_item.xml');
@@ -1329,12 +1323,7 @@ class gallery extends Module {
 			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
 
 			// generate sprite
-			$sprite_image = $this->create_sprite_image(
-					$image_ids,
-					$image_size,
-					$image_constraint,
-					$image_crop
-				);
+			$sprite_image = $this->create_sprite_image($image_ids, $image_size, $image_constraint, $image_crop);
 		}
 
 		// render template for each image
@@ -2874,6 +2863,10 @@ class gallery extends Module {
 		if (!is_null($save_quality))
 			$save_function($thumbnail, $target_file, $save_quality); else
 			$save_function($thumbnail, $target_file);
+
+		// free up memory
+		imagedestroy($img_source);
+		imagedestroy($thumbnail);
 
 		return $target_file;
 	}
