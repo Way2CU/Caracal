@@ -124,6 +124,8 @@ div.backend-dialog div.thumbnail div.image_holder {
 
 	border: 1px solid #EBEBEB;
 	background-color: white;
+	background-position: center center;
+	background-repeat: no-repeat;
 
 	font-size: 0px;
 	text-align: center;
