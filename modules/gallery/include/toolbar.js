@@ -129,13 +129,10 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 			// configure elements
 			container.classList.add('image_holder');
 
-			container.style.backgroundImage = 'url(' + image_data.thumbnail + ');';
-			if (current_language in image_data.title) {
-				label.innerHTML = image_data.title[current_language];
-
-			} else {
+			container.style.backgroundImage = 'url(' + image_data.thumbnail.toString() + ')';
+			if (current_language in image_data.title && image_data.title != '')
+				label.innerHTML = image_data.title[current_language]; else
 				label.innerHTML = image_data.filename;
-			}
 
 			label.classList.add('title');
 
