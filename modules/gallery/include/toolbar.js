@@ -124,19 +124,16 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 			// create interface elements
 			var item = document.createElement('div');
 			var container = document.createElement('div');
-			var image = document.createElement('img');
 			var label = document.createElement('span');
 
 			// configure elements
 			container.classList.add('image_holder');
 
-			image.src = image_data.thumbnail;
+			container.style.backgroundImage = 'url(' + image_data.thumbnail + ');';
 			if (current_language in image_data.title) {
-				image.alt = image_data.title[current_language];
 				label.innerHTML = image_data.title[current_language];
 
 			} else {
-				image.alt = image_data.filename;
 				label.innerHTML = image_data.filename;
 			}
 
@@ -150,7 +147,6 @@ Caracal.Gallery.Toolbar = function(toolbar) {
 			item.addEventListener('click', self.handler.item_click);
 
 			// pack elements
-			container.append(image);
 			item.append(container);
 			item.append(label);
 			list.append(item);
