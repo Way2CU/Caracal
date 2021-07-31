@@ -926,7 +926,7 @@ class gallery extends Module {
 									),
 					);
 
-		$template->register_tag_handler('_container_list', $this, 'tag_ContainerList');
+		$template->register_tag_handler('cms:container_list', $this, 'tag_ContainerList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();

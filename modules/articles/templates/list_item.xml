@@ -3,17 +3,18 @@
 <document>
 	<tr>
 		<td>
-			<cms:var name="$params['title'][$language]"/>
+			<cms:var param="title" multilanguage="yes"/>
 		</td>
 		<td>
-			<cms:var name="$params['author']"/>
+			<cms:var param="author"/>
 		</td>
 		<td>
 			<cms:var name="round($params['rating'], 1)"/>
 		</td>
+
 		<td class="options">
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_delete']"/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
 		</td>
 	</tr>
 </document>
