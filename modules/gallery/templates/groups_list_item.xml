@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px;">
+	<tr>
+		<td>
 			<cms:var name="$params['name'][$language]"/>
-		</span>
+		</td>
 
-		<span class="column">
+		<td class="options">
 			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

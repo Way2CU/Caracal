@@ -7,18 +7,19 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 250px;">
+	<table class="list" data-height="300">
+		<thead>
+			<td style="width: 250px">
 				<cms:text constant="column_group_name" module="gallery"/>
-			</span>
-			<span class="column">
+			</td>
+			<td class="options">
 				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
+			</td>
+		</thead>
+
+		<tbody>
 			<cms:group_list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 
 </document>
