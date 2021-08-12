@@ -163,6 +163,7 @@ class ShopTransactionsHandler {
 		$params['phone'] = $buyer->phone;
 
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->parent);
 
 		// register tag handler
 		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
@@ -359,7 +360,7 @@ class ShopTransactionsHandler {
 							'item_details'		=> URL::make_hyperlink(
 													$this->parent->get_language_constant('details'),
 													window_Open(
-														$window, 810, $title, true, false,
+														$window, 825, $title, true, false,
 														URL::make_query(
 															'backend_module',
 															'transfer_control',
