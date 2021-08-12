@@ -33,16 +33,19 @@ div.window table.list tr.with_details:hover td small.details {
 
 div.window table.list tr.with_details td small.details span.property {
 	display: inline-block;
-	padding-left: 4px;
 	margin-right: 3px;
+	padding-left: 4px;
 
 	border: 1px solid rgb(200, 200, 200);
 	border-radius: 4px;
 	background-color: rgb(240, 240, 240);
 }
+
 html[dir=rtl] div.window table.list tr.with_details td small.details span.property {
 	margin-right: 0;
 	margin-left: 3px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 div.window table.list tr.with_details td small.details span.property span.value {
@@ -54,3 +57,9 @@ div.window table.list tr.with_details td small.details span.property span.value 
 	background-color: rgb(200, 200, 200);
 	font-weight: bold;
 }
+
+html[dir=rtl] div.window table.list tr.with_details td small.details span.property span.value {
+	margin-left: 0px;
+	margin-right: 4px;
+}
+
