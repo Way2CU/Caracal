@@ -1,270 +1,270 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="box left notebook" style="width: 300px;">
-		<!-- General tab -->
-		<div class="page" data-title="tab_general" cms:constant="data-title">
-			<label>
-				<span><cms:text constant="label_full_name" module="shop"/></span>
-				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-				<input type="hidden" name="uid" value="$params['uid']" cms:eval="value"/>
-				<input
-					type="text"
-					value="$params['first_name'].' '.$params['last_name']"
-					cms:eval="value"
-					readonly="readonly"
-					style="width: 200px;"
-					/>
-			</label>
-			<label>
-				<span><cms:text constant="label_email" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['email']"
-					readonly="readonly"
-					style="width: 200px;"
-					class="code ltr"
-					cms:eval="value"
-					/>
-			</label>
-			<label>
-				<span><cms:text constant="label_phone" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['phone']"
-					readonly="readonly"
-					style="width: 200px;"
-					class="code ltr"
-					cms:eval="value"
-					/>
-			</label>
+	<form>
+		<div class="box horizontal notebook" style="width: 300px;">
+			<!-- General tab -->
+			<div class="page" data-title="tab_general" cms:constant="data-title">
+				<table>
+					<tr>
+						<td><cms:text constant="label_full_name" module="shop"/></td>
+						<td>
+							<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+							<input type="hidden" name="uid" value="$params['uid']" cms:eval="value"/>
+							<input
+								type="text"
+								value="$params['first_name'].' '.$params['last_name']"
+								cms:eval="value"
+								readonly="readonly"
+								style="width: 200px;"
+								/>
+						</td>
+					</tr>
+					<tr>
+						<td><cms:text constant="label_email" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								value="$params['email']"
+								readonly="readonly"
+								style="width: 200px;"
+								class="code ltr"
+								cms:eval="value"
+								/>
+						</td>
+					</tr>
+					<tr>
+						<td><cms:text constant="label_phone_number" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								value="$params['phone']"
+								readonly="readonly"
+								style="width: 200px;"
+								class="code ltr"
+								cms:eval="value"
+								/>
+						</td>
+					</tr>
 
-			<hr/>
+					<tr><td colspan="2"><hr/></td></tr>
 
-			<table>
-				<tr>
-					<td><cms:text constant="label_handling" module="shop"/></td>
-					<td>
-						<input
-							type="text"
-							name="handling"
-							value="$params['handling']"
-							cms:eval="value"
-							readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
-							style="width: 100px"
-							cms:optional="readonly"
-							/>
-					</td>
-				</tr>
-				<tr>
-					<td><cms:text constant="label_shipping" module="shop"/></td>
-					<td>
-						<input
-							type="text"
-							value="$params['shipping']"
-							cms:eval="value"
-							readonly="readonly"
-							style="width: 100px"
-							/>
-					</td>
-				</tr>
-				<tr>
-					<td><cms:text constant="label_total" module="shop"/></td>
-					<td>
-						<input
-							type="text"
-							name="total"
-							value="$params['total']"
-							cms:eval="value"
-							readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
-							style="width: 100px"
-							cms:tooltip="tooltip_total_money"
-							cms:optional="readonly"
-							/>
-					</td>
-					<td>
-						<!-- Show save button on delayed payment transactions -->
-						<cms:if condition="$params['type'] == TransactionType::DELAYED">
+					<tr>
+						<td><cms:text constant="label_handling" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								name="handling"
+								value="$params['handling']"
+								cms:eval="value"
+								readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
+								style="width: 100px"
+								cms:optional="readonly"
+								/>
+						</td>
+					</tr>
+					<tr>
+						<td><cms:text constant="label_shipping" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								value="$params['shipping']"
+								cms:eval="value"
+								readonly="readonly"
+								style="width: 100px"
+								/>
+						</td>
+					</tr>
+					<tr>
+						<td><cms:text constant="label_total" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								name="total"
+								value="$params['total']"
+								cms:eval="value"
+								readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
+								style="width: 100px"
+								cms:tooltip="tooltip_total_money"
+								cms:optional="readonly"
+								/>
+						</td>
+						<td>
+							<!-- Show save button on delayed payment transactions -->
+							<cms:if condition="$params['type'] == TransactionType::DELAYED">
+								<label>
+									<button
+										type="button"
+										onclick="Caracal.Shop.update_total_amount(this);"
+										>
+										<cms:text constant="save"/>
+									</button>
+								</label>
+							</cms:if>
+						</td>
+					</tr>
+
+					<tr><td colspan="2"><hr/></td></tr>
+
+					<tr>
+						<td><cms:text constant="label_status" module="shop"/></td>
+						<td>
+							<select name="status" style="width: 70%">
+								<cms:transaction_status
+									active="$params['status']"
+									transaction="$params['id']"
+									cms:eval="active,transaction"
+									/>
+							</select>
+
+							<button
+								type="button"
+								onclick="javascript: Caracal.Shop.update_transaction_status(this);"
+								>
+								<cms:text constant="save"/>
+							</button>
+						</td>
+					</tr>
+
+					<tr><td colspan="2"><hr/></td></tr>
+
+					<tr>
+						<td><cms:text constant="label_timestamp" module="shop"/></td>
+						<td>
+							<input
+								type="text"
+								value="$params['timestamp']"
+								cms:eval="value"
+								readonly="readonly"
+								style="width: 200px;"
+								/>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Shipping tab -->
+			<div class="page" data-title="tab_shipping" cms:constant="data-title">
+				<table>
+					<tr>
+						<td colspan="2">
 							<label>
-								<button
-									type="button"
-									onclick="Caracal.Shop.update_total_amount(this);"
-									>
-									<cms:text constant="save"/>
-								</button>
+								<span><cms:text constant="label_shipping_recipient" module="shop"/></span>
+								<textarea readonly="readonly" style="width: 100%;" rows="4">
+									<cms:var param="address_name"/><cms:raw text="&amp;#13;"/>
+									<cms:var param="address_phone"/><cms:raw text="&amp;#13;"/>
+									<cms:var param="address_email"/><cms:raw text="&amp;#13;"/>
+									<cms:var param="address_access_code"/>
+								</textarea>
 							</label>
-						</cms:if>
+						</td>
+					</tr>
+					<tr><td colspan="2"><hr/></td></tr>
+					<tr>
+						<td colspan="2">
+							<label>
+								<span><cms:text constant="label_shipping_address" module="shop"/></span>
+								<textarea readonly="readonly" style="width: 100%;" rows="3">
+									<cms:var name="$params['full_address']"/>
+								</textarea>
+							</label>
+						</td>
+					</tr>
+					<tr><td colspan="2"><hr/></td></tr>
+					<tr>
+						<td>
+							<label>
+								<span><cms:text constant="label_delivery_method" module="shop"/></span>
+								<input
+									type="text"
+									value="$params['delivery_method']"
+									cms:eval="value"
+									readonly="readonly"
+									style="width: 150px;"
+									/>
+							</label>
+						</td>
+						<td>
+							<label>
+								<span><cms:text constant="label_delivery_type" module="shop"/></span>
+								<input
+									type="text"
+									value="$params['delivery_type']"
+									cms:eval="value"
+									readonly="readonly"
+									style="width: 150px;"
+									/>
+							</label>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="2">
+							<label>
+								<span><cms:text constant="label_remark" module="shop"/></span>
+								<textarea readonly="readonly" style="width: 100%;" rows="3">
+									<cms:var name="$params['remark']"/>
+								</textarea>
+							</label>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Promotions tab -->
+			<div class="page" data-title="tab_promotions" cms:constant="data-title">
+				<table class="list with-border" data-height="470">
+					<thead>
+						<td><cms:text constant="column_promotion_discounts" module="shop"/></td>
+					</thead>
+
+					<tbody>
+						<cms:applied_promotions
+							transaction="$_REQUEST['id']"
+							template="transaction_promotion_list_item.xml"
+							local="1"
+							cms:eval="transaction"
+							/>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="box horizontal-ending" style="width: 475px;">
+			<table class="list with-border" data-height="470">
+				<thead>
+					<td style="width: 220px;">
+						<cms:text constant="column_name" module="shop"/>
 					</td>
-				</tr>
+					<td style="width: 70px;">
+						<cms:text constant="column_count" module="shop"/>
+					</td>
+					<td style="width: 70px;">
+						<cms:text constant="column_price" module="shop"/>
+					</td>
+					<td style="width: 70px;">
+						<cms:text constant="column_total" module="shop"/>
+					</td>
+				</thead>
+
+				<tbody>
+					<cms:item_list
+							transaction="$params['id']"
+							cms:eval="transaction"
+							/>
+				</tbody>
 			</table>
+		</div>
 
-			<hr/>
-
-			<label>
-				<span><cms:text constant="label_status" module="shop"/></span>
-				<select name="status">
-					<cms:transaction_status
-						active="$params['status']"
-						transaction="$params['id']"
-						cms:eval="active,transaction"
-						/>
-				</select>
-				<button
+		<div class="button_bar">
+			<button
 					type="button"
-					onclick="javascript: Caracal.Shop.update_transaction_status(this);"
+					onclick="javascript:Caracal.Shop.print_transaction(this);"
+					data-print-url="$params['print_url']"
+					cms:eval="data-print-url"
 					>
-					<cms:text constant="save"/>
-				</button>
-			</label>
-
-			<hr/>
-
-			<label>
-				<span><cms:text constant="label_timestamp" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['timestamp']"
-					cms:eval="value"
-					readonly="readonly"
-					style="width: 200px;"
-					/>
-			</label>
+				<cms:text constant="print"/>
+			</button>
 		</div>
-
-		<!-- Shipping tab -->
-		<div class="page" data-title="tab_shipping" cms:constant="data-title">
-			<label>
-				<span><cms:text constant="label_shipping_recipient" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['address_name']"
-					readonly="readonly"
-					style="width: 270px;"
-					cms:eval="value"
-					/>
-			</label>
-			<div>
-				<label class="horizontal">
-					<span><cms:text constant="label_phone_number" module="shop"/></span>
-					<input
-						type="text"
-						value="$params['address_phone']"
-						readonly="readonly"
-						style="width: 200px;"
-						class="code ltr"
-						cms:eval="value"
-						/>
-				</label>
-				<label class="horizontal">
-					<span><cms:text constant="label_email" module="shop"/></span>
-					<input
-						type="text"
-						value="$params['address_email']"
-						readonly="readonly"
-						style="width: 120px;"
-						class="code ltr"
-						cms:eval="value"
-						/>
-				</label>
-				<label class="horizontal">
-					<span><cms:text constant="label_access_code" module="shop"/></span>
-					<input
-						type="text"
-						value="$params['address_access_code']"
-						readonly="readonly"
-						style="width: 115px;"
-						class="code ltr"
-						cms:eval="value"
-						/>
-				</label>
-			</div>
-			<label>
-				<span><cms:text constant="label_shipping_address" module="shop"/></span>
-				<textarea readonly="readonly" style="width: 270px; height: calc(3em + 10px);">
-					<cms:var name="$params['full_address']"/>
-				</textarea>
-			</label>
-			<label>
-				<span><cms:text constant="label_delivery_method" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['delivery_method']"
-					cms:eval="value"
-					readonly="readonly"
-					style="width: 270px;"
-					/>
-			</label>
-			<label>
-				<span><cms:text constant="label_delivery_type" module="shop"/></span>
-				<input
-					type="text"
-					value="$params['delivery_type']"
-					cms:eval="value"
-					readonly="readonly"
-					style="width: 270px;"
-					/>
-			</label>
-			<label>
-				<span><cms:text constant="label_remark" module="shop"/></span>
-				<textarea readonly="readonly" style="width: 270px; height: 70px;">
-					<cms:var name="$params['remark']"/>
-				</textarea>
-			</label>
-		</div>
-
-		<!-- Promotions tab -->
-		<div class="page" data-title="tab_promotions" cms:constant="data-title">
-			<div class="scrollable_list">
-				<div class="list_header">
-					<span class="column">
-						<cms:text constant="column_promotion_discounts" module="shop"/>
-					</span>
-				</div>
-
-				<div class="list_content" style="height: 400px">
-					<cms:applied_promotions
-						transaction="$_REQUEST['id']"
-						template="transaction_promotion_list_item.xml"
-						local="1"
-						cms:eval="transaction"
-						/>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="scrollable_list box right" style="width: 475px;">
-		<div class="list_header">
-			<span class="column" style="width: 220px;">
-				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_count" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_price" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_total" module="shop"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 470px">
-			<cms:item_list
-				transaction="$params['id']"
-				cms:eval="transaction"
-				/>
-		</div>
-	</div>
-	<div style="clear: both;"/>
-
-	<div class="button_bar">
-		<button
-			type="button"
-			onclick="javascript:Caracal.Shop.print_transaction(this);"
-			data-print-url="$params['print_url']"
-			cms:eval="data-print-url"
-			>
-			<cms:text constant="print"/>
-		</button>
-	</div>
+	</form>
 </document>

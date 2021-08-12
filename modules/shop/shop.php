@@ -945,7 +945,7 @@ class shop extends Module {
 			$this->path.'images/transactions.svg',
 			window_Open( // on click open window
 				'shop_transactions',
-				800,
+				900,
 				$this->get_language_constant('title_transactions'),
 				true, true,
 				backend_UrlMake($this->name, 'transactions')

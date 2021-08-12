@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 100px;">
+	<tr>
+		<td>
 			<cms:var param="type_value"/>
-		</span>
-		<span class="column" style="width: 170px;">
+		</td>
+		<td>
 			<cms:var param="uid"/>
-		</span>
-		<span class="column" style="width: 190px;">
+		</td>
+		<td>
 			<cms:var param="buyer_name"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<cms:var param="total"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<cms:var param="status_value"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var param="item_details"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

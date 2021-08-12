@@ -19,87 +19,38 @@ div.window label.property-selector.ml_array ~ div.property-container label.prope
 	display: block;
 }
 
-
 /**
- * Expandable list item.
+ * Transaction item details
  */
-div.window div.list_item.with_details input.trigger {
-	display: none;
+div.window table.list tr.with_details td small.details {
+	display: block;
+	opacity: 0.7;
 }
 
-div.window div.list_item.with_details label.trigger {
+div.window table.list tr.with_details:hover td small.details {
+	opacity: 1;
+}
+
+div.window table.list tr.with_details td small.details span.property {
 	display: inline-block;
-	float: left;
+	padding-left: 4px;
+	margin-right: 3px;
+
+	border: 1px solid rgb(200, 200, 200);
+	border-radius: 4px;
+	background-color: rgb(240, 240, 240);
+}
+html[dir=rtl] div.window table.list tr.with_details td small.details span.property {
+	margin-right: 0;
+	margin-left: 3px;
 }
 
-html[dir=rtl] div.window div.list_item.with_details label.trigger {
-	float: right;
-}
-
-div.window div.list_item.with_details input.trigger + label.trigger:before,
-div.window div.list_item.with_details input.trigger + span label.trigger:before {
+div.window table.list tr.with_details td small.details span.property span.value {
 	display: inline-block;
-	content: '';
-	width: 0;
-	height: 0;
-	line-height: 0;
-	border: 0.6em solid transparent;
-	border-left-color: #333333;
+	padding: 2px 4px;
+	margin-left: 4px;
 
-	transition: transform 0.3s;
-	transform-origin: 20% 50%;
-}
-
-html[dir=rtl] div.window div.list_item.with_details input.trigger + label.trigger:before,
-html[dir=rtl] div.window div.list_item.with_details input.trigger + span label.trigger:before {
-	border-color: transparent;
-	border-right-color: #333333;
-	transform-origin: 80% 50%;
-}
-
-div.window div.list_item.with_details input.trigger:checked ~ label.trigger:before,
-div.window div.list_item.with_details input.trigger:checked ~ span label.trigger:before {
-	transform: rotate(90deg);
-}
-
-html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ label.trigger:before,
-html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ span label.trigger:before {
-	transform: rotate(-90deg);
-}
-
-div.window div.list_item.with_details div.details,
-div.window div.list_item.with_details small.details {
-	display: block;
-	max-height: 0;
-	padding: 0;
-	overflow: hidden;
-	transition: max-height 0.3s;
-}
-
-div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ div.details:nth-of-type(1) {
-	display: block;
-	max-height: initial;
-}
-
-div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ small.details:nth-of-type(1) {
-	display: block;
-	max-height: 100px;
-}
-
-div.window div.list_item.with_details small.details span.property {
-	display: block;
-}
-
-div.window div.list_item.with_details small.details span.property:first-of-type {
-	padding-top: 5px;
-}
-
-div.window div.list_item.with_details small.details span.value {
-	display: inline-block;
-	padding-left: 10px;
-}
-
-html[dir=rtl] div.window div.list_item.with_details small.details span.value {
-	padding-left: 0;
-	padding-right: 10px;
+	border-radius: 0px 4px 4px 0px;
+	background-color: rgb(200, 200, 200);
+	font-weight: bold;
 }

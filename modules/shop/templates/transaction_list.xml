@@ -17,32 +17,33 @@
 	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 100px;">
+	<table class="list" data-height="400">
+		<thead>
+			<td style="width: 100px;">
 				<cms:text constant="column_type" module="shop"/>
-			</span>
-			<span class="column" style="width: 170px;">
+			</td>
+			<td style="width: 240px;">
 				<cms:text constant="column_uid" module="shop"/>
-			</span>
-			<span class="column" style="width: 190px;">
+			</td>
+			<td style="width: 190px;">
 				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 100px;">
+			</td>
+			<td style="width: 100px;">
 				<cms:text constant="column_total" module="shop"/>
-			</span>
-			<span class="column" style="width: 100px;">
+			</td>
+			<td style="width: 100px;">
 				<cms:text constant="column_status" module="shop"/>
-			</span>
-			<span class="column">
+			</td>
+			<td class="options">
 				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
+			</td>
+		</thead>
+
+		<tbody>
 			<cms:transaction_list
 				order_by="timestamp"
 				order_asc="0"
 				/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>
