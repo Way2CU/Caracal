@@ -26,8 +26,6 @@ class PayPal_Express extends PaymentMethod {
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		global $section;
-
 		parent::__construct($parent);
 
 		// register payment method
