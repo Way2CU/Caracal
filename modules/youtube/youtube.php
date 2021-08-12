@@ -935,7 +935,7 @@ class youtube extends Module {
 				foreach($membership_items as $item)
 					$item_list[] = $item->video;
 
-			// make sure nothing is selected if groupd doesn't contain any videos
+			// make sure nothing is selected if group doesn't contain any videos
 			if (count($item_list) == 0)
 				$item_list[] = -1;
 
