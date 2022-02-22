@@ -360,7 +360,7 @@ class Backend_UserManager {
 				$manager->change_password($data['username'], $source['password']);
 
 				// log user in if no validation is required
-				if ($this->parent->settings['require_verified'])
+				if (!$this->parent->settings['require_verified'])
 					Session::login(array(
 							'username' => $data['username'],
 							'password' => $source['password']
