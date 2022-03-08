@@ -666,7 +666,7 @@ class Backend_UserManager {
 			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
 
 			// start creating message
-			$result = true;
+			$mail_result = true;
 			foreach ($mailers as $mailer_name => $mailer) {
 				$mailer->start_message();
 				$mailer->set_subject($template['subject']);
@@ -677,7 +677,7 @@ class Backend_UserManager {
 				$mailer->set_variables($fields);
 
 				$send_result = $mailer->send();
-				$result &= $send_result;
+				$mail_result &= $send_result;
 
 				// report error with mailer in case it failed
 				if (!$send_result)
@@ -685,7 +685,7 @@ class Backend_UserManager {
 			}
 
 			// send email
-			$result['error'] = !$result;
+			$result['error'] = !$mail_result;
 
 			if (!$result['error'])
 				$result['message'] = $this->parent->get_language_constant('message_password_recovery_email_sent'); else
