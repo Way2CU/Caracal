@@ -288,7 +288,7 @@ $(function() {
 	Caracal.ContactForm.list = [];
 	Caracal.ContactForm.dialog = null;
 
-	$('form[data-dynamic]').each(function() {
+	$('form[data-dynamic=1]').each(function() {
 		var form = new Caracal.ContactForm.Form(this);
 		Caracal.ContactForm.list.push(form);
 	});
