@@ -2770,6 +2770,8 @@ class gallery extends Module {
 		$target_file .= $size.'_';
 		if (!is_null($crop_size))
 			$target_file .= 'crp'.$crop_size.'_';
+		if ($autorotate)
+			$target_file .= 'ar_';
 		$target_file .= 'cs'.$constraint.'_';
 		$target_file .= pathinfo($filename, PATHINFO_BASENAME);
 
