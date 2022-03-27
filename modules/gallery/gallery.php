@@ -2437,9 +2437,10 @@ class gallery extends Module {
 	 * @param integer $size
 	 * @param Thumbnail $constraint
 	 * @param integer $crop_size
+	 * @param boolean $autorotate
 	 * @return string
 	 */
-	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null, $autorotate=false) {
 		$result = '';
 		$conditions = array();
 
@@ -2467,7 +2468,13 @@ class gallery extends Module {
 			$gallery = gallery::get_instance();
 			$raw_file = $gallery->image_path.$item->filename;
 
-			$generated_file = $gallery->create_optimized_image($raw_file, $size, $constraint, $crop_size);
+			$generated_file = $gallery->create_optimized_image(
+					$raw_file,
+					$size,
+					$constraint,
+					$crop_size,
+					$autorotate
+				);
 			$result = URL::from_file_path($generated_file);
 
 		} else {
@@ -2754,9 +2761,10 @@ class gallery extends Module {
 	 * @param integer $size
 	 * @param integer $constraint
 	 * @param integer $crop_size
+	 * @param boolean $autorotate
 	 * @return string
 	 */
-	private function create_optimized_image($filename, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+	private function create_optimized_image($filename, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null, $autorotate=false) {
 		// generate file name
 		$target_file = $this->optimized_path;
 		$target_file .= $size.'_';
@@ -2805,6 +2813,21 @@ class gallery extends Module {
 		// we failed to load image, exit
 		if ($img_source === FALSE || is_null($img_source))
 			return null;
+
+		// rotate image if specified and possible
+		if ($autorotate) {
+			$angles = array(3 => 180, 6 => 270, 8 => 90);
+			$exif_data = exif_read_data($filename);
+
+			$orientation = 1;  // default orientation, plays no role
+			if ($exif_data && isset($exif_data['Orientation']))
+				$orientation = $exif_data['Orientation'];
+
+			$angle = array_key_exists($orientation, $angles) ? $angles[$orientation] : 0;
+
+			if ($angle)  // rotate only when needed
+				$img_source = imagerotate($img_source, $angle, 0);
+		}
 
 		// calculate width to height ratio
 		$source_width = imagesx($img_source);
