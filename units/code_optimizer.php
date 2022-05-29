@@ -331,9 +331,13 @@ class CodeOptimizer {
 		if (file_exists($style_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
 
-		if (!$include_styles)
-			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
+		if (!$include_styles) {
+			$cache_time = filemtime($style_cache);
+			print '<link type="text/css" rel="stylesheet" ';
+			print 'href="'._BASEURL.'/'.$style_cache.'?mt='.$cache_time.'"'.$integrity.'>';
+		} else {
 			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+		}
 	}
 
 	/**
@@ -377,7 +381,9 @@ class CodeOptimizer {
 		if (file_exists($script_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
 
-		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
+		$cache_time = filemtime($script_cache);
+		print '<script type="text/javascript" async ';
+		print 'src="'._BASEURL.'/'.$script_cache.'?mt='.$cache_time.'"'.$integrity.'></script>';
 	}
 }
 
