@@ -75,12 +75,8 @@ Caracal.ContactForm.Form = function(form_object) {
 		}
 
 		// create dialog
-		if (Caracal.ContactForm.dialog == null) {
+		if (Caracal.ContactForm.dialog == null)
 			Caracal.ContactForm.dialog = new Caracal.Dialog({clear_on_close: true});
-			Caracal.language.load_text('contact_form', 'dialog_title', function(constant, data) {
-				Caracal.ContactForm.dialog.set_title(data);
-			});
-		}
 
 		// create message container
 		self._message = $('<div>');
@@ -214,6 +210,7 @@ Caracal.ContactForm.Form = function(form_object) {
 		if (response) {
 			self._message.html(data.message);
 			Caracal.ContactForm.dialog.set_error(data.error);
+			Caracal.ContactForm.dialog.set_title(self._form[0].dataset['name']);
 			Caracal.ContactForm.dialog.set_content(self._message);
 			Caracal.ContactForm.dialog.open();
 		}
