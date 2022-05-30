@@ -8,7 +8,7 @@
 		data-dynamic="$params['use_ajax'] ? '1' : '0'"
 		data-name="$params['name'][$language]"
 		cms:optional="enctype"
-		cms:eval="action,data-dynamic"
+		cms:eval="action,data-dynamic,data-name"
 		>
 
 		<!-- Form ID -->
