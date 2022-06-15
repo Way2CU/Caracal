@@ -401,6 +401,8 @@ class Backend_UserManager {
 		// send notification email
 		if (!$result['error'] && !is_null($user_id))
 			$this->sendNotificationEmail($user_id);
+
+		return $user_id;
 	}
 
 	/**
