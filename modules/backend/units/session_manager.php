@@ -317,7 +317,7 @@ class SessionManager {
 		Session::change_type();
 
 		// kill session variables
-		UserManager::get_instance()->logout_user();
+		Backend_UserManager::get_instance()->logout_user();
 
 		// get message
 		$message = $this->parent->get_language_constant('message_logout_ok');
