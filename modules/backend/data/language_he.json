@@ -86,7 +86,7 @@
     "message_template_selection_saved": "בחירת תבנית מייל נשמרה!",
     "message_users_account_not_verified": "חשבון משתמש לא אושר!",
     "message_users_created_no_verify": "נוצא משתמש חגש",
-    "message_users_created_verify": "המשתמש נוצר בהצלחה! אנא בידקו את תיבת הדואל שלכם אליה נשלח מייל לאימות החשבון.",
+    "message_users_created_verify": "יש לנו את זה! הפרופיל שלך הוקם והכרטיס שלך נוצר. שלחנו לך הודעת דוא\"ל שמסבירה איך מתקדמים מפה. בהצלחה!",
     "message_users_data_saved": "מידע עבור המשתמש נשמר.",
     "message_users_delete": "אתה עומד להסיר את המשתמש, כל המידע המשוייך אליו ימחקהאם אתה בטוח?יאליו",
     "message_users_deleted": "המשתמש הוסר",
