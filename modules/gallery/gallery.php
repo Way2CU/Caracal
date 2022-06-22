@@ -2476,9 +2476,6 @@ class gallery extends Module {
 					$autorotate
 				);
 			$result = URL::from_file_path($generated_file);
-
-		} else {
-			trigger_error('Gallery: No suitable image identifier specified!', E_USER_NOTICE);
 		}
 
 		return $result;
