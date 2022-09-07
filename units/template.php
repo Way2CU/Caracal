@@ -153,7 +153,7 @@ class TemplateHandler {
 		// if file exits then load
 		if (!empty($this->file) && file_exists($this->file)) {
 			$data = @file_get_contents($this->file);
-			$this->engine = new XMLParser($data, $this->file);
+			$this->engine = new Core\XML\Parser($data, $this->file);
 			$this->engine->Parse();
 
 			$this->active = true;
@@ -203,7 +203,7 @@ class TemplateHandler {
 		if (isset($this->engine))
 			unset($this->engine);
 
-		$this->engine = new XMLParser($data, '');
+		$this->engine = new Core\XML\Parser($data, '');
 		$this->engine->Parse();
 		$this->active = true;
 	}

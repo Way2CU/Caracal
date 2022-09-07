@@ -98,7 +98,7 @@ function database_initialize($create_database) {
 
 		// populate tables
 		$raw_data = file_get_contents($xml_file);
-		$data = new XMLParser($raw_data, $xml_file);
+		$data = new Core\XML\Parser($raw_data, $xml_file);
 		$data->parse();
 
 		// go over XML file and insert data

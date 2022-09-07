@@ -70,7 +70,7 @@ class ModuleHandler {
 			$file = $data_path.'system_init.xml';
 
 			if (file_exists($file)) {
-				$xml = new XMLParser(@file_get_contents($file), $file);
+				$xml = new Core\XML\Parser(@file_get_contents($file), $file);
 				$xml->Parse();
 
 				foreach ($xml->document->tagChildren as $xml_tag)

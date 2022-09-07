@@ -255,7 +255,7 @@ class country_list extends Module {
 		$file_name = $this->path."data/country_list.xml";
 
 		$data = @file_get_contents($file_name);
-		$this->country_list = new XMLParser($data, $file_name);
+		$this->country_list = new Core\XML\Parser($data, $file_name);
 		$this->country_list->Parse();
 	}
 
@@ -266,7 +266,7 @@ class country_list extends Module {
 		$file_name = $this->path."data/state_list.xml";
 
 		$data = @file_get_contents($file_name);
-		$this->state_list = new XMLParser($data, $file_name);
+		$this->state_list = new Core\XML\Parser($data, $file_name);
 		$this->state_list->Parse();
 	}
 }

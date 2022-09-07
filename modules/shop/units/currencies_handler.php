@@ -39,7 +39,7 @@ class ShopCurrenciesHandler {
 			// get XML file
 			$data = file_get_contents($filename);
 
-			$xml = new XMLParser($data, $filename);
+			$xml = new Core\XML\Parser($data, $filename);
 			$xml->Parse();
 
 			$currencies = array();

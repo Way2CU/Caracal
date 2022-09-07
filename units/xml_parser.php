@@ -13,6 +13,8 @@
     For support, please visit http://www.criticaldevelopment.net/xml/
 */
 
+namespace Core\XML;
+
 /**
  * XML Parser Class (php5)
  *
@@ -23,7 +25,7 @@
  *
  * @version 1.3.0
  */
-class XMLParser
+class Parser
 {
     /**
      * The XML parser
