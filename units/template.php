@@ -885,7 +885,7 @@ class TemplateHandler {
 				$result .= $this->get_data_for_cache($child);
 
 		// show tag data
-		if (count($tag->tagData) > 0)
+		if (strlen($tag->tagData) > 0)
 			$result .= $tag->tagData;
 
 		// close tag
