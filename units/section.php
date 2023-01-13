@@ -54,9 +54,9 @@ final class SectionHandler {
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
 			// match different types of parameters
-			$match = preg_replace('|\{a:([\w\d-_]+)\}|iu', '(?<\1>.+)', $pattern);  // any characters, must be at the end
-			$match = preg_replace('|\{n:([\w\d-_]+)\}|iu', '(?<\1>-?[\d]+([\.,]\d+)?)', $match);  // numbers only
-			$match = preg_replace('|\{(s:)?([\w\d-_]+)\}|iu', '(?<\2>[\w\d-_\.]+)', $match);  // text ids only
+			$match = preg_replace('|\{a:([\w\d\-_]+)\}|iu', '(?<\1>.+)', $pattern);  // any characters, must be at the end
+			$match = preg_replace('|\{n:([\w\d\-_]+)\}|iu', '(?<\1>-?[\d]+([\.,]\d+)?)', $match);  // numbers only
+			$match = preg_replace('|\{(s:)?([\w\d\-_]+)\}|iu', '(?<\2>[\w\d\-_\.]+)', $match);  // text ids only
 
 			$match = self::PREFIX.$match;
 			if ($pattern == self::ROOT_KEY)
