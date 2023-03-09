@@ -40,7 +40,7 @@
 					<cms:guest>
 						<div class="page" id="sign_in">
 							<!-- Show other options if guest only is disabled -->
-							<cms:if condition="!$param['guest_only']">
+							<cms:if condition="!$params['guest_only']">
 								<h1><cms:text constant="title_sign_in" module="shop"/></h1>
 
 								<label class="radio">
@@ -212,7 +212,7 @@
 							</cms:if>
 
 							<!-- Hard code value for guest only selection -->
-							<cms:if condition="$param['guest_only']">
+							<cms:if condition="$params['guest_only']">
 								<input type="hidden" name="existing_user" value="guest"/>
 							</cms:if>
 
