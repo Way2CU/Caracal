@@ -7,6 +7,7 @@
 	"label_title": "Title:",
 	"label_description": "Description:",
 	"label_search": "Search:",
+	"label_only_empty": "Show only pages with missing data",
 	"message_saved": "Page title and description for selected URL has been saved.",
 	"title_manage": "Page descriptions",
 	"title_change": "Page description: Change",

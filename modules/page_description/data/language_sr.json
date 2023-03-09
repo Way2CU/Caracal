@@ -7,6 +7,7 @@
 	"label_title": "Title:",
 	"label_description": "Опис:",
 	"label_search": "Search:",
+	"label_only_empty": "Show only pages with missing data",
 	"message_saved": "Page title and description for selected URL has been saved.",
 	"title_manage": "Описи страница",
 	"title_change": "Описи страница: Измена",
