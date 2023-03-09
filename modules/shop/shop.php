@@ -3846,6 +3846,7 @@ class shop extends Module {
 					'show_captcha'         => $count > 3,
 					'terms_link'           => $buyer_terms_link,
 					'payment_method'       => isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null,
+					'guest_only'           => isset($tag_params['guest_only']) ? $tag_params['guest_only'] : false,
 					'qualified_promotions' => $this->get_qualified_promotion_count()
 				);
 

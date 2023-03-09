@@ -39,174 +39,182 @@
 					<!-- Sign In -->
 					<cms:guest>
 						<div class="page" id="sign_in">
-							<h1><cms:text constant="title_sign_in" module="shop"/></h1>
+							<!-- Show other options if guest only is disabled -->
+							<cms:if condition="!$param['guest_only']">
+								<h1><cms:text constant="title_sign_in" module="shop"/></h1>
 
-							<label class="radio">
-								<input
-									type="radio"
-									name="existing_user"
-									value="log_in"
-									checked="$settings['default_account_option'] == 'log_in' ? 'checked' : false"
-									cms:optional="checked"
-									/>
-								<span><cms:text constant="label_existing_user" module="shop"/></span>
-							</label>
+								<label class="radio">
+									<input
+										type="radio"
+										name="existing_user"
+										value="log_in"
+										checked="$settings['default_account_option'] == 'log_in' ? 'checked' : false"
+										cms:optional="checked"
+										/>
+									<span><cms:text constant="label_existing_user" module="shop"/></span>
+								</label>
 
-							<div class="existing_account">
-								<label>
-									<span><cms:text constant="label_email" module="shop"/></span>
-									<input
-										type="email"
-										name="sign_in_email"
-										maxlength="127"
-										autocomplete="on"
-										/>
-								</label>
-								<label>
-									<span><cms:text constant="label_password" module="shop"/></span>
-									<input
-										type="password"
-										name="sign_in_password"
-										maxlength="127"
-										autocomplete="off"
-										/>
-								</label>
-								<label
-									class="$params['show_captcha'] ? 'captcha' : 'captcha hidden'"
-									cms:eval="class"
-									>
-									<span><cms:text constant="label_captcha" module="shop"/></span>
-									<input
-										type="text"
-										name="captcha"
-										maxlength="4"
-										autocomplete="off"
-										/>
-									<cms:module
-										name="captcha"
-										action="print_image_tag"
-										/>
-								</label>
-								<a href="javascript:void();" class="password_recovery">
-									<cms:text constant="label_password_recovery" module="shop"/>
-								</a>
-							</div>
+								<div class="existing_account">
+									<label>
+										<span><cms:text constant="label_email" module="shop"/></span>
+										<input
+											type="email"
+											name="sign_in_email"
+											maxlength="127"
+											autocomplete="on"
+											/>
+									</label>
+									<label>
+										<span><cms:text constant="label_password" module="shop"/></span>
+										<input
+											type="password"
+											name="sign_in_password"
+											maxlength="127"
+											autocomplete="off"
+											/>
+									</label>
+									<label
+										class="$params['show_captcha'] ? 'captcha' : 'captcha hidden'"
+										cms:eval="class"
+										>
+										<span><cms:text constant="label_captcha" module="shop"/></span>
+										<input
+											type="text"
+											name="captcha"
+											maxlength="4"
+											autocomplete="off"
+											/>
+										<cms:module
+											name="captcha"
+											action="print_image_tag"
+											/>
+									</label>
+									<a href="javascript:void();" class="password_recovery">
+										<cms:text constant="label_password_recovery" module="shop"/>
+									</a>
+								</div>
 
-							<hr/>
+								<hr/>
 
-							<label class="radio">
-								<input
-									type="radio"
-									name="existing_user"
-									value="sign_up"
-									checked="$settings['default_account_option'] == 'sign_up' ? 'checked' : false"
-									cms:optional="checked"
-									/>
-								<span><cms:text constant="label_new_user" module="shop"/></span>
-							</label>
+								<label class="radio">
+									<input
+										type="radio"
+										name="existing_user"
+										value="sign_up"
+										checked="$settings['default_account_option'] == 'sign_up' ? 'checked' : false"
+										cms:optional="checked"
+										/>
+									<span><cms:text constant="label_new_user" module="shop"/></span>
+								</label>
 
-							<div class="new_account">
-								<label>
-									<span><cms:text constant="label_first_name" module="shop"/></span>
-									<input
-										type="text"
-										name="first_name"
-										maxlength="64"
-										data-required="1"
-										autocomplete="on"
-										/>
-								</label>
-								<label class="separator">
-									<span><cms:text constant="label_last_name" module="shop"/></span>
-									<input
-										type="text"
-										name="last_name"
-										maxlength="64"
-										data-required="1"
-										autocomplete="on"
-										/>
-								</label>
-								<label>
-									<span><cms:text constant="label_phone_number" module="shop"/></span>
-									<input
-										type="text"
-										name="new_phone_number"
-										maxlength="200"
-										autocomplete="on"
-										/>
-								</label>
-								<label class="separator">
-									<span><cms:text constant="label_email" module="shop"/></span>
-									<input
-										type="email"
-										name="new_email"
-										maxlength="127"
-										data-required="1"
-										autocomplete="on"
-										/>
-								</label>
-								<label>
-									<span><cms:text constant="label_password" module="shop"/></span>
-									<input
-										type="password"
-										name="new_password"
-										maxlength="127"
-										data-required="1"
-										autocomplete="off"
-										/>
-								</label>
-								<label>
-									<span><cms:text constant="label_confirm" module="shop"/></span>
-									<input
-										type="password"
-										name="new_password_confirm"
-										maxlength="127"
-										data-required="1"
-										autocomplete="off"
-										/>
-								</label>
-								<cms:if condition="!is_null($params['terms_link'])">
+								<div class="new_account">
+									<label>
+										<span><cms:text constant="label_first_name" module="shop"/></span>
+										<input
+											type="text"
+											name="first_name"
+											maxlength="64"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+									<label class="separator">
+										<span><cms:text constant="label_last_name" module="shop"/></span>
+										<input
+											type="text"
+											name="last_name"
+											maxlength="64"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+									<label>
+										<span><cms:text constant="label_phone_number" module="shop"/></span>
+										<input
+											type="text"
+											name="new_phone_number"
+											maxlength="200"
+											autocomplete="on"
+											/>
+									</label>
+									<label class="separator">
+										<span><cms:text constant="label_email" module="shop"/></span>
+										<input
+											type="email"
+											name="new_email"
+											maxlength="127"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+									<label>
+										<span><cms:text constant="label_password" module="shop"/></span>
+										<input
+											type="password"
+											name="new_password"
+											maxlength="127"
+											data-required="1"
+											autocomplete="off"
+											/>
+									</label>
+									<label>
+										<span><cms:text constant="label_confirm" module="shop"/></span>
+										<input
+											type="password"
+											name="new_password_confirm"
+											maxlength="127"
+											data-required="1"
+											autocomplete="off"
+											/>
+									</label>
+									<cms:if condition="!is_null($params['terms_link'])">
+										<label class="checkbox">
+											<input
+												type="checkbox"
+												name="agree_to_terms"
+												data-required="1"
+												/>
+											<span>
+												<cms:text constant="label_agree_to_terms1" module="shop"/>
+												<cms:raw text=" "/>
+												<a
+													href="$params['terms_link']"
+													target="_blank"
+													cms:eval="href"
+													>
+													<cms:text constant="label_agree_to_terms2" module="shop"/>
+												</a>
+												<cms:raw text="."/>
+											</span>
+										</label>
+									</cms:if>
 									<label class="checkbox">
 										<input
 											type="checkbox"
-											name="agree_to_terms"
-											data-required="1"
+											name="want_promotions"
 											/>
-										<span>
-											<cms:text constant="label_agree_to_terms1" module="shop"/>
-											<cms:raw text=" "/>
-											<a
-												href="$params['terms_link']"
-												target="_blank"
-												cms:eval="href"
-												>
-												<cms:text constant="label_agree_to_terms2" module="shop"/>
-											</a>
-											<cms:raw text="."/>
-										</span>
+										<span><cms:text constant="label_want_promotions" module="shop"/></span>
 									</label>
-								</cms:if>
-								<label class="checkbox">
+								</div>
+
+								<hr/>
+
+								<label class="radio">
 									<input
-										type="checkbox"
-										name="want_promotions"
+										type="radio"
+										name="existing_user"
+										value="guest"
+										checked="$settings['default_account_option'] == 'guest' ? 'checked' : false"
+										cms:optional="checked"
 										/>
-									<span><cms:text constant="label_want_promotions" module="shop"/></span>
+									<span><cms:text constant="label_guest" module="shop"/></span>
 								</label>
-							</div>
+							</cms:if>
 
-							<hr/>
-
-							<label class="radio">
-								<input
-									type="radio"
-									name="existing_user"
-									value="guest"
-									checked="$settings['default_account_option'] == 'guest' ? 'checked' : false"
-									cms:optional="checked"
-									/>
-								<span><cms:text constant="label_guest" module="shop"/></span>
-							</label>
+							<!-- Hard code value for guest only selection -->
+							<cms:if condition="$param['guest_only']">
+								<input type="hidden" name="existing_user" value="guest"/>
+							</cms:if>
 
 							<div class="guest_checkout">
 								<label>
@@ -232,7 +240,7 @@
 								<label>
 									<span><cms:text constant="label_phone_number" module="shop"/></span>
 									<input
-										type="email"
+										type="text"
 										name="guest_phone"
 										maxlength="200"
 										autocomplete="on"
