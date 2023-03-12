@@ -18,8 +18,8 @@
 									<td><cms:text constant="column_name" module="shop"/></td>
 									<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
 									<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
-									<td class="optional" style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
-									<td class="optional" style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
+									<td class="optional tax" style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+									<td class="optional weight" style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
 									<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
 								</cms:if>
 								<cms:if condition="$params['type'] == TransactionType::DELAYED">
@@ -39,15 +39,17 @@
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
 									<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
 								</tr>
-								<tr>
-									<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
-									<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
-								</tr>
-								<tr>
+								<cms:if condition="$params['include_shipping']">
+									<tr class="optional shipping">
+										<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
+										<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
+									</tr>
+								</cms:if>
+								<tr class="optional handling">
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
 									<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
 								</tr>
-								<tr>
+								<tr class="optional total-weight">
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_total_weight" module="shop"/></td>
 									<td class="subtotal-value weight">
 										<cms:var name="$params['total_weight']"/>
