@@ -11,8 +11,8 @@
 			</td>
 			<td><cms:var name="$params['count']"/></td>
 			<td><cms:var name="$params['price']"/></td>
-			<td class="optional"><cms:var name="$params['tax']"/></td>
-			<td class="optional"><cms:var name="$params['weight']"/></td>
+			<td class="optional tax"><cms:var name="$params['tax']"/></td>
+			<td class="optional weight"><cms:var name="$params['weight']"/></td>
 			<td><cms:var name="$params['total']"/></td>
 		</tr>
 	</cms:if>
@@ -26,7 +26,7 @@
 				</cms:if>
 			</td>
 			<td><cms:var name="$params['count']"/></td>
-			<td class="optional"><cms:var name="$params['weight']"/></td>
+			<td class="optional weight"><cms:var name="$params['weight']"/></td>
 		</tr>
 	</cms:if>
 </document>

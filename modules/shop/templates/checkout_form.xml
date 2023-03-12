@@ -76,7 +76,7 @@
 									<td class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
 									<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
 								</tr>
-								<tr>
+								<tr class="optional total-weight">
 									<td class="subtotal-label"><cms:text constant="column_total_weight" module="shop"/></td>
 									<td class="subtotal-value weight">
 										<cms:var name="$params['total_weight']"/>
