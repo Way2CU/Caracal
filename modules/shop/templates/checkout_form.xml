@@ -35,7 +35,7 @@
 							<!-- Regular transactions -->
 							<cms:if condition="$params['type'] != TransactionType::DELAYED">
 								<tr class="first">
-									<td colspan="_DESKTOP_VERSION ? '3' : '1'" rowspan="5" style="padding: 20px;" cms:eval="colspan"/>
+									<td rowspan="5" style="padding: 20px;"/>
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
 									<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
 								</tr>
