@@ -2870,7 +2870,7 @@ class shop extends Module {
 	}
 
 	/**
-	 * Update transaction data.
+	 * Update transaction data before final checkout page is rendered.
 	 *
 	 * @param integer $type
 	 * @param object $payment_method
@@ -3059,25 +3059,27 @@ class shop extends Module {
 		$discount_amounts = array();
 		$promotion_count = 0;
 		$promotion_manager->delete_items(array('transaction' => $result['id']));
+		$qualified_promotion = isset($_REQUEST['qualified_promotion']) ? $_REQUEST['qualified_promotion'] : null;
 
-		foreach ($this->promotions as $promotion)
-			if ($promotion->qualifies($transaction)) {
-				// store discount for application later
-				$discount = $promotion->get_discount();
+		if (!is_null($qualified_promotion) && $qualified_promotion != '')
+			foreach ($this->promotions as $promotion)
+				if ($promotion->get_name() == $qualified_promotion && $promotion->qualifies($transaction)) {
+					// store discount for application later
+					$discount = $promotion->get_discount();
 
-				// insert data to database
-				$data = array(
-						'transaction' => $result['id'],
-						'promotion'   => $promotion->get_name(),
-						'discount'    => $discount->get_name()
-					);
+					// insert data to database
+					$data = array(
+							'transaction' => $result['id'],
+							'promotion'   => $promotion->get_name(),
+							'discount'    => $discount->get_name()
+						);
 
-				$promotion_manager->insert_item($data);
+					$promotion_manager->insert_item($data);
 
-				// apply discount
-				$discount_amounts []= $discount->apply($transaction);
-				$promotion_count++;
-			}
+					// apply discount
+					$discount_amounts []= $discount->apply($transaction);
+					$promotion_count++;
+				}
 
 		$result['promotion_count'] = $promotion_count;
 
