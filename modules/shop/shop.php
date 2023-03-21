@@ -2459,24 +2459,6 @@ class shop extends Module {
 				break;
 		}
 
-		// update totals with results from promotions and discounts
-		$discount_amounts = array();
-		$promotion_count = 0;
-		foreach ($this->promotions as $promotion)
-			if ($promotion->qualifies($transaction)) {
-				// store discount for application later
-				$discount = $promotion->get_discount();
-
-				// apply discount
-				$discount_amounts []= $discount->apply($transaction);
-				$promotion_count++;
-			}
-
-		$discount_total = 0;
-		if (count($discount_amounts) > 0)
-			foreach ($discount_amounts as $discount)
-				$discount_total += $discount[2];
-
 		// prepare result
 		$result = array(
 			'items_for_checkout' => $items_for_checkout,
@@ -2484,7 +2466,7 @@ class shop extends Module {
 			'handling'           => $handling,
 			'weight'             => $total_weight,
 			'total'              => $total_money,
-			'discounts'          => $total_discount + $discount_total,
+			'discounts'          => $total_discount,
 			'currency'           => $preferred_currency,
 			'promotion_count'    => $promotion_count
 		);
