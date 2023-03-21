@@ -2459,14 +2459,34 @@ class shop extends Module {
 				break;
 		}
 
+		// update totals with results from promotions and discounts
+		$discount_amounts = array();
+		$promotion_count = 0;
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies($transaction)) {
+				// store discount for application later
+				$discount = $promotion->get_discount();
+
+				// apply discount
+				$discount_amounts []= $discount->apply($transaction);
+				$promotion_count++;
+			}
+
+		$discount_total = 0;
+		if (count($discount_amounts) > 0)
+			foreach ($discount_amounts as $discount)
+				$discount_total += $discount[2];
+
+		// prepare result
 		$result = array(
 			'items_for_checkout' => $items_for_checkout,
 			'shipping'           => $shipping,
 			'handling'           => $handling,
 			'weight'             => $total_weight,
 			'total'              => $total_money,
-			'discounts'          => $total_discount,
-			'currency'           => $preferred_currency
+			'discounts'          => $total_discount + $discount_total,
+			'currency'           => $preferred_currency,
+			'promotion_count'    => $promotion_count
 		);
 
 		return $result;
@@ -3090,6 +3110,11 @@ class shop extends Module {
 				$discount_total += $discount[2];
 
 		$_SESSION['transaction']['total'] -= $discount_total;
+
+		// TODO: This is a dirty fix to get system to update transaction total
+		// before charging it from client. Database will store value before discounts
+		// are applied.
+		$result['total'] -= $discount_total;
 
 		return $result;
 	}
