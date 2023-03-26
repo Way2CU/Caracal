@@ -456,7 +456,7 @@ class ShopTransactionsHandler {
 				);
 
 				foreach ($item_map[$item->id] as $item_transaction_id)
-					$items[$item_transaction_id] = $data;
+					$items[$item_transaction_id] = array_merge($items[$item_transaction_id], $data);
 			}
 
 		if (count($items) > 0) {
