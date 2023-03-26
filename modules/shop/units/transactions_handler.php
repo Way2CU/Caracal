@@ -402,63 +402,61 @@ class ShopTransactionsHandler {
 
 		// get items from database
 		$items = array();
+		$item_map = array();
 		$raw_items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
 				$properties = unserialize($item->description);
+
+				// prepare description
 				$description = '';
 				foreach ($properties as $key => $value)
 					$description .= '<span class="property">'.$key.'<span class="value">'.$value.'</span></span>';
 
-				$items[$item->item] = array(
-							'id'              => $item->id,
+				// add transaction item to the item map for later population
+				if (!array_key_exists($item->item, $item_map))
+					$item_map[$item->item] = array();
+				$item_map[$item->item][] = $item->id;
+
+				// assign data from transaction
+				$items[$item->id] = array(
+							'item'            => $item->item,
 							'price'           => $item->price,
 							'tax'             => $item->tax,
 							'amount'          => $item->amount,
 							'description'     => $description,
-							'uid'             => '',
-							'name'            => '',
-							'gallery'         => '',
-							'size_definition' => '',
-							'colors'          => '',
-							'manufacturer'    => '',
-							'author'          => '',
-							'views'           => '',
-							'weight'          => '',
-							'votes_up'        => '',
-							'votes_down'      => '',
-							'timestamp'       => '',
-							'priority'        => '',
-							'visible'         => '',
-							'deleted'         => '',
 							'total'           => ($item->price + ($item->price * ($item->tax / 100))) * $item->amount,
 							'currency'        => $currency
 						);
 			}
 
 		// get the rest of item details from database
-		$id_list = array_keys($items);
+		$id_list = array_keys($item_map);
 		$raw_items = $item_manager->get_items($item_manager->get_field_names(), array('id' => $id_list));
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
-				$id = $item->id;
-				$items[$id]['uid'] = $item->uid;
-				$items[$id]['name'] = $item->name;
-				$items[$id]['gallery'] = $item->gallery;
-				$items[$id]['size_definition'] = $item->size_definition;
-				$items[$id]['colors'] = $item->colors;
-				$items[$id]['manufacturer'] = $item->manufacturer;
-				$items[$id]['author'] = $item->author;
-				$items[$id]['views'] = $item->views;
-				$items[$id]['weight'] = $item->weight;
-				$items[$id]['votes_up'] = $item->votes_up;
-				$items[$id]['votes_down'] = $item->votes_down;
-				$items[$id]['timestamp'] = $item->timestamp;
-				$items[$id]['priority'] = $item->priority;
-				$items[$id]['visible'] = $item->visible;
-				$items[$id]['deleted'] = $item->deleted;
+				$data = array(
+					'uid'             => $item->uid,
+					'name'            => $item->name,
+					'gallery'         => $item->gallery,
+					'size_definition' => $item->size_definition,
+					'colors'          => $item->colors,
+					'manufacturer'    => $item->manufacturer,
+					'author'          => $item->author,
+					'views'           => $item->views,
+					'weight'          => $item->weight,
+					'votes_up'        => $item->votes_up,
+					'votes_down'      => $item->votes_down,
+					'timestamp'       => $item->timestamp,
+					'priority'        => $item->priority,
+					'visible'         => $item->visible,
+					'deleted'         => $item->deleted,
+				);
+
+				foreach ($item_map[$item->id] as $item_transaction_id)
+					$items[$item_transaction_id] = $data;
 			}
 
 		if (count($items) > 0) {
