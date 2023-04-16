@@ -28,6 +28,11 @@
 					<cms:text constant="title_qualified_promotions" module="shop"/>
 				</a>
 			</cms:if>
+			<cms:if condition="$params['include_receipt']">
+				<a href="javascript:void(0);">
+					<cms:text constant="title_receipt" module="shop"/>
+				</a>
+			</cms:if>
 			<a href="javascript:void(0);">
 				<cms:text constant="title_checkout" module="shop"/>
 			</a>
@@ -592,6 +597,26 @@
 								<button class="previous"><cms:text constant="back"/></button>
 								<button class="next"><cms:text constant="next"/></button>
 							</div>
+						</div>
+					</cms:if>
+
+					<!-- Receipt configuration page -->
+					<cms:if condition="$params['include_receipt']">
+						<div class="page" id="qualified_promotions">
+							<h1><cms:text constant="title_qualified_promotions" module="shop"/></h1>
+
+							<label class="checkbox">
+								<input
+									type="checkbox"
+									name="include_receipt"
+									/>
+								<span><cms:text constant="label_want_receipt" module="shop"/></span>
+							</label>
+						</div>
+
+						<div class="checkout_controls">
+							<button class="previous"><cms:text constant="back"/></button>
+							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</cms:if>
 

@@ -3623,6 +3623,11 @@ class shop extends Module {
 		if (isset($tag_params['include_shipping']))
 			$include_shipping = fix_id($tag_params['include_shipping']) == 1;
 
+		// whether to provide ability to generate receipt for buyer
+		$include_receipt = false;
+		if (isset($tag_params['include_receipt']))
+			$include_receipt = fix_id($tag_params['include_receipt']) == 1;
+
 		// handle data preparation of checkout process
 		switch ($stage) {
 			case Stage::RESUME:
@@ -3849,6 +3854,7 @@ class shop extends Module {
 
 				$params = array(
 					'include_shipping'     => $include_shipping,
+					'include_receipt'      => $include_receipt,
 					'fixed_country'        => $fixed_country,
 					'bad_fields'           => $bad_fields,
 					'recurring'            => $transaction_type == TransactionType::SUBSCRIPTION,
