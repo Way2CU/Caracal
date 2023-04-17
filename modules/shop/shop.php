@@ -2467,8 +2467,7 @@ class shop extends Module {
 			'weight'             => $total_weight,
 			'total'              => $total_money,
 			'discounts'          => $total_discount,
-			'currency'           => $preferred_currency,
-			'promotion_count'    => $promotion_count
+			'currency'           => $preferred_currency
 		);
 
 		return $result;
@@ -3667,6 +3666,7 @@ class shop extends Module {
 
 				} else {
 					$shipping_required = array();
+					$shipping_information = array();
 				}
 
 				// collect billing information
