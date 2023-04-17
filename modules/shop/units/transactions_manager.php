@@ -32,6 +32,9 @@ class ShopTransactionsManager extends ItemManager {
 		$this->add_property('remark', 'text');
 		$this->add_property('remote_id', 'varchar');
 		$this->add_property('total', 'decimal');
+		$this->add_property('issue_receipt', 'boolean');
+		$this->add_property('receipt_name', 'varchar');
+		$this->add_property('receipt_vat_number', 'varchar');
 		$this->add_property('timestamp', 'timestamp');
 	}
 

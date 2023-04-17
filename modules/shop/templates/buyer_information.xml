@@ -612,6 +612,25 @@
 									/>
 								<span><cms:text constant="label_want_receipt" module="shop"/></span>
 							</label>
+
+							<label>
+								<span><cms:text constant="label_receipt_name" module="shop"/></span>
+								<input
+									type="text"
+									name="name_on_receipt"
+									autocomplete="on"
+									/>
+							</label>
+
+							<label>
+								<span><cms:text constant="label_receipt_vat" module="shop"/></span>
+								<input
+									type="text"
+									name="name_on_receipt"
+									autocomplete="on"
+									format="\d+"
+									/>
+							</label>
 						</div>
 
 						<div class="checkout_controls">
