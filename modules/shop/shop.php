@@ -3702,8 +3702,19 @@ class shop extends Module {
 		switch ($stage) {
 			case Stage::CHECKOUT:
 				// get fields for payment method
-				$return_url = URL::make_query('shop', 'checkout-completed', array('payment_method', $payment_method->get_name()));
-				$cancel_url = URL::make_query('shop', 'checkout-canceled', array('payment_method', $payment_method->get_name()));
+				if (isset($tag_params['complete_url']))
+					$return_url = $tag_params['complete_url']; else
+					$return_url = URL::make_query(
+						'shop', 'checkout-completed',
+						array('payment_method', $payment_method->get_name())
+					);
+
+				if (isset($tag_params['cancel_url']))
+					$cancel_url = $tag_params['cancel_url']; else
+					$cancel_url = URL::make_query(
+						'shop', 'checkout-canceled',
+						array('payment_method', $payment_method->get_name())
+					);
 
 				// update transaction
 				$summary = $this->updateTransaction(
