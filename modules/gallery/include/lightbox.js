@@ -249,7 +249,7 @@ Caracal.Gallery.LightBox = function() {
 
 		} else if (images instanceof NodeList) {
 			// get images from the node list
-			for (var i=0, count=list.length; i<count; i++)
+			for (var i=0, count=images.length; i<count; i++)
 				if (images[i] instanceof HTMLAnchorElement)
 					links.push(images[i]);
 		}
