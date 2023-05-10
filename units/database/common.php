@@ -152,6 +152,11 @@ function database_initialize($create_database) {
 						$data['fullname'] = $data['first_name'].' '.$data['last_name'];
 					}
 
+					// insert required email
+					if (isset($item->tagAttrs['email']))
+						$data['email'] = $item->tagAttrs['email']; else
+						$data['email'] = 'admin@'._DOMAIN;
+
 					$admin_manager->insert_item($data);
 					break;
 			}
