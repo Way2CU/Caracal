@@ -268,7 +268,7 @@ final class URL {
 
 		if (!is_array($text)) {
 			$text = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($text));
-			$result = html_entity_decode($text, null, 'UTF-8');;
+			$result = html_entity_decode($text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');;
 
 		} else {
 			$result = array();
