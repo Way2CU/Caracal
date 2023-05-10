@@ -44,7 +44,12 @@ class Database_MySQL extends Database {
 		$result = false;
 
 		if ($this->active)
-			$result = $this->handle->select_db($database);
+			try {
+				$result = $this->handle->select_db($database);
+			} catch ($error) {
+				trigger_error($error, E_USER_WARNING);
+				$result = false;
+			}
 
 		return $result;
 	}
