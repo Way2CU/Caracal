@@ -161,7 +161,8 @@ class Mailer extends ContactForm_Mailer {
 		// parse response
 		$response = json_decode($response);
 		if (is_object($response))
-			$result = $response->message == 'success';
+			$result = $response->message == 'success'; else
+			trigger_error($response->errors[0], E_USER_NOTICE);
 
 		return $result;
 	}
