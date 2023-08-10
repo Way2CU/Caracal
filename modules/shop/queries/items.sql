@@ -6,7 +6,7 @@ CREATE TABLE `shop_items` (
 	`name` ml_varchar(255) NOT NULL DEFAULT '',
 	`description` ml_text NOT NULL ,
 	`gallery` int NOT NULL,
-	`videos` int NOT NULL,
+	`videos` int NULL,
 	`manufacturer` int NOT NULL,
 	`supplier` int NOT NULL,
 	`size_definition` int NULL,
