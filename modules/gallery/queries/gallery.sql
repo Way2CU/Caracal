@@ -2,10 +2,10 @@
 
 CREATE TABLE `gallery` (
 	`id` int NOT NULL AUTO_INCREMENT ,
-	`text_id` varchar(32) NOT NULL,
+	`text_id` varchar(32) NOT NULL DEFAULT '',
 	`group` int DEFAULT NULL ,
 	`title` ml_varchar(255) NOT NULL DEFAULT '',
-	`description` ml_text NOT NULL ,
+	`description` ml_text NOT NULL DEFAULT '',
 	`size` bigint NOT NULL ,
 	`filename` varchar(40) NOT NULL ,
 	`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
