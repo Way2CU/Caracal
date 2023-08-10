@@ -565,7 +565,9 @@ abstract class ItemManager {
 					$tmp[] = "{$field} IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
 				}
 			} else {
-				$tmp[] = "{$field} = ".($is_string ? "'{$field_value}'" : $field_value);
+				if (is_null($field_value))
+					$tmp[] = "{$field} = NULL"; else
+					$tmp[] = "{$field} = ".($is_string ? "'{$field_value}'" : $field_value);
 			}
 		}
 
