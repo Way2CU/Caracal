@@ -292,7 +292,7 @@ class Handler {
 				'supplier'        => isset($_REQUEST['supplier']) && !empty($_REQUEST['supplier']) ? fix_id($_REQUEST['supplier']) : 0,
 				'visible'         => $this->parent->get_boolean_field('visible') ? 1 : 0,
 				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID(),
-				'expires'         => date('Y-m-d H:i:s', strtotime(fix_chars($_REQUEST['expires'])))
+				'expires'         => isset($_REQUEST['expires']) && !empty($_REQUEST['expires') ? date('Y-m-d H:i:s', strtotime(fix_chars($_REQUEST['expires']))) : null
 			);
 
 		if ($new_item) {
