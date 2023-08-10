@@ -925,7 +925,7 @@ class Handler {
 						'priority'        => $item->priority,
 						'timestamp'       => $item->timestamp,
 						'is_new'          => strtotime($item->timestamp) >= $new_timestamp,
-						'expires'         => strtotime($item->expires),
+						'expires'         => is_null($item->expires) ? null : strtotime($item->expires),
 						'visible'         => $item->visible,
 						'deleted'         => $item->deleted,
 						'sprite'          => $sprite_image
