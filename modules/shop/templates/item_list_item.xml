@@ -15,7 +15,9 @@
 			<cms:var param="rating"/>
 		</td>
 		<td>
-			<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
+			<cms:if condition="!is_null($params['expires'])">
+				<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
+			</cms:if>
 		</td>
 		<td class="options">
 			<cms:var param="item_change"/>
