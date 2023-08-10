@@ -276,7 +276,7 @@ class Handler {
 		$open_editor = '';
 
 		$new_item = is_null($id);
-		$expires = strtotime($_REQUEST['expires']);
+		$expires = strtotime(fix_chars($_REQUEST['expires']));
 
 		$data = array(
 				'name'            => $this->parent->get_multilanguage_field('name'),
