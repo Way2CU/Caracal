@@ -2747,7 +2747,7 @@ class gallery extends Module {
 		$gallery_manager = GalleryGroupManager::get_instance();
 
 		// create gallery
-		$gallery_manager->insert_item(array('name' => $name));
+		$gallery_manager->insert_item(array('title' => $name));
 		return $gallery_manager->get_inserted_id();
 	}
 
