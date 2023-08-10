@@ -276,6 +276,7 @@ class Handler {
 		$open_editor = '';
 
 		$new_item = is_null($id);
+		$expires = strtotime($_REQUEST['expires']);
 
 		$data = array(
 				'name'            => $this->parent->get_multilanguage_field('name'),
@@ -292,7 +293,7 @@ class Handler {
 				'supplier'        => isset($_REQUEST['supplier']) && !empty($_REQUEST['supplier']) ? fix_id($_REQUEST['supplier']) : 0,
 				'visible'         => $this->parent->get_boolean_field('visible') ? 1 : 0,
 				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID(),
-				'expires'         => strtotime($_REQUEST['expires']) === false ? null : date('Y-m-d H:i:s', strtotime($_REQUEST['expires']))
+				'expires'         => $expires === false || $expires < 0 ? null : date('Y-m-d H:i:s', $expires)
 			);
 
 		if ($new_item) {
