@@ -229,13 +229,6 @@ class Handler {
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 		$template->register_tag_handler('cms:supplier_list', $supplier_handler, 'tag_SupplierList');
 
-		// parse color string
-		$colors = array();
-		if (!empty($item->colors))
-			foreach (explode(',', $item->colors) as $keyval) {
-				list($name, $value) = explode(':', $keyval);
-				$colors[$name] = $value;
-			}
 
 		// prepare parameters
 		$params = array(
@@ -251,8 +244,7 @@ class Handler {
 					'views'           => $item->views,
 					'price'           => $item->price,
 					'discount'        => $item->discount,
-					'colors'          => $colors,
-					'raw_colors'      => $item->colors,
+					'colors'      => $item->colors,
 					'tags'            => $item->tags,
 					'tax'             => $item->tax,
 					'weight'          => $item->weight,
@@ -908,6 +900,14 @@ class Handler {
 			$rating = 0;
 			$variation_id = $shop->generateVariationId($item->uid);
 
+			// parse color string
+			$colors = array();
+			if (!empty($item->colors))
+				foreach (explode(',', $item->colors) as $keyval) {
+					list($name, $value) = explode(':', $keyval);
+					$colors[$name] = $value;
+				}
+
 			$params = array(
 						'id'              => $item->id,
 						'uid'             => $item->uid,
@@ -918,7 +918,8 @@ class Handler {
 						'gallery'         => $item->gallery,
 						'videos'          => $item->videos,
 						'size_definition' => $item->size_definition,
-						'colors'          => $item->colors,
+						'colors'          => $colors,
+						'raw_colors'      => $item->colors,
 						'manufacturer'    => $item->manufacturer,
 						'supplier'        => $item->supplier,
 						'author'          => $item->author,
