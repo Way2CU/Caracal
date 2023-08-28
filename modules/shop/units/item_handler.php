@@ -229,6 +229,14 @@ class Handler {
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 		$template->register_tag_handler('cms:supplier_list', $supplier_handler, 'tag_SupplierList');
 
+		// parse color string
+		$colors = array();
+		if (!empty($item->colors))
+			foreach (explode(',', $item->colors) as $keyval) {
+				list($name, $value) = explode(':', $keyval);
+				$colors[$name] = $value;
+			}
+
 		// prepare parameters
 		$params = array(
 					'id'              => $item->id,
@@ -243,7 +251,8 @@ class Handler {
 					'views'           => $item->views,
 					'price'           => $item->price,
 					'discount'        => $item->discount,
-					'colors'          => $item->colors,
+					'colors'          => $colors,
+					'raw_colors'      => $item->colors,
 					'tags'            => $item->tags,
 					'tax'             => $item->tax,
 					'weight'          => $item->weight,
