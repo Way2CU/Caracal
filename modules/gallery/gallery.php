@@ -1675,7 +1675,7 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_ContainerList($tag_params, $children) {
-		global $language;
+		global $language, $section;
 
 		$manager = GalleryContainerManager::get_instance();
 		$conditions = array();
