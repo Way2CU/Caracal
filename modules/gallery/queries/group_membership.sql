@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS `gallery_group_membership` (
 	`container` int NOT NULL,
 	PRIMARY KEY (`id`),
 	KEY `index_by_container` (`container`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;
