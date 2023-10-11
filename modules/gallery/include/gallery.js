@@ -33,6 +33,8 @@ Caracal.Gallery.Loader = function() {
 	self.constructor = null;
 	self.thumbnail_size = 100;
 	self.constraint = 2;
+	self.order_by = null;
+	self.limit = null;
 
 	/**
 	 * Complete object initialization.
@@ -104,6 +106,30 @@ Caracal.Gallery.Loader = function() {
 	};
 
 	/**
+	 * Set number of images to load on every call. Setting `limit`
+	 * to `null` will remove limit from request.
+	 *
+	 * @param integer limit
+	 * @return self
+	 */
+	self.set_load_limit = function(limit) {
+		self.limit = limit;
+		return self;
+	};
+
+	/**
+	 * Set property to order images by on load. Setting this
+	 * to `null` resets ordering to default which is `title`.
+	 *
+	 * @param string property_name
+	 * @return self
+	 */
+	self.set_order_property = function(property_name) {
+		self.order_by = property_name;
+		return self;
+	};
+
+	/**
 	 * Asynchronously load images from the gallery with specified numberical
 	 * unique id. If load is successful constructor function will be used to
 	 * create each image in all of the galleries added to loader.
@@ -127,6 +153,12 @@ Caracal.Gallery.Loader = function() {
 				thumbnail_size: self.thumbnail_size,
 				constraint: self.constraint
 			};
+
+		if (self.order_by != null)
+			data.order_by = self.order_by;
+
+		if (self.limit != null)
+			data.limit = self.limit;
 
 		if (slideshow)
 			data.slideshow = slideshow ? 1 : 0;
