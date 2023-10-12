@@ -133,7 +133,8 @@ function Communicator(module_name) {
 				context: this,
 				data: {
 					section: self._module,
-					action: action
+					action: action,
+					language: Caracal.language.current_language
 				},
 				cache: self._cache_response,
 				async: self._asynchronous,
@@ -172,7 +173,8 @@ function Communicator(module_name) {
 				context: this,
 				data: {
 					section: self._module,
-					action: action
+					action: action,
+					language: Caracal.language.current_language
 				},
 				cache: self._cache_response,
 				async: self._asynchronous,
