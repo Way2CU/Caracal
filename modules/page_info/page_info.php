@@ -154,11 +154,11 @@ class page_info extends Module {
 			$head_tag->add_tag('meta', array('charset' => 'UTF-8'));
 		}
 
-		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION)
+		if (!in_array('viewport', $this->omit_elements))
 			$head_tag->add_tag('meta',
 						array(
 							'name'		=> 'viewport',
-							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
+							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=5'
 						));
 
 		// robot tags
