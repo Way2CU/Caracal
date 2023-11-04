@@ -24,6 +24,7 @@ class ContactForm_FormFieldManager extends ItemManager {
 		$this->add_property('required', 'boolean');
 		$this->add_property('checked', 'boolean');
 		$this->add_property('autocomplete', 'boolean');
+		$this->add_property('order', 'int');
 	}
 
 	/**
