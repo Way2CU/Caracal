@@ -91,6 +91,7 @@
     "label_use_ajax": "להשתמש ב AJAX לשליחת המידע?",
     "label_use_ssl": "להצפין ב SSL?",
     "label_value": "ערך מוגדר מראש:",
+    "label_order": "הזמן:",
     "legend_controls": "פקדי טופס",
     "legend_range": "טווח",
     "legend_recipient": "נמען",
