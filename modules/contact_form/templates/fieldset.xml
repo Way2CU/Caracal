@@ -17,6 +17,7 @@
 			fieldset="$params['id']"
 			fieldset_members="1"
 			skip_foreign="0"
+			order_by="order"
 			cms:eval="fieldset"
 			/>
 	</fieldset>

@@ -2004,7 +2004,7 @@ class contact_form extends Module {
 										$this->get_language_constant('new'),
 										window_Open(
 											'contact_form_fields_add', 	// window id
-											400,				// width
+											460,				// width
 											$this->get_language_constant('title_fields_add'), // title
 											false, false,
 											URL::make_query(
@@ -2123,7 +2123,8 @@ class contact_form extends Module {
 			'disabled'     => $this->get_boolean_field('disabled') ? 1 : 0,
 			'required'     => $this->get_boolean_field('required') ? 1 : 0,
 			'checked'      => $this->get_boolean_field('checked') ? 1 : 0,
-			'autocomplete' => $this->get_boolean_field('autocomplete') ? 1 : 0
+			'autocomplete' => $this->get_boolean_field('autocomplete') ? 1 : 0,
+			'order'        => fix_id($_REQUEST['order'])
 		);
 		$manager = ContactForm_FormFieldManager::get_instance();
 
@@ -2835,7 +2836,7 @@ class contact_form extends Module {
 											$this->get_language_constant('change'),
 											window_Open(
 												'contact_form_fields_edit', 	// window id
-												400,				// width
+												460,				// width
 												$this->get_language_constant('title_fields_edit'), // title
 												false, false,
 												URL::make_query(

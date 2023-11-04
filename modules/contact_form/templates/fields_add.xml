@@ -14,18 +14,23 @@
 					<cms:field_types/>
 				</select>
 			</label>
+
+			<label class="horizontal">
+				<span><cms:text constant="label_order" module="contact_form"/></span>
+				<input name="order" style="width: 70px"/>
+			</label>
 		</div>
 
 		<hr/>
 
 		<label>
 			<span><cms:text constant="label_label" module="contact_form"/></span>
-			<input name="label" class="multi-language" type="text" maxlength="100" style="width: 370px"/>
+			<input name="label" class="multi-language" type="text" maxlength="100" style="width: 430px"/>
 		</label>
 
 		<label>
 			<span><cms:text constant="label_placeholder" module="contact_form"/></span>
-			<input name="placeholder" class="multi-language" type="text" maxlength="100" style="width: 370px"/>
+			<input name="placeholder" class="multi-language" type="text" maxlength="100" style="width: 430px"/>
 		</label>
 
 		<div>
@@ -41,7 +46,7 @@
 
 		<label class="pattern">
 			<span><cms:text constant="label_pattern" module="contact_form"/></span>
-			<input type="text" name="pattern" class="code ltr" maxlength="255" style="width: 370px"/>
+			<input type="text" name="pattern" class="code ltr" maxlength="255" style="width: 430px"/>
 		</label>
 
 		<fieldset class="range">

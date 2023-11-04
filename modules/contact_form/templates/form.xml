@@ -33,6 +33,7 @@
 				form="$params['id']"
 				skip_foreign="0"
 				fieldset_orphans="1"
+				order_by="order"
 				cms:eval="form"
 				/>
 		</cms:if>

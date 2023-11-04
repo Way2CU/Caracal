@@ -16,6 +16,7 @@ CREATE TABLE `contact_form_fields` (
 	`required` boolean NOT NULL DEFAULT '0',
 	`checked` boolean NOT NULL DEFAULT '0',
 	`autocomplete` boolean NOT NULL DEFAULT '0',
+	`order` int NULL,
 	PRIMARY KEY(`id`),
 	INDEX `contact_form_fields_by_form` (`form`),
 	INDEX `contact_form_fields_by_form_and_type` (`form`, `type`)

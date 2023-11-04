@@ -25,6 +25,16 @@
 						/>
 				</select>
 			</label>
+
+			<label class="horizontal">
+				<span><cms:text constant="label_order" module="contact_form"/></span>
+				<input
+					name="order"
+					style="width: 70px"
+					value="$params['order']"
+					cms:eval="value"
+					/>
+			</label>
 		</div>
 
 		<hr/>
@@ -36,7 +46,7 @@
 				class="multi-language"
 				type="text"
 				maxlength="100"
-				style="width: 370px"
+				style="width: 430px"
 				/>
 			<cms:language_data param="label"/>
 		</label>
@@ -48,7 +58,7 @@
 				class="multi-language"
 				type="text"
 				maxlength="100"
-				style="width: 370px"
+				style="width: 430px"
 				/>
 			<cms:language_data param="placeholder"/>
 		</label>
@@ -86,7 +96,7 @@
 				name="pattern"
 				class="code ltr"
 				maxlength="255"
-				style="width: 370px"
+				style="width: 430px"
 				value="$params['pattern']"
 				cms:eval="value"
 				/>
