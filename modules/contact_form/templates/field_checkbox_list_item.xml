@@ -2,15 +2,17 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<tr>
-		<label class="column">
-			<input
-				type="checkbox"
-				name="'field_'.$params['id']"
-				checked="$params['in_fieldset']"
-				cms:eval="name"
-				cms:optional="checked"
-				/>
-			<cms:var param="name"/>
-		</label>
+		<td>
+			<label class="column">
+				<input
+					type="checkbox"
+					name="'field_'.$params['id']"
+					checked="$params['in_fieldset']"
+					cms:eval="name"
+					cms:optional="checked"
+					/>
+				<cms:var param="name"/>
+			</label>
+		</td>
 	</tr>
 </document>

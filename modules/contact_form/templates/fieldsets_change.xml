@@ -26,22 +26,22 @@
 			<cms:language_data param="legend"/>
 		</label>
 
-		<div class="scrollable_list">
-			<div class="list_header">
-				<span class="column">
+		<table class="list" data-height="200">
+			<thead>
+				<td>
 					<cms:text constant="column_fields" module="contact_form"/>
-				</span>
-			</div>
+				</td>
+			</thead>
 
-			<div class="list_content" style="height: 200px">
+			<tbody>
 				<cms:field_list
 					fieldset="$params['id']"
 					template="field_checkbox_list_item.xml"
 					local="1"
 					cms:eval="fieldset"
 					/>
-			</div>
-		</div>
+			</tbody>
+		</table>
 
 		<div class="button_bar">
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
