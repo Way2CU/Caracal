@@ -2076,22 +2076,23 @@ class contact_form extends Module {
 			$template->set_mapped_module($this->name);
 
 			$params = array(
-						'id'				=> $item->id,
-						'form'				=> $item->form,
-						'name'				=> $item->name,
-						'type'				=> $item->type,
-						'label'				=> $item->label,
-						'placeholder'		=> $item->placeholder,
-						'min'				=> $item->min,
-						'max'				=> $item->max,
-						'maxlength'			=> $item->maxlength,
-						'value'				=> $item->value,
-						'pattern'			=> $item->pattern,
-						'disabled'			=> $item->disabled,
-						'required'			=> $item->required,
-						'checked'			=> $item->checked,
-						'autocomplete'		=> $item->autocomplete,
-						'form_action'  		=> backend_UrlMake($this->name, 'fields_save'),
+						'id'           => $item->id,
+						'form'         => $item->form,
+						'name'         => $item->name,
+						'type'         => $item->type,
+						'label'        => $item->label,
+						'placeholder'  => $item->placeholder,
+						'min'          => $item->min,
+						'max'          => $item->max,
+						'maxlength'    => $item->maxlength,
+						'value'        => $item->value,
+						'pattern'      => $item->pattern,
+						'disabled'     => $item->disabled,
+						'required'     => $item->required,
+						'checked'      => $item->checked,
+						'autocomplete' => $item->autocomplete,
+						'form_action'  => backend_UrlMake($this->name, 'fields_save'),
+						'order'        => $item->order
 					);
 
 			$template->register_tag_handler('cms:field_types', $this, 'tag_FieldTypes');
@@ -2811,21 +2812,22 @@ class contact_form extends Module {
 					break;
 
 				$params = array(
-					'id'			=> $item->id,
-					'form'			=> $item->form,
-					'name'			=> $item->name,
-					'type'			=> $item->type,
-					'label'			=> $item->label,
-					'placeholder'	=> $item->placeholder,
-					'min'			=> $item->min,
-					'max'			=> $item->max,
-					'maxlength'		=> $item->maxlength,
-					'value'			=> $item->value,
-					'pattern'		=> $item->pattern,
-					'disabled'		=> $item->disabled,
-					'required'		=> $item->required,
-					'checked'		=> $item->checked,
-					'autocomplete'	=> $item->autocomplete,
+					'id'           => $item->id,
+					'form'         => $item->form,
+					'name'         => $item->name,
+					'type'         => $item->type,
+					'label'        => $item->label,
+					'placeholder'  => $item->placeholder,
+					'min'          => $item->min,
+					'max'          => $item->max,
+					'maxlength'    => $item->maxlength,
+					'value'        => $item->value,
+					'pattern'      => $item->pattern,
+					'disabled'     => $item->disabled,
+					'required'     => $item->required,
+					'checked'      => $item->checked,
+					'autocomplete' => $item->autocomplete,
+					'order'        => $item->order
 				);
 
 				$backend_params = array(
