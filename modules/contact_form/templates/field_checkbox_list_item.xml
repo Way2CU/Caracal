@@ -3,7 +3,7 @@
 <document>
 	<tr>
 		<td>
-			<label class="column">
+			<label class="checkbox">
 				<input
 					type="checkbox"
 					name="'field_'.$params['id']"
