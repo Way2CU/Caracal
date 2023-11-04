@@ -26,7 +26,7 @@
 			<cms:language_data param="legend"/>
 		</label>
 
-		<table class="list" data-height="200">
+		<table class="list with-border" data-height="200">
 			<thead>
 				<td>
 					<cms:text constant="column_fields" module="contact_form"/>
