@@ -63,6 +63,7 @@ form input[pattern] + small.placeholder:after {
 	top: -1em;
 	left: 0;
 	width: max-content;
+	max-width: 300px;
 	opacity: 0;
 	content: attr(data-content);
 	padding: 0.3em 0.5em;
