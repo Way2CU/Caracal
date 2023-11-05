@@ -52,7 +52,7 @@ form input[pattern] + small.placeholder:before {
 	opacity: 0;
 
 	border: 8px solid transparent;
-	border-bottom-color: #909090;
+	border-bottom-color: currentColor;
 
 	line-height: 0;
 	transition: all 0.3s;
@@ -62,15 +62,16 @@ form input[pattern] + small.placeholder:after {
 	position: absolute;
 	top: -1em;
 	left: 0;
+	width: max-content;
 	opacity: 0;
 	content: attr(data-content);
-	padding: 0.2em 0.3em;
+	padding: 0.3em;
 
-	border: 1px solid #909090;
-	border-radius: 2px;
+	border: 1px solid currentColor;
+	border-radius: 5px;
 	background-color: white;
 
-	color: #909090;
+	color: #303030;
 	font-size: 1rem;
 	line-height: normal;
 
