@@ -297,10 +297,11 @@ class Backend_UserManager {
 			$source = $tag_params;
 
 		$data = array(
-				'username'	=> fix_chars($source['username']),
-				'email'		=> fix_chars($source['email']),
-				'level'		=> 0,
-				'agreed'	=> $agreed
+				'username' => fix_chars($source['username']),
+				'password' => '',
+				'email'    => fix_chars($source['email']),
+				'level'    => 0,
+				'agreed'   => $agreed
 			);
 
 		// prepare user's name
