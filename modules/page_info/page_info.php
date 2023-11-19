@@ -154,7 +154,11 @@ class page_info extends Module {
 			$head_tag->add_tag('meta', array('charset' => 'UTF-8'));
 
 		if (!in_array('is-mobile', $this->omit_elements))
-			$head_tag->add_tag('meta', array('is-mobile' => _MOBILE_VERSION ? '1': '0'));
+			$head_tag->add_tag('meta',
+						array(
+							'name'    => 'is-mobile',
+							'content' => _MOBILE_VERSION ? '1': '0'
+						));
 
 		if (!in_array('viewport', $this->omit_elements))
 			$head_tag->add_tag('meta',
