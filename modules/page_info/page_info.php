@@ -150,9 +150,11 @@ class page_info extends Module {
 			$collection->includeScript(collection::MOBILE_MENU);
 
 		// content meta tags
-		if (!in_array('charset', $this->omit_elements)) {
+		if (!in_array('charset', $this->omit_elements))
 			$head_tag->add_tag('meta', array('charset' => 'UTF-8'));
-		}
+
+		if (!in_array('is-mobile', $this->omit_elements))
+			$head_tag->add_tag('meta', array('is-mobile' => _MOBILE_VERSION ? '1': '0'));
 
 		if (!in_array('viewport', $this->omit_elements))
 			$head_tag->add_tag('meta',
