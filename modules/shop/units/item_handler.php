@@ -842,6 +842,9 @@ class Handler {
 		if (isset($tag_params['generate_sprite']))
 			$generate_sprite = $tag_params['generate_sprite'] == 1;
 
+		if (isset($tag_params['author']))
+			$conditions['author'] = fix_id($tag_params['author']);
+
 		// get items
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
