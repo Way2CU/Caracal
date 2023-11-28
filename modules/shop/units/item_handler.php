@@ -637,6 +637,13 @@ class Handler {
 		$rating = 0;
 		$variation_id = $shop->generateVariationId($item->uid);
 
+		$colors = array();
+		if (!empty($item->colors))
+			foreach (explode(',', $item->colors) as $keyval) {
+				list($name, $value) = explode(':', $keyval);
+				$colors[$name] = $value;
+			}
+
 		$params = array(
 					'id'              => $item->id,
 					'uid'             => $item->uid,
@@ -649,7 +656,8 @@ class Handler {
 					'manufacturer'    => $item->manufacturer,
 					'supplier'        => $item->supplier,
 					'size_definition' => $item->size_definition,
-					'colors'          => $item->colors,
+					'colors'          => $colors,
+					'raw_colors'      => $item->colors,
 					'author'          => $item->author,
 					'views'           => $item->views,
 					'price'           => $item->price,
