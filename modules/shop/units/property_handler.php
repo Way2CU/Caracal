@@ -172,6 +172,7 @@ class Handler {
 
 		// create template
 		$template = $this->parent->load_template($tag_params, 'item_property.xml');
+		$template->set_template_params_from_array($children);
 
 		// prepare data
 		$data = array(
