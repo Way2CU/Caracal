@@ -559,6 +559,9 @@ class Handler {
 		if (isset($tag_params['uid']))
 			$conditions['uid'] = fix_chars($tag_params['uid']);
 
+		if (isset($tag_params['author']))
+			$conditions['author'] = fix_id($tag_params['author']);
+
 		if (isset($tag_params['random']) && isset($tag_params['category'])) {
 			if (is_numeric($tag_params['category'])) {
 				$category_id = fix_id($tag_params['category']);
