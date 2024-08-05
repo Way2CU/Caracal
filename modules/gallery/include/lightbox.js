@@ -39,26 +39,20 @@ Caracal.Gallery.LightBox = function() {
 		self.ui.next_control = document.createElement('a');
 		self.ui.close_control = document.createElement('a');
 
-		with (self.ui.previous_control) {
-			classList.add('control', 'previous');
-			addEventListener('click', self.handlers.previous_click);
+		self.ui.previous_control.classList.add('control', 'previous');
+		self.ui.previous_control.addEventListener('click', self.handlers.previous_click);
 
-			if (!self.show_controls)
-				classList.add('hidden');
-		}
+		if (!self.show_controls)
+			self.ui.previous_control.classList.add('hidden');
 
-		with (self.ui.next_control) {
-			classList.add('control', 'next');
-			addEventListener('click', self.handlers.next_click);
+		self.ui.next_control.classList.add('control', 'next');
+		self.ui.next_control.addEventListener('click', self.handlers.next_click);
 
-			if (!self.show_controls)
-				classList.add('hidden');
-		}
+		if (!self.show_controls)
+			self.ui.next_control.classList.add('hidden');
 
-		with (self.ui.close_control) {
-			classList.add('control', 'close');
-			addEventListener('click', self.handlers.close_click);
-		}
+		self.ui.close_control.classList.add('control', 'close');
+		self.ui.close_control.addEventListener('click', self.handlers.close_click);
 
 		// create image and its caption
 		self.ui.title = document.createElement('h4');
@@ -68,29 +62,23 @@ Caracal.Gallery.LightBox = function() {
 			self.ui.description.classList.add('hidden');
 
 		self.ui.caption_container = document.createElement('figcaption');
-		with (self.ui.caption_container) {
-			appendChild(self.ui.title);
-			appendChild(self.ui.description);
+		self.ui.caption_container.appendChild(self.ui.title);
+		self.ui.caption_container.appendChild(self.ui.description);
 
-			if (!self.show_title)
-				classList.add('hidden');
-		}
+		if (!self.show_title)
+			self.ui.caption_container.classList.add('hidden');
 
 		// create figure container
 		self.ui.image = document.createElement('figure');
-		with (self.ui.image) {
-			appendChild(self.ui.caption_container);
-			appendChild(self.ui.close_control);
-		}
+		self.ui.image.appendChild(self.ui.caption_container);
+		self.ui.image.appendChild(self.ui.close_control);
 
 		// create image container
 		self.ui.image_container = document.createElement('div');
-		with (self.ui.image_container) {
-			classList.add('image');
-			appendChild(self.ui.previous_control);
-			appendChild(self.ui.image);
-			appendChild(self.ui.next_control);
-		}
+		self.ui.image_container.classList.add('image');
+		self.ui.image_container.appendChild(self.ui.previous_control);
+		self.ui.image_container.appendChild(self.ui.image);
+		self.ui.image_container.appendChild(self.ui.next_control);
 
 		// create thumbnail container
 		self.ui.thumbnail_container = document.createElement('div');
@@ -98,14 +86,12 @@ Caracal.Gallery.LightBox = function() {
 
 		// create main container
 		self.ui.container = document.createElement('section');
-		with (self.ui.container) {
-			classList.add('lightbox');
-			appendChild(self.ui.image_container);
-			appendChild(self.ui.thumbnail_container);
+		self.ui.container.classList.add('lightbox');
+		self.ui.container.appendChild(self.ui.image_container);
+		self.ui.container.appendChild(self.ui.thumbnail_container);
 
-			if (self.show_thumbnails)
-				classList.add('with_thumbnails');
-		}
+		if (self.show_thumbnails)
+			self.ui.container.classList.add('with_thumbnails');
 
 		document.querySelector('body').appendChild(self.ui.container);
 
