@@ -355,13 +355,11 @@ class Handler {
 			$manager->insert_item($data);
 			$window = 'shop_item_add';
 			$id = $manager->get_inserted_id();
-			Events::trigger('shop', 'item-added', $id);
 
 		} else {
 			// update existing data
 			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_item_change';
-			Events::trigger('shop', 'item-changed', $id);
 		}
 
 		// update categories and delivery method selection
@@ -429,6 +427,11 @@ class Handler {
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
+
+		// trigger events
+		if ($new_item)
+			Events::trigger('shop', 'item-added', $id); else
+			Events::trigger('shop', 'item-changed', $id);
 	}
 
 	/**
