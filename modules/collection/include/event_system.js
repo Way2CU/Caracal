@@ -107,8 +107,8 @@ Caracal.EventSystem = function() {
 
 		// call functions
 		for (var index in list) {
-			callback = list[index];
-			response = callback.apply(null, params);
+			var callback = list[index];
+			var response = callback.apply(null, params);
 
 			if (response_type)
 				switch (response_type) {
