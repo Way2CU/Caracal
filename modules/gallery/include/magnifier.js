@@ -26,7 +26,11 @@ Caracal.Gallery.Magnifier = function(container) {
 	self.is_circle = false;
 
 	self._init = function() {
-		self.ui.container = document.querySelector(container);
+		if (typeof container == 'string')
+			self.ui.container = document.querySelector(container); else
+		if (container instanceof Element)
+			self.ui.container = container; else
+			self.ui.container = null;
 
 		if (!self.ui.container) {
 			console.warn('Missing container for gallery magnifier.');
