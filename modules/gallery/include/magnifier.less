@@ -1,0 +1,34 @@
+/**
+ * Magnifier for Gallery
+ *
+ * Copyright (c) 2024. by Way2CU
+ * Author: Mladen Mijatov
+ */
+
+div.gallery-magnifier-viewport {
+	position: fixed;
+	padding: 0.2em;
+
+	outline: 1px solid #dadada;
+	border: 3px solid #fff;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+	background-color: #fff;
+
+	opacity: 0;
+	pointer-events: none;
+	transition: none;
+	overflow: hidden;
+
+	&.visible {
+		opacity: 1;
+		transition: 0.3s opacity;
+	}
+
+	&.circle {
+		border-radius: 50%;
+	}
+
+	img {
+		position: relative;
+	}
+}

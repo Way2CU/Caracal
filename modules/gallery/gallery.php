@@ -386,6 +386,17 @@ class gallery extends Module {
 						'rel'  => 'stylesheet/less',
 						'type' => 'text/css'
 					));
+		$head_tag->add_tag('script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/magnifier.js'),
+						'type' => 'text/javascript'
+					));
+		$head_tag->add_tag('link',
+					array(
+						'href' => URL::from_file_path($this->path.'include/magnifier.less'),
+						'rel'  => 'stylesheet/less',
+						'type' => 'text/css'
+					));
 	}
 
 	/**
