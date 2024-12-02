@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Main Configuration File
- */
-
 // paths
 $site_path = 'site/';
 $cache_path = $site_path.'cache/';
@@ -40,7 +36,7 @@ $db_config = array(
 	);
 
 // configure default values for CSP
-CSP\Policy::add_value('script-src', "'self'");
+Core\CSP\Policy::add_value('script-src', "'self'");
 
 // cache
 $cache_method = Core\Cache\Type::NONE;
