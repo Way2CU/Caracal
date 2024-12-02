@@ -101,8 +101,6 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transfer_control($params, $children) {
-		global $frame_options;
-
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'login':

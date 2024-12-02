@@ -57,7 +57,6 @@ $closure_compiler_config = null;
 // security
 $force_https = false;
 $referrer_policy = 'strict-origin-when-cross-origin';
-$frame_options = 'SAMEORIGIN';
 
 $url_rewrite = false;
 

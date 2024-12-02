@@ -926,7 +926,7 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
-		global $language, $referrer_policy, $frame_options;
+		global $language, $referrer_policy;
 
 		header('X-Powered-By: Caracal/'._VERSION);
 		header('Content-Language: '.$language);
@@ -938,10 +938,6 @@ class TemplateHandler {
 
 			// prevent drive-by downloads and site being treated as different type
 			header('X-Content-Type-Options: nosniff');
-
-			// prevent site loading from different origins
-			if (!is_null($frame_options))
-				header('X-Frame-Options: '.$frame_options);
 
 			// enforce cross-site scripting protection
 			header('X-Xss-Protection: 1; mode=block');

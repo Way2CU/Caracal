@@ -93,9 +93,6 @@ Enforcing of SSL encryption of HTTP protocol (HTTPS) can be done by setting `$fo
 
 Default stance for cross-domain referral URLs in Caracal is to provide only domain without any additional information or path. This is done with intention on protecting user's privacy while keeping some backwards compatibility with services which require such information. Referrer policy can be changed by setting `$referrer_policy` variable.
 
-Embedding Caracal website is configured by default to be allowed only on same origin (domain). This configuration can be changed by setting new value to `$frame_options`. It's important to note that backend relies on ability to use IFrames. Changing this option might result in file uploads to stop working in backend.
-
-
 ## URL generator features
 
 To provide URL and paths in easier to read fashion which are more friendly to search engines Caracal uses URL generator class. More information can be found [here](path_handling.markdown).
