@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\CSP;
 use Core\Events;
 use Core\Module;
 use Core\Markdown;
@@ -132,6 +133,16 @@ class page_info extends Module {
 		$collection = collection::get_instance();
 		$language_list = Language::get_languages(false);
 		$ignored_section = in_array($section, array('backend', 'backend_module'));
+
+		// thanks to "excellent" implementation of nginx, on some servers CSP header is blocked
+		// and we are forced to pass this policy through meta tag. Care should be exercised
+		// in cases where servers implement their own CSP through header as two policies can be
+		// applied at the same time and cause weird issues.
+		$head_tag->add_tag('meta',
+			array(
+				'http-equiv' => 'Content-Security-Policy',
+				'content'    => CSP\Policy::get_policy()
+			));
 
 		// add base url tag
 		$head_tag->add_tag('meta',
