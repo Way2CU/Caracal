@@ -19,6 +19,7 @@ namespace Core\CSP;
 
 final class Policy {
 	private static $policy = array();
+	private static $nonce = null;
 
 	/**
 	 * Parse all values and return associative array.
@@ -78,6 +79,24 @@ final class Policy {
 	}
 
 	/**
+	 * Add NONCE number to element's policy. Number is randomly generated per
+	 * request and can serve as an additional layer of security without having to resort
+	 * to using `unsafe-inline` values.
+	 *
+	 * Usage:
+	 *	<style href="..." cms:nonce/>
+	 *
+	 * @param string $element
+	 */
+	public static function add_nonce($element) {
+		$value = self::get_nonce();
+
+		if (!isset(self::$policy[$element]))
+			self::$policy[$element] = array();
+		self::$policy[$element][] = "nonce-{$value}";
+	}
+
+	/**
 	 * Add single value to the element list.
 	 *
 	 * @param string $element
@@ -111,6 +130,20 @@ final class Policy {
 		foreach (self::$policy as $element => $values)
 			$result[] = $element.' '.join(' ', $values);
 		return join('; ', $result);
+	}
+
+	/**
+	 * Return value of NONCE.
+	 *
+	 * @return string
+	 */
+	public static function get_nonce() {
+		global $db_config;
+
+		if (is_null(self::$nonce))
+			self::$nonce = hash_hmac('sha1', uniqid("", true), $db_config['pass']);
+
+		return self::$nonce;
 	}
 }
 
