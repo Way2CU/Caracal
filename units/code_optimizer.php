@@ -11,6 +11,7 @@
 require_once(_LIBPATH.'less/lib/Less/Autoloader.php');
 require_once(_LIBPATH.'closure/closure.php');
 
+use Core\CSP;
 use Library\Closure\Compiler as Closure;
 use Library\Closure\Level as ClosureLevel;
 use Library\Closure\InvalidResponseError;
@@ -336,7 +337,8 @@ class CodeOptimizer {
 			print '<link type="text/css" rel="stylesheet" ';
 			print 'href="'._BASEURL.'/'.$style_cache.'?mt='.$cache_time.'"'.$integrity.'>';
 		} else {
-			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+			print '<style type="text/css" nonce="'.CSP\Policy::get_nonce().'">';
+			print file_get_contents($style_cache).'</style>';
 		}
 	}
 
