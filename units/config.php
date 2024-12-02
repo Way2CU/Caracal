@@ -36,8 +36,6 @@ $db_config = array(
 	);
 
 // configure default values for CSP
-Core\CSP\Policy::add_nonce('style-src');
-Core\CSP\Policy::add_nonce('script-src');
 Core\CSP\Policy::add_value('script-src', "'self'");
 
 // cache
