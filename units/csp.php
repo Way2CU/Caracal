@@ -93,7 +93,7 @@ final class Policy {
 
 		if (!isset(self::$policy[$element]))
 			self::$policy[$element] = array();
-		self::$policy[$element][] = "nonce-{$value}";
+		self::$policy[$element][] = "'nonce-{$value}'";
 	}
 
 	/**
