@@ -39,6 +39,9 @@ $db_config = array(
 		'name' => 'database'
 	);
 
+// configure default values for CSP
+CSP\Policy::add_value('script-src', "'self'");
+
 // cache
 $cache_method = Core\Cache\Type::NONE;
 $cache_expire_period = 86400;

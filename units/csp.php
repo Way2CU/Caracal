@@ -10,29 +10,29 @@
  *
  * Usage example:
  *
- *	Parser::add_value('script-src', 'domain.com/scripts/something.js');
+ *	Policy::add_value('script-src', 'domain.com/scripts/something.js');
  *
  * Author: Mladen Mijatov
  */
 namespace Core\CSP;
 
 
-final class Parser {
-	private static $default_policy = "script-src 'self'";
-	private static $policy = null;
+class Policy {
+	private static $policy = array();
 
 	/**
 	 * Parse all values and return associative array.
 	 *
+	 * @param string $policy
 	 * @return array
 	 */
-	private static function get_elements() {
+	private static function parse($policy) {
 		if (is_null(self::$policy))
 			self::$policy = self::$default_policy;
 
 		// split policy into manageable chunks
 		$elements = array();
-		$raw_elements = explode(';', self::$policy);
+		$raw_elements = explode(';', $policy);
 
 		// parse each chunk
 		foreach ($raw_elements as $raw_values) {
@@ -49,18 +49,12 @@ final class Parser {
 	}
 
 	/**
-	 * Set values for all elements.
+	 * Set values for all elements in one go.
 	 *
-	 * @param array $values
+	 * @param array $policy
 	 */
-	private static function set_elements($elements) {
-		// prepare elements for update
-		$raw_elements = array();
-		foreach ($elements as $key => $values)
-			$raw_elements[] = $key.' '.join(' ', $values);
-
-		// update policy
-		self::$policy = join(';', $raw_elements);
+	private static function set($policy) {
+		self::$policy = $policy;
 	}
 
 	/**
@@ -70,13 +64,7 @@ final class Parser {
 	 * @return array
 	 */
 	public static function get_values($element) {
-		$elements = self::get_elements();
-
-		$result = null;
-		if (isset($elements[$element]))
-			$result = $elements[$element];
-
-		return $result;
+		return isset(self::$policy[$element]) ? self::$policy[$element] : null;
 	}
 
 	/**
@@ -86,9 +74,7 @@ final class Parser {
 	 * @param array $values
 	 */
 	public static function set_values($element, $values) {
-		$elements = self::get_elements();
-		$elements[$element] = $values;
-		self::set_elements($elements);
+		self::$policy[$element] = $values;
 	}
 
 	/**
@@ -98,13 +84,21 @@ final class Parser {
 	 * @param string $value
 	 */
 	public static function add_value($element, $value) {
-		$elements = self::get_elements();
+		if (!isset(self::$policy[$element]))
+			self::$policy[$element] = array();
+		self::$policy[$element][] = $value;
+	}
 
-		if (!isset($elements[$element]))
-			$elements[$element] = array();
-		$elements[$element][] = $value;
-
-		self::set_elements($elements);
+	/**
+	 * Add multiple values to the element list.
+	 *
+	 * @param string $element
+	 * @param array $values
+	 */
+	public static function add_values($element, $values) {
+		if (!isset(self::$policy[$element]))
+			self::$policy[$element] = array();
+		self::$policy[$element] = array_merge(self::$policy[$element], $values);
 	}
 
 	/**
@@ -113,7 +107,10 @@ final class Parser {
 	 * @return string
 	 */
 	public static function get_policy() {
-		return self::$policy;
+		$result = array();
+		foreach (self::$policy as $element => $values)
+			$result[] = $element.' '.join(' ', $values);
+		return join('; ', $result);
 	}
 }
 
