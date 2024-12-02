@@ -17,7 +17,7 @@
 namespace Core\CSP;
 
 
-class Policy {
+final class Policy {
 	private static $policy = array();
 
 	/**

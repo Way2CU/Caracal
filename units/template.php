@@ -11,7 +11,7 @@
 
 use Core\Events;
 use Core\Markdown;
-use Core\CSP\Parser as CSP;
+use Core\CSP\Policy as CSP;
 use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
 use Core\Testing\Handler as TestingHandler;
