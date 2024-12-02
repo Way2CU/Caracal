@@ -12,7 +12,7 @@ use Core\Events;
 use Core\Module;
 use Core\Exports\File;
 use Core\Cache\Manager as Cache;
-use Core\CSP\Parser as CSP;
+use Core\CSP\Policy as CSP;
 use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
