@@ -58,6 +58,14 @@ class gallery extends Module {
 				return;
 			}
 
+		// register events that will be emitted by this module
+		Events::register('gallery', 'image-uploaded', 3);  // params: id list, data, group
+		Events::register('gallery', 'image-changed', 2);  // params: id, data
+		Events::register('gallery', 'image-deleted', 1);  // params: id
+		Events::register('gallery', 'group-created', 2);  // params: id, data
+		Events::register('gallery', 'group-changed', 2);  // params: id, data
+		Events::register('gallery', 'group-deleted', 1);  // params: id
+
 		// connect event for loading tags
 		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 		Events::connect('backend', 'sprite-include', 'include_sprite', $this);
@@ -527,11 +535,13 @@ class gallery extends Module {
 			// store multiple uploaded images
 			$window_name = 'gallery_images_upload_bulk';
 			$result = $this->create_image('image');
+			$id_list = array_keys($result['filenames']);
 
 			$manager->update_items(
 					array('group' => $group),
-					array('id' => array_keys($result['filenames']))
+					array('id' => $id_list)
 				);
+			Events::trigger('gallery', 'image-uploaded', $id_list, null, $group);
 
 		} else {
 			// store single uploaded image
@@ -552,6 +562,7 @@ class gallery extends Module {
 						);
 
 				$manager->update_items($data, array('id' => array_keys($result['filenames'])));
+				Events::trigger('gallery', 'image-uploaded', $id_list, $data, $group);
 			}
 		}
 
@@ -625,6 +636,7 @@ class gallery extends Module {
 				);
 
 		$manager->update_items($data, array('id' => $id));
+		Events::trigger('gallery', 'image-changed', $id, $data);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
@@ -686,6 +698,7 @@ class gallery extends Module {
 		$manager = GalleryManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
+		Events::trigger('gallery', 'image-deleted', $id);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
@@ -787,10 +800,14 @@ class gallery extends Module {
 
 		if (!is_null($id)) {
 			$manager->update_items($data, array('id' => $id));
+			Events::trigger('gallery', 'group-changed', $id, $data);
 			$window_name = 'gallery_groups_change';
 			$message = $this->get_language_constant('message_group_changed');
+
 		} else {
 			$manager->insert_item($data);
+			$id = $manager->get_inserted_id();
+			Events::trigger('gallery', 'group-created', $id, $data);
 			$window_name = 'gallery_groups_create';
 			$message = $this->get_language_constant('message_group_created');
 		}
@@ -856,6 +873,7 @@ class gallery extends Module {
 
 		$manager->delete_items(array('group' => $id));
 		$group_manager->delete_items(array('id' => $id));
+		Events::trigger('gallery', 'group-deleted', $id);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
