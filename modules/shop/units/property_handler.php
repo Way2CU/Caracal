@@ -145,6 +145,10 @@ class Handler {
 	public function tag_Property($tag_params, $children) {
 		$manager = Manager::get_instance();
 		$conditions = array();
+		$fallback = false;
+
+		if (isset($tag_params['fallback']))
+			$fallback = $tag_params['fallback'] == 1;
 
 		// prepare conditions
 		if (isset($tag_params['item']))
@@ -167,12 +171,34 @@ class Handler {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// we need items to display
-		if (!is_object($item))
+		if (!is_object($item) && !$fallback)
 			return;
 
 		// create template
 		$template = $this->parent->load_template($tag_params, 'item_property.xml');
 		$template->set_template_params_from_array($children);
+
+		// render template with fallback data
+		if (!is_object($item) && $fallback) {
+			$params = array(
+					'name'      => '',
+					'type'      => 'text',
+					'value'     => '',
+					'raw_value' => serialize(''),
+					'data'      => null
+				);
+			if (isset($conditions['item']))
+				$params['id'] = $conditions['id'];
+			if (isset($conditions['text_id']))
+				$params['text_id'] = $conditions['text_id'];
+
+			// parse template
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+
+			return;
+		}
 
 		// prepare data
 		$data = array(
