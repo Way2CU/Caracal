@@ -943,7 +943,8 @@ class TemplateHandler {
 			header('X-Xss-Protection: 1; mode=block');
 
 			// define content security policy
-			header('Content-Security-Policy: '.CSP::get_policy());
+			if (!CSP::is_disabled())
+				header('Content-Security-Policy: '.CSP::get_policy());
 
 			// set referrer policy
 			header('Referrer-Policy: '.$referrer_policy);

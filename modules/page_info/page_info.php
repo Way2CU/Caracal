@@ -138,11 +138,12 @@ class page_info extends Module {
 		// and we are forced to pass this policy through meta tag. Care should be exercised
 		// in cases where servers implement their own CSP through header as two policies can be
 		// applied at the same time and cause weird issues.
-		$head_tag->add_tag('meta',
-			array(
-				'http-equiv' => 'Content-Security-Policy',
-				'content'    => CSP\Policy::get_policy()
-			));
+		if (!CSP\Policy::is_disabled())
+			$head_tag->add_tag('meta',
+				array(
+					'http-equiv' => 'Content-Security-Policy',
+					'content'    => CSP\Policy::get_policy()
+				));
 
 		// add base url tag
 		$head_tag->add_tag('meta',

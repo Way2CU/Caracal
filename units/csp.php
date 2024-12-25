@@ -20,6 +20,28 @@ namespace Core\CSP;
 final class Policy {
 	private static $policy = array();
 	private static $nonce = null;
+	private static $disabled = false;
+
+	/**
+	 * Allow enabling or disabling CSP policy use. This is mainly
+	 * meant for use by legacy sites where configuring policy is either
+	 * hard or downright impossible. Whenever possible CSP should
+	 * be configured and used.
+	 *
+	 * @param boolean $state
+	 */
+	public static function set_disabled($state) {
+		self::$disabled = $state;
+	}
+
+	/**
+	 * Return current state of CSP operation.
+	 *
+	 * @return boolean
+	 */
+	public static function is_disabled() {
+		return self::$disabled;
+	}
 
 	/**
 	 * Parse all values and return associative array.
