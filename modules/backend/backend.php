@@ -101,6 +101,10 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transfer_control($params, $children) {
+		// backend depends on inline scripts a lot, ideally this should
+		// be fixed properly, but for the time being this will have to do
+		Core\CSP\Policy::add_value('script-src', "'unsafe-inline'");
+
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'login':
