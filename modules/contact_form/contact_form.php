@@ -753,7 +753,7 @@ class contact_form extends Module {
 
 		// show result
 		if (_AJAX_REQUEST) {
-			// return JSON object as reponse
+			// return JSON object as response
 			$response = array(
 					'error'				=> !$result,
 					'messages'			=> $messages,
@@ -768,7 +768,7 @@ class contact_form extends Module {
 
 		} else {
 			// show response from template
-			$template = $this->load_template($tag_params, 'reponse.xml');
+			$template = $this->load_template($tag_params, 'response.xml');
 			$template->set_template_params_from_array($children);
 
 			$params = array(
