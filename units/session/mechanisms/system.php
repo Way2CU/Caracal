@@ -18,7 +18,7 @@ class SystemMechanism extends Mechanism {
 	 * @param array $params
 	 * @return array or null
 	 */
-	public function login($params) {
+	public function login($params=null) {
 		$result = null;
 
 		// login traditional way with username and password
