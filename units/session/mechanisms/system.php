@@ -11,25 +11,42 @@ namespace Core\Session;
 
 class SystemMechanism extends Mechanism {
 	/**
-	 * Perform authentication and return boolean value denoting
-	 * success of the action.
+	 * If successfull return value is an array containing identification
+	 * data to be passed to `get_data` method. In case authentication
+	 * failed return value is null.
 	 *
-	 * @return boolean
+	 * @param array $params
+	 * @return array or null
 	 */
-	public function login($params=null) {
+	public function login($params) {
 		$result = null;
 
+		// login traditional way with username and password
 		if (is_array($params) && isset($params['username']) && isset($params['password'])) {
-			$username = $params['username'];
-			$password = $params['password'];
+			if (self::check_credentials($params['username'], $params['password']))
+				$result = array('username' => $params['username']);
 
-		} else {
-			$username = $_REQUEST['username'];
-			$password = $_REQUEST['password'];
+		// login using account verification code
+		} else if (is_array($params) && isset($params['username']) && isset($params['verification'])) {
+			$user_manager = \UserManager::get_instance();
+			$code_manager = \UserVerificationManager::get_instance();
+
+			$user = $user_manager->get_single_item(
+				array('id'),
+				array('username' => $params['username'])
+			);
+
+			if (!is_object($user))
+				return $result;
+
+			$verification = $manager->get_single_item(
+					$manager->get_field_names(),
+					array('user' => $user->id)
+				);
+
+			if (is_object($verification) && $verification->code == $params['verification'])
+				$result = array('username' => $params['username']);
 		}
-
-		if (self::check_credentials($username, $password))
-			$result = array('username' => $username);
 
 		return $result;
 	}

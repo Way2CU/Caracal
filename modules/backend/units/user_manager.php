@@ -1149,7 +1149,6 @@ class Backend_UserManager {
 		$result = false;
 		$username = null;
 		$code = null;
-		$verification = null;
 
 		// get username
 		if (isset($tag_params['username']))
@@ -1171,18 +1170,12 @@ class Backend_UserManager {
 		// get user from database
 		$user = $manager->get_single_item($manager->get_field_names(), array('username' => $username));
 
+		// try to log user in and complete verification
 		if (is_object($user))
-			$verification = $verification_manager->get_single_item(
-									$verification_manager->get_field_names(),
-									array(
-										'user'	=> $user->id,
-										'code'	=> $code
-									));
-
-		// data matches, mark account as verified
-		if (is_object($verification)) {
-			$manager->verify_user($user->username);
-			$verification_manager->delete_items(array('user' => $user->id));
+			if (Session::login(array('username' => $user, 'verification' => $code)) {
+				$manager->verify_user($user->username);
+				$verification_manager->delete_items(array('user' => $user->id));
+			}
 		}
 	}
 }

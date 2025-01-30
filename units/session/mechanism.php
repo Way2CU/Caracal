@@ -17,17 +17,16 @@ namespace Core\Session;
 
 abstract class Mechanism {
 	/**
-	 * Perform authentication and return boolean value denoting
-	 * success of the action. Normally this process is initiated
+	 * Perform authentication. Normally this process is initiated
 	 * by sending request to `?section=session`. If optional parameters
 	 * are specified, authentication mechanism can be used manually.
 	 *
 	 * If successfull return value is an array containing identification
 	 * data to be passed to `get_data` method. In case authentication
-	 * failed return value is null
+	 * failed return value is null.
 	 *
 	 * @param array $params
-	 * @return mixed
+	 * @return array or null
 	 */
 	public abstract function login($params=null);
 
