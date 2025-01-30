@@ -39,8 +39,8 @@ class SystemMechanism extends Mechanism {
 			if (!is_object($user))
 				return $result;
 
-			$verification = $manager->get_single_item(
-					$manager->get_field_names(),
+			$verification = $code_manager->get_single_item(
+					$code_manager->get_field_names(),
 					array('user' => $user->id)
 				);
 
