@@ -1172,7 +1172,7 @@ class Backend_UserManager {
 
 		// try to log user in and complete verification
 		if (is_object($user))
-			if (Session::login(array('username' => $user, 'verification' => $code))) {
+			if (Session::login(array('username' => $user->username, 'verification' => $code))) {
 				$manager->verify_user($user->username);
 				$verification_manager->delete_items(array('user' => $user->id));
 			}
