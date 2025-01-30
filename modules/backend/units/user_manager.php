@@ -1176,7 +1176,6 @@ class Backend_UserManager {
 				$manager->verify_user($user->username);
 				$verification_manager->delete_items(array('user' => $user->id));
 			}
-		}
 	}
 }
 
