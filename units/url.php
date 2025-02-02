@@ -1,5 +1,7 @@
 <?php
 
+use Core\CSP\Policy as CSP;
+
 /**
  * Universal resource locator (URL) helper class provides functions
  * for creating, modifying and working with URLs.
@@ -206,7 +208,8 @@ final class URL {
 	 */
 	public static function set_refresh($url=null, $timeout=2) {
 		$url = is_null($url) ? $_SERVER['REQUEST_URI'] : $url;
-		$output = '<script type="text/javascript">';
+		$nonce = CSP::get_nonce();
+		$output = '<script type="text/javascript" nonce="'.$nonce.'">';
 		$output .= 'setTimeout(function() { window.location = \''.$url.'\'; }, '.($timeout * 1000).')';
 		$output .= '</script>';
 
