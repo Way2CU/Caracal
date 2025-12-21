@@ -333,4 +333,33 @@ class SettingsManager extends ItemManager {
 	}
 }
 
+
+class PrivacyConsentManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('system_privacy_consent');
+
+		$this->add_property('uid', 'char');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('categories', 'varchar');
+		$this->add_property('gpc', 'boolean');
+		$this->add_property('gpp', 'varchar');
+		$this->add_property('desktop_version', 'boolean');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function get_instance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
+
 ?>
