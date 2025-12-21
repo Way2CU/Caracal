@@ -265,4 +265,22 @@ function get_qr_image($uri, $size=100, $error_correction="L") {
 	return $result;
 }
 
+/**
+ * Generate UUID version 4 based on random data.
+ *
+ * @return string
+ */
+function uuid_v4() {
+	$result = sprintf(
+		'%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+		mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+		mt_rand(0, 0xffff),
+		mt_rand(0, 0x0fff) | 0x4000,
+		mt_rand(0, 0x3fff) | 0x8000,
+		mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+	);
+
+	return $result;
+}
+
 ?>
