@@ -366,9 +366,9 @@ class TemplateHandler {
 
 			// check if specified tag shouldn't be cached
 			$skip_cache = false;
+			$no_cache_tags = array('cms:privacy', 'cms:test');
 
-			if (isset($tag->tagAttrs['cms:skip_cache'])) {
-				// unset param
+			if (isset($tag->tagAttrs['cms:skip_cache']) || in_array($tag->tagName, $no_cache_tags)) {
 				unset($tag->tagAttrs['cms:skip_cache']);
 
 				// only if current URL is being cached, we start dirty area
@@ -654,6 +654,23 @@ class TemplateHandler {
 
 					break;
 
+				// conditional tag that forces site to respect user's privacy configuration
+				case 'cms:privacy':
+					$condition = false;
+					$categories = isset($_SESSION['privacy_categories']) ? $_SESSION['privacy_categories'] : array('system');
+
+					if (isset($_SERVER['HTTP_SEC_GPC']) && $_SERVER['HTTP_SEC_GPC'] == 1)
+						$categories = array('system');
+
+					if (isset($tag->tagAttrs['type']))
+						$condition = in_array($tag->tagAttrs['type'], $_SESSION['privacy_categories']);
+
+					// parse children
+					if ($condition)
+						$this->parse($tag->tagChildren);
+
+					break;
+
 				// conditional tag parsed for desktop version
 				case 'cms:desktop':
 					if (_DESKTOP_VERSION)
@@ -743,17 +760,6 @@ class TemplateHandler {
 
 				// automated testing support
 				case 'cms:test':
-					// don't allow content of this tag to be cached
-					if ($this->cache->is_caching()) {
-						$this->cache->start_dirty_area();
-						$skip_cache = true;
-
-						// reconstruct template for cache,
-						// ugly but we are not doing it a lot
-						$data = $this->get_data_for_cache($tag);
-						$this->cache->set_dirty_area_template($data);
-					}
-
 					// select and show version
 					$handler = TestingHandler::get_instance();
 					$handler->show_version($this, $tag->tagAttrs, $tag->tagChildren);
