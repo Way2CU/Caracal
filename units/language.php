@@ -252,11 +252,11 @@ final class Language {
 	}
 
 	/**
-	 * Apply language for current session. If language is not defined
+	 * Apply language for current browser client. If language is not defined
 	 * function will try to match the language with browser's desired
 	 * language or use site's default.
 	 */
-	public static function apply_for_session() {
+	public static function apply_for_client() {
 		global $language, $default_language, $available_languages, $language_rtl, $data_path, $system_path;
 
 		// load language definitions
