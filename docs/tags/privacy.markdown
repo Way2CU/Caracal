@@ -9,10 +9,11 @@ Tag `cms:privacy` supports the following attributes:
 Predefined types are:
 
 - `system` - For system scripts. Things like language preference, session tracking and similar don't require consent;
+- `customization` - For customizing user experience (recommendations, AB testing, etc.). Consent required: Depends on implementation;
 - `analytics` - For usage analytics and performance tracking. Consent required: GDPR: yes, USA: often;
-- `advertising` - For advertising and targeting purposes. Consent required: GDPR: yes, USA: yes for sale/share;
-- `customization` - For customizing user experience (recommendations, AB testing, etc.). Consent required: Depends on implementation.
+- `advertising` - For advertising and targeting purposes. Consent required: GDPR: yes, USA: yes for sale/share.
 
+You are able to customize this list and add more types by changing `privacy_consent.xml` from the site template and adding additional categories with their descriptions. All you need to do in templates now is use this new type as you would with built in.
 
 Example parsing optional image only on home page:
 
