@@ -1,7 +1,7 @@
 /**
  * Common Style Sheet
  *
- * Copyright (c) 2014. by Way2CU
+ * Copyright (c) 2025. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -235,4 +235,52 @@ button::-moz-focus-inner {
  */
 iframe.video {
 	border: 0;
+}
+
+/**
+ * Cookie consent
+ */
+#privacy-consent.system {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	padding: 1em;
+
+	border: 1px solid #a0a0a0;
+	border-radius: 1em;
+	background-color: white;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+
+	color: #333;
+
+	transform: translate(-50%, -50%);
+}
+
+#privacy-consent.system h3 {
+	margin-top: 0;
+}
+
+#privacy-consent.system > div {
+	padding-bottom: 1em;
+}
+
+#privacy-consent.system form label {
+	display: grid;
+	padding: 0.2em 0.5em;
+	margin-bottom: 0.5em;
+
+	border-radius: 0.2em;
+	grid-template-columns: auto min-content;
+	cursor: pointer;
+	user-select: none;
+}
+
+#privacy-consent.system form label:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#privacy-consent.system form label span small {
+	display: block;
+	font-style: italic;
 }
