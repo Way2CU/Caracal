@@ -91,6 +91,7 @@
     "label_use_ajax": "Користи AJAX за слање података?",
     "label_use_ssl": "Користи SSL енкрипцију?",
     "label_value": "Предефинисана вредност:",
+    "label_order": "Order:",
     "legend_controls": "Контроле формулара",
     "legend_range": "Опсег",
     "legend_recipient": "Прималац",

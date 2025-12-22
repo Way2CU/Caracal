@@ -34,5 +34,17 @@
     "refresh": "Освежи",
     "reload": "Поново учитај",
     "download": "Download",
-    "back_to_home": "Назад на почетну страницу"
+    "back_to_home": "Назад на почетну страницу",
+    "privacy_title": "We use cookies",
+    "privacy_text": "This site uses cookies to provide functionality and personalization. You can select which elements are allowed to be loaded bellow. Do note turning off certain options will make areas of site unavailable and features to stop working. For more information on how your data is collected and used please read our privacy policy.",
+    "terms_of_use_link": "Terms of use",
+    "privacy_policy_link": "Privacy policy",
+    "privacy_category_system": "Core functionality",
+    "privacy_category_customization": "Site customization",
+    "privacy_category_analytics": "Analytics",
+    "privacy_category_advertisement": "Advertising",
+    "privacy_description_system": "Session keeping, language selection, login, shopping cart, ...",
+    "privacy_description_customization": "Accessibility tools, automatic translation, ...",
+    "privacy_description_analytics": "Usage tracking, behavior patterns and performance metrics",
+    "privacy_description_advertisement": "Track visitor behavior and show relevant advertisement"
 }
