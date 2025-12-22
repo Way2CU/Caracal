@@ -3,6 +3,8 @@
  * Shared session management functions.
  */
 namespace Core\Session;
+
+use \URL;
 use \Exception;
 use \SectionHandler;
 
@@ -26,9 +28,11 @@ class Type {
 final class Manager {
 	const COOKIE_ID = 'Caracal_SessionID';
 	const COOKIE_TYPE = 'Caracal_Type';
+	const COOKIE_CONSENT_ID = 'Caracal_ConsentID';
 
-	const DEFAULT_DURATION = 15;
+	const DEFAULT_DURATION = 120;
 	const EXTENDED_DURATION = 43200;  // 30 days
+	const CONSENT_DURATION = 259200;  // 6 months
 
 	private static $path;
 	private static $login_mechanisms = array();
@@ -61,7 +65,9 @@ final class Manager {
 	 * load. This is due to bug in IE which accepts
 	 * cookies in GMT but checks for their validity in
 	 * local time zone. Since our cookies are set to
-	 * expire in 15 minutes, they have expired before storage.
+	 * expire in 120 minutes, users will have at least
+	 * some time to use site.
+	 *
 	 * Using Type::BROWSER solves this issue.
 	 */
 	public static function start() {
@@ -104,8 +110,31 @@ final class Manager {
 		}
 
 		// make sure session variables are properly set
-		if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
-		if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
+		$default_values = array(
+			'level'              => 0,
+			'logged'             => false,
+			'privacy_consented'  => false,
+			'privacy_consent_id' => '',
+			'privacy_categories' => array('system'),
+		);
+
+		foreach ($default_values as $key => $value)
+			if (!isset($_SESSION[$key]) || empty($_SESSION[$key])) $_SESSION[$key] = $value;
+
+		// load privacy consent if cookie is present
+		if (array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE)) {
+			$manager = \PrivacyConsentManager::get_instance();
+			$consent = $manager->get_single_item(
+					$manager->get_field_names(),
+					array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
+				);
+
+			if (is_object($consent)) {
+				$_SESSION['privacy_consented'] = true;
+				$_SESSION['privacy_consent_id'] = $consent->uid;
+				$_SESSION['privacy_categories'] = unserialize($consent->categories);
+			}
+		}
 	}
 
 	/**
@@ -122,14 +151,6 @@ final class Manager {
 
 		// calculate duration based on type
 		switch ($type) {
-			case Type::EXTENDED:
-					if (is_null($duration))
-						$duration = 30 * 24 * 60; else
-						$duration = self::EXTENDED_DURATION;
-
-					$timestamp = time() + ($duration * 60);
-					break;
-
 			case Type::BROWSER:
 					$timestamp = 0;
 					break;
@@ -137,6 +158,12 @@ final class Manager {
 			case Type::NORMAL:
 				default:
 					$timestamp = time() + (self::DEFAULT_DURATION * 60);
+					break;
+
+			case Type::EXTENDED:
+					if (is_null($duration))
+						$duration = self::EXTENDED_DURATION;
+					$timestamp = time() + ($duration * 60);
 					break;
 		}
 
@@ -220,6 +247,45 @@ final class Manager {
 					header('Content-Type: application/json');
 					print(json_encode($result));
 				}
+				break;
+
+			case 'save_privacy_choice':
+				$manager = \PrivacyConsentManager::get_instance();
+				$redirect_url = isset($_REQUEST['redirect_url']) ? $_REQUEST['redirect_url'] : URL::make();
+				$ignored_keys = array('section', 'action', 'redirect_url');
+
+				$categories = array_keys($_REQUEST);
+				$categories = array_diff($categories, $ignored_keys);
+				$categories []= 'system';  // this category is always enabled
+
+				// prepare data
+				$duration = time() + (self::CONSENT_DURATION * 60);
+				$data = array(
+					'uid'             => $consent_id,
+					'categories'      => serialize($categories),
+					'gpc'             => isset($_SERVER['HTTP_SEC_GPC']) && $_SERVER['HTTP_SEC_GPC'] == 1 ? 1 : 0,
+					'desktop_version' => _DESKTOP_VERSION ? 1 : 0
+				);
+
+				// set cookie
+				setcookie(self::COOKIE_CONSENT_ID, $consent_id, $duration, self::get_path(), '', false, true);
+
+				// store consent to database
+				if (!array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE)) {
+					$consent_id = uuid_v4();
+					$data['uid'] = $consent_id;
+					$manager->insert_item($data);
+
+				} else {
+					$consent_id = $_COOKIE[self::COOKIE_CONSENT_ID];
+					$manager->update_items($data, array('uid' => $consent_id));
+				}
+
+				// update session variables
+				$_SESSION['privacy_consented'] = true;
+				$_SESSION['privacy_consent_id'] = $consent_id;
+				$_SESSION['privacy_categories'] = $categories;
+				header('Location: '.$redirect_url);
 				break;
 
 			default:
