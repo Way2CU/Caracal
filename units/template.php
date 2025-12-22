@@ -108,7 +108,10 @@ class TemplateHandler {
 	 * List of session variables that we protect from setting
 	 * @var array
 	 */
-	private $protected_variables = array('uid', 'logged', 'level', 'username', 'fullname', 'captcha');
+	private $protected_variables = array(
+		'uid', 'logged', 'level', 'username', 'fullname', 'captcha',
+		'privacy_consented', 'privacy_consent_id', 'privacy_categories'
+	);
 
 	/**
 	 * Cache handler.
