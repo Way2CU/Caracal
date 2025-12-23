@@ -93,13 +93,6 @@ if (should_force_https()) {
 	exit();
 }
 
-// initialize language system and apply language
-Language::apply_for_client();
-
-// start database engine
-if ($db_type !== DatabaseType::NONE && !database_connect())
-	die('There was an error while trying to connect database.');
-
 // prepare for page rendering
 Session::start();
 $page_match = SectionHandler::prepare();
@@ -107,6 +100,16 @@ URL::unpack_values();
 
 // set legacy variable values
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? null: fix_chars($_REQUEST['section']);
+
+// initialize language system and apply language
+Language::apply_for_client();
+
+// start database engine
+if ($db_type !== DatabaseType::NONE && !database_connect())
+	die('There was an error while trying to connect database.');
+
+// apply user's privacy options
+Session::load_privacy_options();
 
 $cache = Cache::get_instance();
 $module_handler = ModuleHandler::get_instance();

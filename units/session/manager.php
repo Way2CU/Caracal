@@ -120,20 +120,27 @@ final class Manager {
 
 		foreach ($default_values as $key => $value)
 			if (!isset($_SESSION[$key]) || empty($_SESSION[$key])) $_SESSION[$key] = $value;
+	}
 
-		// load privacy consent if cookie is present
-		if (array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE)) {
-			$manager = \PrivacyConsentManager::get_instance();
-			$consent = $manager->get_single_item(
-					$manager->get_field_names(),
-					array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
-				);
+	/**
+	 * Load privacy options user chose in the past. This method is called
+	 * after language files have been initializes and database connections
+	 * established.
+	 */
+	public static function load_privacy_options() {
+		if (!array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE))
+			return;
 
-			if (is_object($consent)) {
-				$_SESSION['privacy_consented'] = true;
-				$_SESSION['privacy_consent_id'] = $consent->uid;
-				$_SESSION['privacy_categories'] = unserialize($consent->categories);
-			}
+		$manager = \PrivacyConsentManager::get_instance();
+		$consent = $manager->get_single_item(
+				$manager->get_field_names(),
+				array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
+			);
+
+		if (is_object($consent)) {
+			$_SESSION['privacy_consented'] = true;
+			$_SESSION['privacy_consent_id'] = $consent->uid;
+			$_SESSION['privacy_categories'] = unserialize($consent->categories);
 		}
 	}
 
