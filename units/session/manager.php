@@ -259,9 +259,11 @@ final class Manager {
 				$categories []= 'system';  // this category is always enabled
 
 				// prepare data
+				$consent = null;
+				if (array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE))
+					$consent = $manager->get_single_item();
 				$duration = time() + (self::CONSENT_DURATION * 60);
 				$data = array(
-					'uid'             => $consent_id,
 					'categories'      => serialize($categories),
 					'gpc'             => isset($_SERVER['HTTP_SEC_GPC']) && $_SERVER['HTTP_SEC_GPC'] == 1 ? 1 : 0,
 					'desktop_version' => _DESKTOP_VERSION ? 1 : 0
@@ -271,14 +273,14 @@ final class Manager {
 				setcookie(self::COOKIE_CONSENT_ID, $consent_id, $duration, self::get_path(), '', false, true);
 
 				// store consent to database
-				if (!array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE)) {
+				if (!is_object($consent)) {
 					$consent_id = uuid_v4();
 					$data['uid'] = $consent_id;
 					$manager->insert_item($data);
 
 				} else {
-					$consent_id = $_COOKIE[self::COOKIE_CONSENT_ID];
-					$manager->update_items($data, array('uid' => $consent_id));
+					$consent_id = $consent->uid;
+					$manager->update_items($data, array('uid' => $consent->uid));
 				}
 
 				// update session variables
