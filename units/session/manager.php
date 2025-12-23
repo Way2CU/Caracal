@@ -269,9 +269,6 @@ final class Manager {
 					'desktop_version' => _DESKTOP_VERSION ? 1 : 0
 				);
 
-				// set cookie
-				setcookie(self::COOKIE_CONSENT_ID, $consent_id, $duration, self::get_path(), '', false, true);
-
 				// store consent to database
 				if (!is_object($consent)) {
 					$consent_id = uuid_v4();
@@ -282,6 +279,9 @@ final class Manager {
 					$consent_id = $consent->uid;
 					$manager->update_items($data, array('uid' => $consent->uid));
 				}
+
+				// set cookie
+				setcookie(self::COOKIE_CONSENT_ID, $consent_id, $duration, self::get_path(), '', false, true);
 
 				// update session variables
 				$_SESSION['privacy_consented'] = true;
