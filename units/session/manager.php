@@ -268,7 +268,11 @@ final class Manager {
 				// prepare data
 				$consent = null;
 				if (array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE))
-					$consent = $manager->get_single_item();
+					$consent = $manager->get_single_item(
+						$manager->get_field_names(),
+						array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
+					);
+
 				$duration = time() + (self::CONSENT_DURATION * 60);
 				$data = array(
 					'categories'      => serialize($categories),
