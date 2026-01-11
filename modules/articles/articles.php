@@ -804,6 +804,7 @@ class articles extends Module {
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
+		$show_hidden = true;
 
 		// get parameters
 		if (isset($tag_params['id']))
@@ -843,8 +844,14 @@ class articles extends Module {
 				$conditions['group'] = -1;
 		}
 
+		if (isset($tag_params['show_hidden']))
+			$show_hidden = (bool) $tag_params['show_hidden'];
+
 		// get single item from the database
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
+
+		if (!$item->visible && !$show_hidden)
+			return;
 
 		// load template
 		$template = $this->load_template($tag_params, 'article.xml');
