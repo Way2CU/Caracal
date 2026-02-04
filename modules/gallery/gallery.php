@@ -1292,12 +1292,17 @@ class gallery extends Module {
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::get_instance();
 
-			$group_id = $group_manager->get_item_value(
-					'id', array('text_id' => fix_chars($tag_params['group']))
+			$group_list = $group_manager->get_items(
+					array('id'), array('text_id' => fix_chars($tag_params['group']))
 				);
 
-			if (!empty($group_id))
-				$conditions['group'] = $group_id; else
+			$group_id_list = array();
+			if (count($group_list) > 0)
+				foreach ($group_list as $group)
+					$group_id_list []= $group->id;
+
+			if (!empty($group_id_list))
+				$conditions['group'] = $group_id_list; else
 				$conditions['group'] = -1;
 		}
 
