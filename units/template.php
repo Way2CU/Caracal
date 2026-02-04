@@ -391,7 +391,7 @@ class TemplateHandler {
 
 			if (isset($tag->tagAttrs['cms:flush'])) {
 				unset($tag->tagAttrs['cms:skip_cache']);
-				$flush_data = false;
+				$flush_data = true;
 			}
 
 			// now parse the tag
