@@ -1293,13 +1293,39 @@ class gallery extends Module {
 			$group_manager = GalleryGroupManager::get_instance();
 
 			$group_id = $group_manager->get_item_value(
-												'id',
-												array('text_id' => fix_chars($tag_params['group']))
-											);
+					'id', array('text_id' => fix_chars($tag_params['group']))
+				);
 
 			if (!empty($group_id))
 				$conditions['group'] = $group_id; else
 				$conditions['group'] = -1;
+		}
+
+		// find all the groups within container assign them as source for image
+		if (isset($tag_params['container'])) {
+			$container_manager = GalleryContainerManager::get_instance();
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
+
+			// find container id
+			$container_id = null;
+			if (is_numeric($tag_params['container']))
+				$container_id = fix_id($tag_params['container']); else
+				$container_id = $container_manager->get_item_value(
+						'id', array('text_id' => fix_chars($tag_params['container'])
+					);
+
+			// get all groups in found container
+			$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
+
+			// intersect with already set parameters or set new ones
+			$group_id_list = array();
+			if (count($memberships) > 0)
+				foreach ($memberships as $membership)
+					$group_id_list []= $membership->group;
+
+			if (isset($conditions['group']))
+				$conditions['group'] = array_intersect($conditions['group'], $group_id_list); else
+				$conditions['group'] = $group_id_list;
 		}
 
 		if (isset($tag_params['order_by']))
