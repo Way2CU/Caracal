@@ -1311,7 +1311,7 @@ class gallery extends Module {
 			if (is_numeric($tag_params['container']))
 				$container_id = fix_id($tag_params['container']); else
 				$container_id = $container_manager->get_item_value(
-						'id', array('text_id' => fix_chars($tag_params['container'])
+						'id', array('text_id' => fix_chars($tag_params['container']))
 					);
 
 			// get all groups in found container
