@@ -1494,7 +1494,7 @@ class gallery extends Module {
 			$container_id = null;
 
 			if (isset($tag_params['container_id'])) {
-				// container ID was specified
+				// container id was specified
 				$container_id = fix_id($tag_params['container_id']);
 
 			} else {
