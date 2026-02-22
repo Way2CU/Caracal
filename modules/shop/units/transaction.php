@@ -46,9 +46,9 @@ final class Transaction {
 
 		// prepare conditions
 		$conditions = array();
-		if (gettype($transaction_id) != 'string' && is_numeric($transaction_id))
-			$conditions['id'] = $transaction_id; else
-			$conditions['uid'] = $transaction_id;
+		if ((gettype($transaction_id) == 'string' && strlen($transaction_id) == 23))
+			$conditions['uid'] = $transaction_id; else
+			$conditions['id'] = $transaction_id;
 
 		// get transaction
 		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
