@@ -374,6 +374,7 @@ final class Manager {
 
 		// clear session data
 		if ($result) {
+			header('Clear-Site-Data: "*"');
 			$_SESSION['uid'] = 0;
 			$_SESSION['logged'] = false;
 			$_SESSION['level'] = 0;
