@@ -182,6 +182,7 @@ Caracal.Dialog = function(config, constants) {
 		// create close button
 		if (self.config.include_close_button) {
 			self._close_button = document.createElement('a');
+			self._close_button.role = 'button';
 			self._close_button.classList.add('close');
 			self._close_button.setAttribute('href', 'javascript: void(0);');
 			self._close_button.addEventListener('click', self.handler.close_click);
