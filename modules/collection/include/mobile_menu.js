@@ -46,6 +46,7 @@ Caracal.MobileMenu = function() {
 			menu_toggle = $('<a>');
 			menu_toggle
 					.attr('href', 'javascript: void(0);')
+					.attr('role', 'button')
 					.addClass('menu')
 					.appendTo(self._top_bar);
 		}
