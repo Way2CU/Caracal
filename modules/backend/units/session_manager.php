@@ -34,7 +34,7 @@ class SessionManager {
 	 * Transfer control to this object
 	 */
 	public function transfer_control($params=array(), $children=array()) {
-		$action = isset($paras['action']) ? $params['action'] : null;
+		$action = isset($params['action']) ? $params['action'] : null;
 		$action = is_null($action) && isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 
 		if (!is_null($action) && $action == 'transfer_control')
