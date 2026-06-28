@@ -114,7 +114,7 @@ class backend extends Module {
 				case 'json_login':
 				case 'json_logout':
 					$session_manager = SessionManager::get_instance();
-					$session_manager->transfer_control();
+					$session_manager->transfer_control($params, $children);
 					break;
 
 				case 'verify_account':
@@ -296,7 +296,7 @@ class backend extends Module {
 				case 'logout':
 				case 'logout_commit':
 					$session_manager = SessionManager::get_instance($this);
-					$session_manager->transfer_control();
+					$session_manager->transfer_control($params, $children);
 					break;
 			}
 	}
