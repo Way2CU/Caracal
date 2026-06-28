@@ -63,7 +63,23 @@
 				</cms:user>
 
 				<!-- Window container -->
-				<div id="container"/>
+				<div id="container">
+					<cms:guest>
+						<div id="login_window" class="window">
+							<div class="title">
+								<span><cms:text constant="title_login" module="backend"/></span>
+								<a class="button close"/>
+							</div>
+
+							<div class="content">
+								<cms:module
+									name="backend"
+									action="login"
+									/>
+							</div>
+						</div>
+					</cms:guest>
+				</div>
 			</section>
 		</body>
 	</html>
