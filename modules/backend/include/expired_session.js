@@ -9,4 +9,4 @@
  * Authors: Mladen Mijatov
  */
 
-Caracal.window_system.open_login_window();
+// TODO: Replace with endpoint.

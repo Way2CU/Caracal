@@ -315,20 +315,6 @@ Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	};
 
 	/**
-	 * Show login window.
-	 */
-	self.open_login_window = function() {
-		var base = document.querySelector('meta[property=base-url]').getAttribute('content');
-
-		Caracal.language.load_text('backend', 'title_login', function(constant, value) {
-			self.open_window(
-				'login_window', 350, value,
-				base + '/index.php?section=backend&action=login', null
-			);
-		});
-	};
-
-	/**
 	 * Open new window (or focus existing) and load content from specified URL
 	 *
 	 * @param string id
@@ -541,12 +527,4 @@ window.addEventListener('load', function() {
 			var predefined_window = predefined_windows[i];
 			Caracal.window_system.attach_window(predefined_window);
 		}
-
-	// show login window if menu is not present
-	/*  Temporarily disable until mechanism change.
-	var main_menu = document.querySelector('nav#main');
-	var window_container = document.querySelector('div#container');
-	if (main_menu == null && !window_container.classList.contains('enclosed'))
-		Caracal.window_system.open_login_window();
-	*/
 });
