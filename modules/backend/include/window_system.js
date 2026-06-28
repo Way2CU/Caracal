@@ -543,8 +543,10 @@ window.addEventListener('load', function() {
 		}
 
 	// show login window if menu is not present
+	/*  Temporarily disable until mechanism change.
 	var main_menu = document.querySelector('nav#main');
 	var window_container = document.querySelector('div#container');
 	if (main_menu == null && !window_container.classList.contains('enclosed'))
 		Caracal.window_system.open_login_window();
+	*/
 });
