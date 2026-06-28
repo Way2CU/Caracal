@@ -41,6 +41,10 @@ class SessionManager {
 			$action = $_REQUEST['backend_action'];
 
 		switch($action) {
+			case 'login':
+				$this->login('', true);  // force showing fields
+				break;
+
 			case 'login_commit':
 				$this->login_commit();
 				break;
@@ -72,14 +76,14 @@ class SessionManager {
 	 *
 	 * @param string $message
 	 */
-	private function login($message='') {
+	private function login($message='', $forced=false) {
 		$manager = LoginRetryManager::get_instance();
 		$show_captcha = false;
 
 		// check if user has more than 3 failed atempts
 		$show_captcha = $manager->getRetryCount() > 3;
 
-		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'login') {
+		if ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'login') || $forced) {
 			// create template and show login form
 			$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
 			$params = array(
