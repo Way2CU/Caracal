@@ -148,9 +148,12 @@ class SessionManager {
 				Session::change_type(SessionType::EXTENDED);
 
 			// check if we need to make redirect URL
-			if (isset($_SESSION['redirect_url']))
-				$url = $_SESSION['redirect_url']; else
+			if (isset($_SESSION['redirect_url'])) {
+				$url = $_SESSION['redirect_url'];
+				unset($_SESSION['redirect_url']);
+			} else {
 				$url = URL::make_query($this->parent->name, '');
+			}
 			URL::set_refresh($url, 2);
 
 			// get message
