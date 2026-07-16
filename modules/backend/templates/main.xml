@@ -67,6 +67,7 @@
 					<cms:guest>
 						<div id="login_window" class="window">
 							<div class="title">
+								<cms:svg file="image.svg" symbol="name"/>
 								<span><cms:text constant="title_login" module="backend"/></span>
 								<a class="button close"/>
 							</div>
