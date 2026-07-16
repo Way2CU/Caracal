@@ -747,9 +747,9 @@ class contact_form extends Module {
 		if (empty($message_sent))
 			$message_sent = $this->get_language_constant('message_sent');
 
-		$message_form_error = Language::get_text('message_form_error');
-		if (empty($message_form_error))
-			$message_form_error = $this->get_language_constant('message_form_error');
+		$message_error = Language::get_text('message_form_error');
+		if (empty($message_error))
+			$message_error = $this->get_language_constant('message_error');
 
 		// show result
 		if (_AJAX_REQUEST) {
@@ -762,7 +762,7 @@ class contact_form extends Module {
 
 			if ($result)
 				$response['message'] = $message_sent; else
-				$response['message'] = $message_form_error;
+				$response['message'] = $message_error;
 
 			print json_encode($response);
 
@@ -779,7 +779,7 @@ class contact_form extends Module {
 
 			if ($result)
 				$params['message'] = $message_sent; else
-				$params['message'] = $message_form_error;
+				$params['message'] = $message_error;
 
 			$template->restore_xml();
 			$template->set_local_params($params);
