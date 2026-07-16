@@ -208,7 +208,25 @@ Caracal.ContactForm.Form = function(form_object) {
 		// configure and show dialog
 		var response = self.events.trigger('submit-success', data);
 		if (response) {
-			self._message.html(data.message);
+			// prepare message
+			var message = data.message;
+			for (var i=0, count=data.messages.length; i<count; i++)
+				message += ' ' + data.messages[i];
+
+			// set message and create field list if needed
+			var list = document.createElement('ul');
+
+			self._message.html(message);
+			if (data.missing_fields.length > 0) {
+				for (var i=0, count=data.missing_fields.length; i<count; i++) {
+					var entry = document.createElement('li');
+					entry.innerText = data.missing_fields[i];
+					list.append(entry);
+				}
+				self._message.append(list);
+			}
+
+			// configure dialog and show it
 			Caracal.ContactForm.dialog.set_error(data.error);
 			Caracal.ContactForm.dialog.set_title(self._form[0].dataset['name']);
 			Caracal.ContactForm.dialog.set_content(self._message);
