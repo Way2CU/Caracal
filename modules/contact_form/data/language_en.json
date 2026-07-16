@@ -106,7 +106,7 @@
     "menu_settings": "Configure defaults",
     "menu_submissions": "Form submissions",
     "message_domain_already_in_list": "Specified domain is already in the list.",
-    "message_error": "An error occured while trying to send your data! Check all fields and try again.",
+    "message_error": "An error occured while trying to send your data!",
     "message_error_no_address": "Error sending data! No default recipient was specified by the system.",
     "message_field_delete": "You are about to remove the follwing field from the form. Are you sure?",
     "message_field_deleted": "Form field was removed.",
