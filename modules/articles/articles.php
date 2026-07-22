@@ -1295,7 +1295,7 @@ class articles extends Module {
 			$conditions['id'] = fix_id($_REQUEST['id']);
 
 		if (isset($_REQUEST['text_id']))
-			$conditions['text_id'] = explode(',', $_REQUEST['text_id']);
+			$conditions['text_id'] = explode(',', fix_chars($_REQUEST['text_id']));
 
 		if (isset($_REQUEST['order_by']))
 			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
