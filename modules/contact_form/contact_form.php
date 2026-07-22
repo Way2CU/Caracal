@@ -688,7 +688,7 @@ class contact_form extends Module {
 			// store form submission
 			$submission_manager->insert_item(array(
 					'form'		=> $form->id,
-					'address'	=> $_SERVER['REMOTE_ADDR'],
+					'address'	=> get_client_ip(),
 				));
 			$submission_id = $submission_manager->get_inserted_id();
 
@@ -850,7 +850,7 @@ class contact_form extends Module {
 			$field_ids[$field->name] = $field->id;
 
 		// get all the submissions for current IP address
-		$conditions['address'] = $_SERVER['REMOTE_ADDR'];
+		$conditions['address'] = get_client_ip();
 
 		if (!is_null($text_id))
 			$conditions['text_id'] = $text_id;

@@ -371,7 +371,7 @@ class activity_tracker extends Module {
 			$conditions['activity'] = $activity->id;
 
 			if (!$activity->ignore_address)
-				$conditions['address'] = $_SERVER['REMOTE_ADDR'];
+				$conditions['address'] = get_client_ip();
 		}
 
 		if ($_SESSION['logged'])
@@ -397,7 +397,7 @@ class activity_tracker extends Module {
 			// create new log
 			$data = array(
 						'activity'	=> $activity->id,
-						'address' 	=> $_SERVER['REMOTE_ADDR'],
+						'address' 	=> get_client_ip(),
 						'timestamp'	=> $db->format_timestamp(time())
 					);
 
@@ -449,7 +449,7 @@ class activity_tracker extends Module {
 							);
 
 			if (!$activity->ignore_address)
-				$conditions['address'] = $_SERVER['REMOTE_ADDR'];
+				$conditions['address'] = get_client_ip();
 		}
 
 		if ($_SESSION['logged'])

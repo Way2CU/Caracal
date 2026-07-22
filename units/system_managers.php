@@ -281,7 +281,7 @@ final class LoginRetryManager extends ItemManager {
 	 */
 	public function getRetryCount($address=null) {
 		if (is_null($address))
-			$address = $_SERVER['REMOTE_ADDR'];
+			$address = get_client_ip();
 
 		// purge outdated entries
 		$this->purgeOutdated();
@@ -304,7 +304,7 @@ final class LoginRetryManager extends ItemManager {
 	 */
 	public function increaseCount($address=null) {
 		if (is_null($address))
-			$address = $_SERVER['REMOTE_ADDR'];
+			$address = get_client_ip();
 
 		// get existing entry if it exists
 		$entry = $this->get_single_item($this->get_field_names(), array('address' => $address));
@@ -322,7 +322,7 @@ final class LoginRetryManager extends ItemManager {
 			// there's no existing entry so we create one
 			$this->insert_item(array(
 								'day'		=> date('j'),
-								'address'	=> $_SERVER['REMOTE_ADDR'],
+								'address'	=> get_client_ip(),
 								'count'		=> 1
 							));
 			$result = 1;
@@ -338,7 +338,7 @@ final class LoginRetryManager extends ItemManager {
 	 */
 	public function clearAddress($address=null) {
 		if (is_null($address))
-			$address = $_SERVER['REMOTE_ADDR'];
+			$address = get_client_ip();
 
 		$this->delete_items(array('address' => $address));
 	}

@@ -25,7 +25,7 @@ class Mechanism extends \Core\Session\Mechanism {
 		$data = array(
 				'id'      => fix_chars($_REQUEST['id']),
 				'token'   => fix_chars($_REQUEST['token']),
-				'address' => $_SERVER['REMOTE_ADDR']
+				'address' => get_client_ip()
 			);
 
 		// get data from storage service

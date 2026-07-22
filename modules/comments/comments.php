@@ -278,7 +278,7 @@ class comments extends Module {
 							'section'	=> $comment_section,
 							'user'		=> $user,
 							'email'		=> $email,
-							'address'	=> isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
+							'address'	=> get_client_ip(),
 							'message'	=> $message,
 							'visible'	=> $this->settings['default_visibility']
 						);
@@ -389,12 +389,13 @@ class comments extends Module {
 		} else {
 			$manager = CommentManager::get_instance();
 			$time = date('Y-m-d H:i:s', time() - (intval($this->settings['repost_time']) * 60));
+			$address = get_client_ip();
 
 			$count = $manager->get_result("
 									SELECT count(id)
 									FROM `comments`
 									WHERE
-										`address` = '{$_SERVER['REMOTE_ADDR']}' AND
+										`address` = '{$address}' AND
 										`timestamp` > '{$time}';"
 								);
 

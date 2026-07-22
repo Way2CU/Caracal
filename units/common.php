@@ -283,4 +283,16 @@ function uuid_v4() {
 	return $result;
 }
 
+
+/**
+ * Return the client's IP address after validation. Returns an empty string
+ * when the value is missing or malformed, so it can never carry a SQL payload.
+ *
+ * @return string
+ */
+function get_client_ip() {
+	$address = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+	return filter_var($address, FILTER_VALIDATE_IP) ? $address : '';
+}
+
 ?>

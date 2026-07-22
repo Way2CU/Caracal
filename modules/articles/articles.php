@@ -1593,7 +1593,7 @@ class articles extends Module {
 									array('id'),
 									array(
 										'article'	=> $id,
-										'address'	=> $_SERVER['REMOTE_ADDR']
+										'address'	=> get_client_ip()
 										)
 									);
 
@@ -1614,7 +1614,7 @@ class articles extends Module {
 			if (is_object($article)) {
 				$vote_manager->insert_item(array(
 										'article'	=> $article->id,
-										'address'	=> $_SERVER['REMOTE_ADDR']
+										'address'	=> get_client_ip()
 									));
 
 				if (is_numeric($value)) {
