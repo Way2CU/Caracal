@@ -134,7 +134,7 @@ final class Manager {
 		$manager = \PrivacyConsentManager::get_instance();
 		$consent = $manager->get_single_item(
 				$manager->get_field_names(),
-				array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
+				array('uid' => fix_chars($_COOKIE[self::COOKIE_CONSENT_ID]))
 			);
 
 		if (is_object($consent)) {
