@@ -213,6 +213,24 @@ final class Manager {
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 		$redirect_url = isset($_REQUEST['redirect_url']) ? $_REQUEST['redirect_url'] : null;
 
+		// validate redirect location
+		if (!is_null($redirect_url)) {
+			$keep = false;
+
+			if (substr($redirect_url, 0, strlen(_DOMAIN)) == _DOMAIN) {
+				$keep = true;
+			} else if (substr($redirect_url, 0, strlen(_BASEURL)) == _BASEURL) {
+				$keep = true;
+			} else if (substr($redirect_url, 0, 1) == '/') {
+				$keep = true;
+			}
+
+			// we only keep redirect locations to same site
+			// to avoid phising and token thefts
+			if (!$keep)
+				$redirect_url = null;
+		}
+
 		// show error if action was not specified
 		if (is_null($action)) {
 			SectionHandler::show_error_page(400);
