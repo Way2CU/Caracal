@@ -357,7 +357,7 @@ class ModuleHandler {
 
 				// restore settings
 				if ($raw_settings !== FALSE) {
-					$settings = unserialize($raw_settings);
+					$settings = unserialize($raw_settings, array('allowed_classes' => array('stdClass')));
 
 					$manager->delete_items(array('module' => $module_name));
 					foreach ($settings as $variable => $value)
@@ -381,7 +381,7 @@ class ModuleHandler {
 
 				// pass the remaining data to module
 				if ($raw_data !== FALSE) {
-					$data = unserialize($raw_data);
+					$data = unserialize($raw_data, array('allowed_classes' => array('stdClass')));
 					$module = call_user_func(array($module_name, 'get_instance'));
 					$module->import_data($data, $options);
 				}

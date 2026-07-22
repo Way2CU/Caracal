@@ -87,16 +87,22 @@ class File {
 	public function __construct($file_name, $key, $verify_hash=true) {
 		global $backup_path;
 
+		// export files live directly in the backup directory, never in a subpath;
+		// reducing to the base name makes directory traversal impossible
+		$file_name = basename($file_name);
+		$full_path = $backup_path.$file_name;
+
 		// increase security a little bit by extending key length through hash function
 		// as people don't have a tendency to choose long passwords
 		$this->key = hash('sha512', $key, true);
 
 		// try to open file
-		if (file_exists($backup_path.$file_name)) {
-			$this->handle = fopen($backup_path.$file_name, 'r');
+		if (file_exists($full_path)) {
+			$this->handle = fopen($full_path, 'r');
 			$this->is_new_file = false;
+
 		} else {
-			$this->handle = fopen($backup_path.$file_name, 'w');
+			$this->handle = fopen($full_path, 'w');
 			$this->is_new_file = true;
 		}
 

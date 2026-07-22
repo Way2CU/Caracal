@@ -798,7 +798,7 @@ class backend extends Module {
 	 */
 	private function import_options() {
 		// load information from the file
-		$file_name = fix_chars($_REQUEST['file_name']);
+		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
 		$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
 		$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
 		$file->close();
@@ -891,14 +891,14 @@ class backend extends Module {
 			// import module data
 			if (in_array($module_name, $module_data)) {
 				$data = $file->read(Core\Exports\Section::DATA, $module_name);
-				$data = unserialize($data);
+				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
 				$module->import_data($data, $options, $file);
 			}
 
 			// import module settings
 			if (in_array($module_name, $module_settings)) {
 				$data = $file->read(Core\Exports\Section::SETTINGS, $module_name);
-				$data = unserialize($data);
+				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
 
 				if ($data !== FALSE)
 					// Replace variable value instead of calling
