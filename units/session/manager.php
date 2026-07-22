@@ -140,7 +140,7 @@ final class Manager {
 		if (is_object($consent)) {
 			$_SESSION['privacy_consented'] = true;
 			$_SESSION['privacy_consent_id'] = $consent->uid;
-			$_SESSION['privacy_categories'] = unserialize($consent->categories);
+			$_SESSION['privacy_categories'] = unserialize($consent->categories, array('allowed_classes' => false));
 		}
 	}
 
