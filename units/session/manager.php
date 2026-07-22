@@ -56,6 +56,30 @@ final class Manager {
 	}
 
 	/**
+	 * Return the current session's CSRF token, generating one when absent.
+	 *
+	 * @return string
+	 */
+	public static function get_csrf_token() {
+		if (empty($_SESSION['csrf_token']))
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+		return $_SESSION['csrf_token'];
+	}
+
+	/**
+	 * Constant-time verification of a submitted CSRF token.
+	 *
+	 * @param string $token
+	 * @return boolean
+	 */
+	public static function verify_csrf_token($token) {
+		$result = !empty($_SESSION['csrf_token']) && is_string($token)
+				&& hash_equals($_SESSION['csrf_token'], $token);
+		return $result;
+	}
+
+	/**
 	 * Start a new session. This function is called
 	 * once by main initialization script and should not
 	 * be used in other parts of the system.
@@ -362,6 +386,7 @@ final class Manager {
 
 			// prevent session fixation - issue a fresh id on privilege change
 			session_regenerate_id(true);
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
 			// retrieve data and store session variables
 			$data = $mechanism->get_data($login_data);

@@ -91,7 +91,8 @@ class SessionManager {
 						'show_captcha'	=> $show_captcha,
 						'username'		=> isset($_REQUEST['username']) ? escape_chars($_REQUEST['username']) : '',
 						'image'			=> URL::from_file_path($this->parent->path.'images/icons/login.png'),
-						'message'		=> $message
+						'message'		=> $message,
+						'csrf_token'	=> \Core\Session\Manager::get_csrf_token()
 					);
 
 		} else {

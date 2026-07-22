@@ -4,6 +4,7 @@
 	<form action="$_SERVER['PHP_SELF']" method="POST" cms:eval="action">
 		<input type="hidden" name="section" value="backend_module"/>
 		<input type="hidden" name="action" value="login_commit"/>
+		<input type="hidden" name="csrf_token" value="$params['csrf_token']" cms:eval="value"/>
 
 
 		<div class="message">

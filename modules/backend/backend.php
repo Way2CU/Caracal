@@ -105,6 +105,24 @@ class backend extends Module {
 		// be fixed properly, but for the time being this will have to do
 		Core\CSP\Policy::add_value('script-src', "'unsafe-inline'");
 
+		// reject authenticated state-changing requests lacking a valid CSRF token.
+		// Backend actions are dispatched via `backend_action` (through the window
+		// system, which attaches the token as a header) or submitted as POST forms;
+		// genuine top-level page loads carry neither and are left untouched, as are
+		// unauthenticated flows (login, registration, password recovery).
+		$is_action = $_SERVER['REQUEST_METHOD'] == 'POST' || isset($_REQUEST['backend_action']);
+		if ($is_action && !empty($_SESSION['logged']) && !$this->is_csrf_exempt()) {
+			$token = isset($_SERVER['HTTP_X_CSRF_TOKEN']) ?
+					$_SERVER['HTTP_X_CSRF_TOKEN'] :
+					(isset($_REQUEST['csrf_token']) ? $_REQUEST['csrf_token'] : '');
+
+			if (!\Core\Session\Manager::verify_csrf_token($token)) {
+				trigger_error('Backend: CSRF token verification failed.', E_USER_WARNING);
+				SectionHandler::show_error_page(403);
+				return;
+			}
+		}
+
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'login':
@@ -208,6 +226,7 @@ class backend extends Module {
 							$template = new TemplateHandler('enclosed_window.xml', $this->path.'templates/');
 							$template->set_top_level(true);
 							$template->register_tag_handler('cms:sprites', $this, 'tag_Sprites');
+							$template->register_tag_handler('cms:csrf_token', $this, 'tag_CsrfToken');
 							$template->set_mapped_module($this->name);
 							$template->set_local_params($params);
 							$template->restore_xml();
@@ -299,6 +318,31 @@ class backend extends Module {
 					$session_manager->transfer_control($params, $children);
 					break;
 			}
+	}
+
+	/**
+	 * Whether the current request is exempt from CSRF verification. Only
+	 * pre-authentication machine endpoints qualify.
+	 *
+	 * @return boolean
+	 */
+	private function is_csrf_exempt() {
+		$exempt_actions = array('json_login', 'json_logout');
+		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+		// enclose mode renders window content for cross-origin embedding and cannot
+		// carry a token header; SameSite=Lax blocks cross-site cookies on that path
+		$is_enclose = isset($_REQUEST['enclose']) && !empty($_REQUEST['enclose']);
+
+		return in_array($action, $exempt_actions) || $is_enclose;
+	}
+
+	/**
+	 * Render a meta tag carrying the session CSRF token so client-side code
+	 * can attach it to state-changing requests.
+	 */
+	public function tag_CsrfToken($tag_params, $children) {
+		echo '<meta name="csrf-token" content="'.\Core\Session\Manager::get_csrf_token().'">';
 	}
 
 	/**
@@ -459,6 +503,7 @@ class backend extends Module {
 		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:menu_items', $this, 'tag_MainMenu');
 		$template->register_tag_handler('cms:sprites', $this, 'tag_Sprites');
+		$template->register_tag_handler('cms:csrf_token', $this, 'tag_CsrfToken');
 
 		// prepare parameters
 		$params = array();

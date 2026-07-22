@@ -529,10 +529,16 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 
 		self.ui.container.classList.add('loading');
 
+		// attach CSRF token so protected backend actions are accepted; a custom
+		// header cannot be set by cross-site requests, which is what protects us
+		var csrf_meta = document.querySelector('meta[name="csrf-token"]');
+		var request_headers = csrf_meta ? {'X-CSRF-Token': csrf_meta.getAttribute('content')} : {};
+
 		$.ajax({
 			cache: false,
 			context: self,
 			dataType: 'html',
+			headers: request_headers,
 			success: self.handler.content_load,
 			error: self.handler.content_error,
 			url: self.url
@@ -633,6 +639,11 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			}
 		}
 
+		// attach CSRF token for this state-changing request
+		var csrf_meta = document.querySelector('meta[name="csrf-token"]');
+		if (csrf_meta)
+			data['csrf_token'] = csrf_meta.getAttribute('content');
+
 		// send data to server
 		$.ajax({
 			cache: false,
@@ -706,6 +717,16 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 				form.addEventListener('submit', function(event) {
 					// trigger before submit event
 					self.system.events.trigger('window-before-submit', self);
+
+					// attach CSRF token so the upload passes server-side verification
+					var csrf_meta = document.querySelector('meta[name="csrf-token"]');
+					if (csrf_meta && !this.querySelector('input[name="csrf_token"]')) {
+						var token_field = document.createElement('input');
+						token_field.setAttribute('type', 'hidden');
+						token_field.setAttribute('name', 'csrf_token');
+						token_field.value = csrf_meta.getAttribute('content');
+						this.appendChild(token_field);
+					}
 
 					// get all multi-language fields
 					var fields = this.querySelectorAll('input.multi-language, textarea.multi-language');

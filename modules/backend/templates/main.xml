@@ -10,6 +10,7 @@
 				cms:constant="value"
 				/>
 			<cms:module name="head_tag" action="show"/>
+			<cms:csrf_token/>
 		</head>
 
 		<body>
