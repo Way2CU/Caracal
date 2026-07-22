@@ -210,7 +210,7 @@ final class URL {
 		$url = is_null($url) ? $_SERVER['REQUEST_URI'] : $url;
 		$nonce = CSP::get_nonce();
 		$output = '<script type="text/javascript" nonce="'.$nonce.'">';
-		$output .= 'setTimeout(function() { window.location = \''.json_encode($url).'\'; }, '.($timeout * 1000).')';
+		$output .= 'setTimeout(function() { window.location = '.json_encode($url).'; }, '.($timeout * 1000).')';
 		$output .= '</script>';
 
 		print $output;
