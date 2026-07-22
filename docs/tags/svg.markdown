@@ -5,9 +5,10 @@ System supports and encourages heavy use of SVG sprites. These reduce site loadi
 Tag recognizes the following attributes:
 
 - `file` - File name to embed or to use as reference for sprite;
-- `symbol` - Optional symbol or sprite name to use from SVG file. When omitted SVG file is included in rendered page.
+- `symbol` - Optional symbol or sprite name to use from SVG file. When omitted SVG file is included in rendered page;
+- `class` - Optional CSS class to apply to the referenced symbol. Only used when `symbol` is specified.
 
-SVG file will be loaded from `$image_path` defined in configuration file. Included files can later styled and animated using CSS/LESS as they are part of the DOM tree.
+SVG file will be loaded from `$images_path` defined in configuration file. Included files can later styled and animated using CSS/LESS as they are part of the DOM tree.
 
 Example which first includes then uses example symbol from `images/sprite.svg`:
 
@@ -15,6 +16,6 @@ Example which first includes then uses example symbol from `images/sprite.svg`:
 <cms:svg file="sprite.svg"/>
 
 <a href="/">
-	<cms:svg file="sprite.svg" symbol="logo">
+	<cms:svg file="sprite.svg" symbol="logo"/>
 </a>
 ```

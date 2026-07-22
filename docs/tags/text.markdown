@@ -5,7 +5,8 @@ Text constants are useful tool for providing localization option without ability
 Tag recognizes the following attributes:
 
 - `constant` - Name of language constant as defined in `data/language_xx.json` files;
-- `module` - Optional module name which will get constant value from module language files instead of global language files.
+- `module` - Optional module name which will get constant value from module language files instead of global language files;
+- `language` - Optional two-letter language code overriding the current render language for this constant.
 
 Example:
 

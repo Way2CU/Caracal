@@ -45,7 +45,7 @@ Available template parameters:
 ---------------|----------|----------------
 `id`           | `int`    | Unique article id.
 `text_id`      | `string` | User specified textual id.
-`timestamp`    | `int`    | Unix time stamp of article creation.
+`timestamp`    | `string` | Article creation time as stored in the database (SQL datetime string).
 `date`         | `string` | Localized date based on `timestamp`.
 `time`         | `string` | Localized time based on `timestamp`.
 `title`        | `array`  | Titles in every language.

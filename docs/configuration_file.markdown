@@ -27,7 +27,7 @@ Variable `$session_type` defines default session type for the system. Cookie usa
 
 The following session types are supported:
 
-- `NORMAL` - Regular session with default timeout of 15 minutes;
+- `NORMAL` - Regular session with default timeout of 2 hours (120 minutes);
 - `BROWSER` - Session which expires the moment browser is closed;
 - `EXTENDED` - Expiration time is set for 30 days.
 
@@ -46,7 +46,7 @@ To configure database use `$db_type` needs to be set to something else other tha
 
 - `NONE` - No database will be used;
 - `MYSQL` - MySQL database; 
-- `PGSQL` - PostgreSQL database;
+- `PGSQL` - PostgreSQL database (constant reserved, not yet implemented);
 - `SQLITE` - SQLite database.
 
 After database type is set, configuration is done through `$db_config` array containing `host`, `user`, `pass` and `name` keys.
@@ -73,6 +73,8 @@ Cache expiration time is set to 24h (86400 seconds) by default. This time can be
 ### Optimizing JavaScript and stylesheets
 
 In order to optimize JavaScript code system will utilize Google's Closure compiler service and store optimized file in `$cache_path` directory. Level of optimizations is set to `SIMPLE` and can not be changed at the moment.
+
+Instead of Google's public service a self-hosted Closure compiler can be used by setting `$closure_compiler_config` to an array in the form `array('hostname' => '...', 'endpoint' => '...')`. When left as `null` (the default) the public service is used.
 
 Stylesheet optimizations are considerably simpler in nature and consist of simplifying expressions, removing comments and unnecessary characters. Selectors and attributes are not modified in any way during this process. This is done on purpose to avoid any potential issues where unintended effects could arise from such optimizations and to provide maximum control to developers over how styles are defined and used.
 

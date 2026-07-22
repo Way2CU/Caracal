@@ -11,7 +11,7 @@ Example message object:
 ```json
 {
 	name: "window.resize",
-	type: "notify",
+	type: "notification",
 	id: "shop_new_item",
 	size: [100, 100]
 }
@@ -20,6 +20,6 @@ Example message object:
 Required properties:
 
 - `name` - Message name usually formed by combining message class with its function;
-- `type` - Type of message used for differentiation between requests, notifications and responses. The following types are recognized: `notify`, `request`, `response`;
+- `type` - Type of message used for differentiation between requests, notifications and responses. The following types are recognized: `notification`, `request`, `response`;
 
 Refer to individual module documentation for list of individually supported messages.

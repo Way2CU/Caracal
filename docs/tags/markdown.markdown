@@ -5,7 +5,7 @@
 Tag recognizes the following attributes:
 
 - `chars` - Optional number of characters to limit output to;
-- `end_with` - Optional text to add at the end of limited output. If omitted it defaults to "...";
+- `end_with` - Optional text to add at the end of limited output. If omitted it defaults to a horizontal ellipsis ("…");
 - `param` - Name of parameter whose value is to be used for rendering to HTML;
 - `multilanguage` - Optional flag which indicates whether parameter value contains more than one language. If omitted defaults to `no`;
 - `clear_text` - Optional flag which indicates whether tags should be stripped from resulting HTML.
