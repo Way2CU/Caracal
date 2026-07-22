@@ -79,25 +79,38 @@ final class Manager {
 		// get current session type
 		if (isset($_COOKIE[self::COOKIE_TYPE]))
 			$type = fix_id($_COOKIE[self::COOKIE_TYPE]); else
-			setcookie(self::COOKIE_TYPE, $type, 0, self::get_path(), '', false, true);
+			setcookie(self::COOKIE_TYPE, $type, array(
+					'expires'  => 0,
+					'path'     => self::get_path(),
+					'secure'   => _SECURE,
+					'httponly' => true,
+					'samesite' => 'Lax'
+				));
 
 		// configure default duration
 		switch ($type) {
 			case Type::BROWSER:
-					session_set_cookie_params(0, self::get_path(), '', false, true);
+					$duration = 0;
 					break;
 
 			case Type::EXTENDED:
 					$duration = self::EXTENDED_DURATION * 60;
-					session_set_cookie_params($duration, self::get_path(), '', false, true);
 					break;
 
 			case Type::NORMAL:
 				default:
 					$duration = self::DEFAULT_DURATION * 60;
-					session_set_cookie_params($duration, self::get_path(), '', false, true);
 					break;
 		}
+
+		session_set_cookie_params(array(
+				'lifetime' => $duration,
+				'path'     => self::get_path(),
+				'domain'   => '',
+				'secure'   => _SECURE,
+				'httponly' => true,
+				'samesite' => 'Lax'
+			));
 
 		// start session
 		session_name(self::COOKIE_ID);
@@ -105,8 +118,15 @@ final class Manager {
 
 		// extend expiration for all types other than browser
 		if ($type == Type::NORMAL || $type == Type::EXTENDED) {
-			setcookie(self::COOKIE_ID, session_id(), time() + $duration, self::get_path(), '', false, true);
-			setcookie(self::COOKIE_TYPE, $type, time() + $duration, self::get_path(), '', false, true);
+			$options = array(
+					'expires'  => time() + $duration,
+					'path'     => self::get_path(),
+					'secure'   => _SECURE,
+					'httponly' => true,
+					'samesite' => 'Lax'
+				);
+			setcookie(self::COOKIE_ID, session_id(), $options);
+			setcookie(self::COOKIE_TYPE, $type, $options);
 		}
 
 		// make sure session variables are properly set
@@ -175,8 +195,15 @@ final class Manager {
 		}
 
 		// modify cookies
-		setcookie(self::COOKIE_ID, session_id(), $timestamp, self::get_path());
-		setcookie(self::COOKIE_TYPE, $type, $timestamp, self::get_path());
+		$options = array(
+				'expires'  => $timestamp,
+				'path'     => self::get_path(),
+				'secure'   => _SECURE,
+				'httponly' => true,
+				'samesite' => 'Lax'
+			);
+		setcookie(self::COOKIE_ID, session_id(), $options);
+		setcookie(self::COOKIE_TYPE, $type, $options);
 	}
 
 	/**
@@ -333,6 +360,9 @@ final class Manager {
 			if ($login_data === null)
 				continue;
 
+			// prevent session fixation - issue a fresh id on privilege change
+			session_regenerate_id(true);
+
 			// retrieve data and store session variables
 			$data = $mechanism->get_data($login_data);
 			$_SESSION['uid'] = $data['uid'];
@@ -379,6 +409,7 @@ final class Manager {
 		// clear session data
 		if ($result) {
 			header('Clear-Site-Data: "*"');
+			session_regenerate_id(true);
 			$_SESSION['uid'] = 0;
 			$_SESSION['logged'] = false;
 			$_SESSION['level'] = 0;

@@ -24,7 +24,9 @@
 define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
-define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
+define('_SECURE',
+	(!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off')
+	|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443));
 define('_VERSION', 0.5);
 
 // include main system components
