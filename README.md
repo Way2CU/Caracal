@@ -10,7 +10,7 @@ Contents:
 1. Quick start guide
 2. Site configuration
 	1. [Configuration file](docs/configuration_file.markdown)
-	2. Multiple language support
+	2. [Multiple language support](docs/multi-language.markdown)
 	3. Path handling and template loading
 		- Error pages
 3. Framework tags
