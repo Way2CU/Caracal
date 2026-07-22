@@ -1994,7 +1994,7 @@ class gallery extends Module {
 		}
 
 		if (isset($_REQUEST['order_by'])) {
-			$order_by = fix_chars(explode($_REQUEST['order_by']));
+			$order_by = fix_chars(explode(',', $_REQUEST['order_by']));
 		} else {
 			// default sorting column
 			$order_by[] = 'title';
