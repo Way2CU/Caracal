@@ -526,9 +526,7 @@ class Backend_UserManager {
 
 		if (is_object($user)) {
 			// make sure old password is correct
-			$old_password = hash_hmac('sha256', $source['current_password'], $user->salt);
-
-			if ($old_password == $user->password) {
+			if ($manager->verify_password($user->username, $source['current_password'])) {
 				// update password
 				$manager->change_password($user->username, $new_password);
 
@@ -920,7 +918,7 @@ class Backend_UserManager {
 
 		if (is_object($user)) {
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
-			$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password;
+			$old_password_ok = $manager->verify_password($user->username, $old_password);
 
 			if ($new_password_ok && $old_password_ok) {
 				// all conditions are met, change password

@@ -944,15 +944,14 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Generate account verification code based on username, email and current time.
+	 * Generate a cryptographically random account verification code.
 	 *
 	 * @param string $username
 	 * @param string $email
 	 * @return string
 	 */
 	public function generateVerificationCode($username, $email) {
-		$starting_hash = sha1((time() * 2) . '--email-verification--');
-		return hash_hmac('sha256', $username.'-'.$email, $starting_hash);
+		return bin2hex(random_bytes(32));
 	}
 
 	/**

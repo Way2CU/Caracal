@@ -122,14 +122,12 @@ function database_initialize($create_database) {
 					break;
 
 				case 'user':
-					$salt = hash('sha256', uuid_v4().strval(time()));
-					$password = hash_hmac('sha256', $item->tagAttrs['password'], $salt);
+					$password = password_hash($item->tagAttrs['password'], PASSWORD_DEFAULT);
 					$data = array(
 							'username'	=> $item->tagAttrs['username'],
 							'password'	=> $password,
 							'level'		=> $item->tagAttrs['level'],
-							'verified'	=> 1,
-							'salt'		=> $salt
+							'verified'	=> 1
 						);
 
 					// prepare user's name

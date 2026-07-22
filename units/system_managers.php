@@ -87,19 +87,58 @@ final class UserManager extends ItemManager {
 		if (!is_object($user))
 			throw new InvalidUserError('Unable to change password!');
 
-		// prepare password
-		$salt = hash('sha256', uuid_v4().strval(time()));
-		$hashed_password = hash_hmac('sha256', $new_password, $salt);
+		// strong, per-record salted hash with a work factor
+		$hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
-		// update password
+		// salt column is obsolete (salt is embedded in the hash); clear it so a
+		// stale legacy salt can never be mistaken for a valid one
 		$this->update_items(
 				array(
 					'password'	=> $hashed_password,
-					'salt'		=> $salt
+					'salt'		=> ''
 				),
 				array('id' => $user->id)
 			);
 		$result = true;
+
+		return $result;
+	}
+
+	/**
+	 * Verify specified user's password, transparently upgrading legacy or
+	 * cost-outdated hashes on a successful check.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function verify_password($username, $password) {
+		$result = false;
+
+		$user = $this->get_single_item(
+				array('id', 'password', 'salt'),
+				array('username' => $username)
+			);
+
+		if (is_object($user)) {
+			$info = password_get_info($user->password);
+
+			if ($info['algo']) {
+				// modern hash, constant-time verification
+				$result = password_verify($password, $user->password);
+
+			} else {
+				// legacy hash_hmac('sha256', pw, salt) scheme
+				$result = hash_equals($user->password, hash_hmac('sha256', $password, $user->salt));
+			}
+
+			// upgrade legacy or cost-outdated hashes after a successful check
+			if ($result && (!$info['algo'] || password_needs_rehash($user->password, PASSWORD_DEFAULT)))
+				$this->update_items(
+						array('password' => password_hash($password, PASSWORD_DEFAULT), 'salt' => ''),
+						array('id' => $user->id)
+					);
+		}
 
 		return $result;
 	}

@@ -44,7 +44,7 @@ class SystemMechanism extends Mechanism {
 					array('user' => $user->id)
 				);
 
-			if (is_object($verification) && $verification->code == $params['verification'])
+			if (is_object($verification) && hash_equals($verification->code, (string) $params['verification']))
 				$result = array('username' => $params['username']);
 		}
 
@@ -69,26 +69,8 @@ class SystemMechanism extends Mechanism {
 	 * @return boolean
 	 */
 	public static function check_credentials($username, $password) {
-		$result = false;
 		$manager = \UserManager::get_instance();
-
-		// get salt for user
-		$test_user = $manager->get_single_item(array('salt'), array('username' => $username));
-
-		// check credentials
-		if (is_object($test_user)) {
-			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
-			$user = $manager->get_single_item(
-						array('id'),
-						array(
-							'username'	=> $username,
-							'password'	=> $hashed_password
-						));
-
-			$result = is_object($user);
-		}
-
-		return $result;
+		return $manager->verify_password($username, $password);
 	}
 
 	/**
