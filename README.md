@@ -43,7 +43,9 @@ Contents:
 	5. [Marking dirty block for cache handling - `cms:skip_cache`](docs/tags/attributes.markdown#cmsskip_cache)
 	6. [Flushing output after tag - `cms:flush`](docs/tags/attributes.markdown#cmsflush)
 5. Modules
-	1. Articles
+	1. [Articles](docs/modules/articles/general.markdown)
+		- [Database structure](docs/modules/articles/database.markdown)
+		- [Functions](docs/modules/articles/functions.markdown)
 	2. Gallery
 	3. Shop
 	4. Downloads
