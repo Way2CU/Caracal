@@ -613,7 +613,7 @@ class TemplateHandler {
 							$pool[$key] = $this->params[$key];
 
 					} else {
-					   	$this->params;
+					   	$pool = $this->params;
 					}
 
 					$keys = array_keys($pool);
@@ -666,7 +666,7 @@ class TemplateHandler {
 						$categories = array('system');
 
 					if (isset($tag->tagAttrs['type']))
-						$condition = in_array($tag->tagAttrs['type'], $_SESSION['privacy_categories']);
+						$condition = in_array($tag->tagAttrs['type'], $categories);
 
 					// parse children
 					if ($condition)
