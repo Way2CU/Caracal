@@ -89,7 +89,7 @@ final class UserManager extends ItemManager {
 			throw new InvalidUserError('Unable to change password!');
 
 		// prepare password
-		$salt = hash('sha256', self::SALT.strval(time()));
+		$salt = hash('sha256', uuid_v4.strval(time()));
 		$hashed_password = hash_hmac('sha256', $new_password, $salt);
 
 		// update password
