@@ -11,6 +11,10 @@
 	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 	RewriteRule ^(.*)$ %{ENV:protocol}://%1/$1 [R=301,L]
 
+	# deny access to server-executable files anywhere under site content
+	# (FilesMatch matches only the basename, so a path-anchored rule is required)
+	RewriteRule ^site/.*\.(php|php[3457]|phtml|phps|phar|pl|py|cgi|sh|asp|aspx|jsp)$ - [F,NC]
+
 	# don't rewrite site content
 	RewriteRule ^/site/ - [NC,L]
 
@@ -24,10 +28,6 @@
 </IfModule>
 
 <FilesMatch "\.(xml|json)$">
-	Deny from all
-</FilesMatch>
-
-<FilesMatch "^site/.*\.(php|php3|asp|sh|py)$">
 	Deny from all
 </FilesMatch>
 

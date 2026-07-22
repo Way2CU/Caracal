@@ -22,6 +22,7 @@
     "message_file_saved": "מידע ההורדה נשמר.",
     "message_file_upload_error": "הייתה טעות בהעלאת הקובץ.",
     "message_file_uploaded": "קובץ חדש הועלה.",
+    "message_file_invalid_type": "סוג קובץ זה אינו מותר.",
     "message_category_saved": "מידע הקטגוריה נשמר.",
     "message_category_delete": "אתם עומדים להסיר את הקטגוריה הבאה. קבצים שהוקצו לקטגוריה זו <strong>לא יוסרו</strong>. קטגוריות ילדים יועברו לרמה העליונה. אתם בטוחים?",
     "message_category_deleted": "הקטגוריה נמחקה.",

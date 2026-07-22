@@ -38,6 +38,16 @@ class downloads extends Module {
 				return;
 			}
 
+		// prevent the web server from executing anything stored here
+		$guard_file = $this->file_path.'.htaccess';
+		if (!file_exists($guard_file))
+			file_put_contents(
+					$guard_file,
+					"<FilesMatch \"\\.(php|php3|php4|php5|php7|phtml|phps|phar|pl|py|cgi|sh|asp|aspx|jsp)$\">\n".
+					"\tDeny from all\n".
+					"</FilesMatch>\n"
+				);
+
 		// connect events
 		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
 		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
@@ -1018,11 +1028,28 @@ class downloads extends Module {
 					'message'	=> '',
 				);
 
+		// extensions the web server may execute - never allowed as downloads
+		$blocked_extensions = array(
+					'php', 'php3', 'php4', 'php5', 'php7', 'phtml', 'phps', 'phar',
+					'pl', 'py', 'cgi', 'sh', 'asp', 'aspx', 'jsp', 'htaccess'
+				);
+
 		if (is_uploaded_file($_FILES[$field_name]['tmp_name'])) {
 			// prepare data for recording
 			$file_name = $this->get_file_name(fix_chars(basename($_FILES[$field_name]['name'])));
 
-			if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->file_path.$file_name)) {
+			// reject any file whose name contains an executable extension segment
+			$segments = explode('.', strtolower($file_name));
+			array_shift($segments);
+			$is_blocked = count(array_intersect($segments, $blocked_extensions)) > 0;
+
+			if ($is_blocked) {
+				// file could be executed by the web server, refuse to store it
+				$result['error'] = true;
+				$result['message'] = $this->get_language_constant('message_file_invalid_type');
+				trigger_error('Downloads: Blocked upload of executable file type.', E_USER_NOTICE);
+
+			} else if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->file_path.$file_name)) {
 				// file was moved properly, record new data
 				$result['filename'] = $file_name;
 				$result['message'] = $this->get_language_constant('message_file_uploaded');

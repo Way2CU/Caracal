@@ -22,6 +22,7 @@
     "message_file_saved": "Download data was saved.",
     "message_file_upload_error": "There was an error uploading your file.",
     "message_file_uploaded": "New file was uploaded.",
+    "message_file_invalid_type": "Dieser Dateityp ist nicht zulässig.",
     "message_category_saved": "Category data was saved.",
     "message_category_delete": "You are about to remove the following category. Files assigned to this category will <strong>not</strong> be removed. Child categories will be moved to the top level. Are you sure?",
     "message_category_deleted": "Category was removed.",
