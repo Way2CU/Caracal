@@ -282,13 +282,14 @@ final class Manager {
 				$categories = array_keys($_REQUEST);
 				$categories = array_diff($categories, $ignored_keys);
 				$categories []= 'system';  // this category is always enabled
+				$categories = fix_chars($categories);  // sanitize input
 
 				// prepare data
 				$consent = null;
 				if (array_key_exists(self::COOKIE_CONSENT_ID, $_COOKIE))
 					$consent = $manager->get_single_item(
 						$manager->get_field_names(),
-						array('uid' => $_COOKIE[self::COOKIE_CONSENT_ID])
+						array('uid' => fix_chars($_COOKIE[self::COOKIE_CONSENT_ID]))
 					);
 
 				$duration = time() + (self::CONSENT_DURATION * 60);
