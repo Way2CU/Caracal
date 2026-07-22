@@ -498,14 +498,16 @@ abstract class ItemManager {
 	 * @param array $data
 	 * @return string
 	 */
-	private function get_fields($data, $from_keys=false) {
+	private function get_fields($data, $from_keys=false, $custom_fields=array()) {
 		$result = array();
 		$fields = $from_keys ? array_keys($data) : $data;
 
 		foreach($fields as $field)
-			if (array_key_exists($field, $this->field_types))
-				$result[] = "`{$field}`"; else
+			if (array_key_exists($field, $this->field_types)) {
+				$result[] = "`{$field}`";
+			} else if (in_array($field, $custom_fields)) {
 				$result[] = "{$field}";
+			}
 
 		return implode(', ', $result);
 	}
