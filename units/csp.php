@@ -160,10 +160,9 @@ final class Policy {
 	 * @return string
 	 */
 	public static function get_nonce() {
-		global $db_config;
-
+		// fresh, unpredictable value per response
 		if (is_null(self::$nonce))
-			self::$nonce = hash_hmac('sha1', uniqid("", true), $db_config['pass']);
+			self::$nonce = base64_encode(random_bytes(16));
 
 		return self::$nonce;
 	}
