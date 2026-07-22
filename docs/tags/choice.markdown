@@ -7,7 +7,7 @@ In the following example, value of request (`GET`, `POST`) parameter `version` w
 Tag `cms:choice` supports following attributes:
 
 - `param` - Parameter name whose value is compared to options;
-- `value` - Manually set or [`cms:eval`-ed](eval.markdown) value to compare.
+- `value` - Manually set or [`cms:eval`-ed](attributes.markdown) value to compare.
 
 Tag `option` can be used in this form only inside of `cms:choice` with following attributes:
 

@@ -35,12 +35,13 @@ Contents:
 	19. [Include script from system collection - `cms:collection`](docs/tags/collection.markdown)
 	20. [Include style in head tag or link to other elements - `cms:link`](docs/tags/link.markdown)
 	21. [Automated testing - `cms:test`](docs/tags/test.markdown)
-4. Framework attributes
-	1. Evaluating attribute - `cms:eval`
-	2. Optional attribute evaluation - `cms:optional`
-	3. Language constant tooltip - `cms:tooltip`
-	4. Treating attribute value as language constant name - `cms:constant`
-	5. Marking dirty block for cache handling - `cms:skip_cache`
+4. [Framework attributes](docs/tags/attributes.markdown)
+	1. [Evaluating attribute - `cms:eval`](docs/tags/attributes.markdown#cmseval)
+	2. [Optional attribute evaluation - `cms:optional`](docs/tags/attributes.markdown#cmsoptional)
+	3. [Language constant tooltip - `cms:tooltip`](docs/tags/attributes.markdown#cmstooltip)
+	4. [Treating attribute value as language constant name - `cms:constant`](docs/tags/attributes.markdown#cmsconstant)
+	5. [Marking dirty block for cache handling - `cms:skip_cache`](docs/tags/attributes.markdown#cmsskip_cache)
+	6. [Flushing output after tag - `cms:flush`](docs/tags/attributes.markdown#cmsflush)
 5. Modules
 	1. Articles
 	2. Gallery
