@@ -48,12 +48,17 @@ class PageSwitch {
 	}
 
 	/**
-	 * Set number of items per page
+	 * Set number of items per page. Values smaller than one are ignored as
+	 * they make page count impossible to calculate and would raise division
+	 * by zero error.
 	 *
 	 * @param integer $number
 	 */
 	public function setItemsPerPage($number) {
-		$this->per_page = $number;
+		$number = intval($number);
+
+		if ($number > 0)
+			$this->per_page = $number;
 	}
 
 	/**
