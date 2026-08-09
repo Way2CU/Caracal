@@ -187,16 +187,9 @@ class callbox extends Module {
 				'caller_name'
 			);
 		$data = array();
-		$strip_slashes = version_compare(PHP_VERSION, '7.4.0') <= 0 && get_magic_quotes_gpc();
 
-		foreach($params as $param) {
-			$value = $_REQUEST[$param];
-
-			if ($strip_slashes)
-				$value = stripslashes($value);
-
-			$data[] = $param.'='.rawurlencode($value);
-		}
+		foreach($params as $param)
+			$data[] = $param.'='.rawurlencode($_REQUEST[$param]);
 
 		// add visitor session id
 		$data['visitor_sid'] = $visitor_sid;
