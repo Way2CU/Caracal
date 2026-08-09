@@ -906,27 +906,36 @@ class TemplateHandler {
 	/**
 	 * Evaluate specified string as PHP code and return value.
 	 *
+	 * Compiled expressions are cached for the duration of the request. Templates
+	 * are rendered repeatedly, often once per item in a list, and the same small
+	 * set of expressions recurs on every pass. Only the compiled code is shared;
+	 * values are passed in on each call so expressions of the same name in
+	 * different templates still resolve against their own parameters.
+	 *
 	 * @param string $code
 	 * @return mixed
 	 */
 	private function get_evaluated_value($code) {
+		static $compiled = array();
+
 		// variables to be used in evaluation
 		$params = $this->params;
 		$template = $this->template_params;
 		$settings = !is_null($this->module) ? $this->module->settings : array();
-		$document_type = $this->document_type;
-
-		// construct function call
-		$function = '
-			$call = function($params, $template, $settings) {
-				global $section, $language, $language_rtl;
-				return '.$code.';
-			}; return $call($params, $template, $settings);';
 
 		// store code to help with debugging
 		$this->last_eval = $code;
 
-		return eval($function);
+		// compile expression on first use
+		if (!isset($compiled[$code]))
+			$compiled[$code] = eval('return static function($params, $template, $settings) {
+					global $section, $language, $language_rtl;
+					return '.$code.';
+				};');
+
+		$result = $compiled[$code]($params, $template, $settings);
+
+		return $result;
 	}
 
 	/**
