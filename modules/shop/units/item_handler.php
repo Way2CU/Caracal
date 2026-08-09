@@ -830,7 +830,11 @@ class Handler {
 			$limit = fix_id($tag_params['limit']);
 
 		if (isset($tag_params['paginate'])) {
-			$per_page = is_numeric($tag_params['paginate']) ? $tag_params['paginate'] : 10;
+			// zero and non-numeric values would make page count impossible to calculate
+			$per_page = fix_id($tag_params['paginate']);
+			if ($per_page < 1)
+				$per_page = 10;
+
 			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : null;
 
 			$item_count = $manager->get_item_value('COUNT(id)', $conditions);

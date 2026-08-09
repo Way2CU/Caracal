@@ -1188,8 +1188,13 @@ class gallery extends Module {
 		if (isset($tag_params['slideshow']))
 			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
 
-		if (isset($tag_params['group_id']) && !($tag_params['group_id'] == 0))
-			$conditions['group'] = fix_id($tag_params['group_id']);
+		if (isset($tag_params['group_id'])) {
+			// compare as number, empty and non-numeric values mean no group was specified
+			$selected_group = fix_id($tag_params['group_id']);
+
+			if ($selected_group != 0)
+				$conditions['group'] = $selected_group;
+		}
 
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::get_instance();
@@ -1283,8 +1288,13 @@ class gallery extends Module {
 		if (isset($tag_params['slideshow']))
 			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
 
-		if (isset($tag_params['group_id']) && !($tag_params['group_id'] == 0))
-			$conditions['group'] = fix_id($tag_params['group_id']);
+		if (isset($tag_params['group_id'])) {
+			// compare as number, empty and non-numeric values mean no group was specified
+			$selected_group = fix_id($tag_params['group_id']);
+
+			if ($selected_group != 0)
+				$conditions['group'] = $selected_group;
+		}
 
 		if (isset($tag_params['limit']))
 			$limit = fix_id($tag_params['limit']);
