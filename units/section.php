@@ -66,16 +66,13 @@ final class SectionHandler {
 			$match .= self::SUFFIX;
 			$match = self::wrap_pattern($match);
 
-			// store pattern params for later use
-			preg_match_all('|\{(\w:)?([\w\d\-_]+)\}|ius', $pattern, $params);
-			self::$params[$pattern] = $params;
-
 			// successfully matched query string to template
-			if (!$result && preg_match($match, $request_path, $matches)) {
+			if (preg_match($match, $request_path, $matches)) {
 				self::$matched_file = $template_file;
 				self::$matched_pattern = $match;
-				self::$matched_params = $params;
+				self::$matched_params = self::get_params_for_pattern($pattern);
 				$result = true;
+				break;
 			}
 		}
 
@@ -110,6 +107,22 @@ final class SectionHandler {
 	}
 
 	/**
+	 * Get parameter placeholders and names for specified pattern. Patterns don't
+	 * change during a request so the result is calculated only once.
+	 *
+	 * @param string $pattern
+	 * @return array
+	 */
+	private static function get_params_for_pattern($pattern) {
+		if (!array_key_exists($pattern, self::$params)) {
+			preg_match_all('|\{(\w:)?([\w\d\-_]+)\}|ius', $pattern, $params);
+			self::$params[$pattern] = $params;
+		}
+
+		return self::$params[$pattern];
+	}
+
+	/**
 	 * Return list of matched patterns for specified template file.
 	 *
 	 * @param string $file
@@ -118,14 +131,10 @@ final class SectionHandler {
 	public static function get_patterns_for_file($file=null) {
 		$result = array();
 
-		// collect templates
-		if (is_null($file)) {
-			$result = self::$params;
-		} else {
-			foreach (self::$data as $pattern => $template_file)
-				if ($file == $template_file)
-					$result[$pattern] = self::$params[$pattern];
-		}
+		// collect patterns pointing to specified file
+		foreach (self::$data as $pattern => $template_file)
+			if (is_null($file) || $file == $template_file)
+				$result[$pattern] = self::get_params_for_pattern($pattern);
 
 		return $result;
 	}
