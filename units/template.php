@@ -970,7 +970,11 @@ class TemplateHandler {
 		header('Content-Language: '.$language);
 		header('Content-Type: '.$document_type.'; charset=UTF-8');
 
-		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+		// `Vary` is not understood by HTTP/1.0 caches, everything below it is version
+		// agnostic and must be sent for HTTP/2 and newer as well
+		$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '';
+
+		if ($protocol != 'HTTP/1.0') {
 			// let the browser/crawler know we have different desktop/mobile styles
 			header('Vary: User-Agent');
 
