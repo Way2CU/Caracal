@@ -9,36 +9,52 @@ class LanguageHandler {
 	private $data = array();
 	private $list = null;
 	private $file;
+	private $path;
 
 	/**
 	 * Constructor
 	 *
+	 * Language data is not read here. Every active module is constructed on each
+	 * request but most never resolve a constant, so files are loaded on first use
+	 * and separately for each requested language.
+	 *
 	 * @return LanguageHandler
 	 */
 	public function __construct($path) {
-		global $data_path, $language;
+		$this->path = $path;
+	}
 
-		// decide which file to load
-		$this->file = $this->get_language_file($path);
+	/**
+	 * Load data for specified language. Falls back to English when localized
+	 * version of the file is not available.
+	 *
+	 * @param string $language_to_load
+	 */
+	private function load($language_to_load) {
+		$data = null;
+		$file = $this->get_language_file($this->path, $language_to_load);
 
 		// make sure language file exists
-		if (!file_exists($this->file) && $language != 'en') {
-			trigger_error('Missing language file: '.$this->file.'. Defaulting to English!', E_USER_WARNING);
-			$this->file = $this->get_language_file($path, 'en');
+		if (!file_exists($file) && $language_to_load != 'en') {
+			trigger_error('Missing language file: '.$file.'. Defaulting to English!', E_USER_WARNING);
+			$file = $this->get_language_file($this->path, 'en');
 		}
 
-		if (!file_exists($this->file)) {
+		if (!file_exists($file)) {
 			trigger_error('English version wasn\'t found.', E_USER_NOTICE);
-			return;
+
+		} else {
+			// load language file
+			$data = json_decode(file_get_contents($file));
+
+			// report error
+			if (is_null($data))
+				trigger_error('Invalid language file: '.$file, E_USER_WARNING);
 		}
 
-		// load language file
-		$this->data = json_decode(file_get_contents($this->file));
-		$this->active = !is_null($this->data);
-
-		// report error
-		if (is_null($this->data))
-			trigger_error('Invalid language file: '.$this->file, E_USER_WARNING);
+		$this->file = $file;
+		$this->active = !is_null($data);
+		$this->data[$language_to_load] = $data;
 	}
 
 	/**
@@ -72,10 +88,16 @@ class LanguageHandler {
 
 		// prepare default result
 		$result = '';
+		$language_to_load = is_null($specified_language) ? $language : $specified_language;
+
+		// load data on first use of requested language
+		if (!array_key_exists($language_to_load, $this->data))
+			$this->load($language_to_load);
 
 		// get value
-		if (property_exists($this->data, $constant))
-			$result = $this->data->$constant;
+		$data = $this->data[$language_to_load];
+		if (is_object($data) && property_exists($data, $constant))
+			$result = $data->$constant;
 
 		return $result;
 	}
