@@ -21,14 +21,22 @@ class Database_MySQL extends Database {
 	 */
 	public function connect($config) {
 		$result = false;
-		$this->handle = new mysqli($config['host'], $config['user'], $config['pass']);
 
-		if (!mysqli_connect_error()) {
-			$result = true;
-			$this->active = true;
+		// report errors through exceptions, this is the default since PHP 8.1
+		// but is set explicitly to get the same behavior on older versions
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+		try {
+			$this->handle = new mysqli($config['host'], $config['user'], $config['pass']);
 
 			// set default protocol encoding
 			$this->handle->set_charset('utf8');
+
+			$this->active = true;
+			$result = true;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to connect. '.$error->getMessage(), E_USER_WARNING);
 		}
 
 		return $result;
@@ -46,9 +54,9 @@ class Database_MySQL extends Database {
 		if ($this->active)
 			try {
 				$result = $this->handle->select_db($database);
-			} catch (Exception $error) {
-				trigger_error($error, E_USER_WARNING);
-				$result = false;
+
+			} catch (mysqli_sql_exception $error) {
+				trigger_error('MySQL: Unable to select database. '.$error->getMessage(), E_USER_WARNING);
 			}
 
 		return $result;
@@ -61,11 +69,18 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function exists($database) {
-		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = `{$database}`";
-		$response = $this->handle->query($sql);
+		$result = false;
 
-		$result = $response->num_rows > 0;
-		$response->free();
+		try {
+			$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = `{$database}`";
+			$response = $this->handle->query($sql);
+
+			$result = $response->num_rows > 0;
+			$response->free();
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to check database. '.$error->getMessage(), E_USER_WARNING);
+		}
 
 		return $result;
 	}
@@ -77,8 +92,17 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function create($database) {
-		$sql = "CREATE DATABASE `{$database}`";
-		return $this->handle->query($sql) === true;
+		$result = false;
+
+		try {
+			$sql = "CREATE DATABASE `{$database}`";
+			$result = $this->handle->query($sql) === true;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to create database. '.$error->getMessage(), E_USER_WARNING);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -88,8 +112,15 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function drop($database) {
-		$sql = "DROP DATABASE `{$database}`";
-		$result = $this->handle->query($sql) === true;
+		$result = false;
+
+		try {
+			$sql = "DROP DATABASE `{$database}`";
+			$result = $this->handle->query($sql) === true;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to drop database. '.$error->getMessage(), E_USER_WARNING);
+		}
 
 		return $result;
 	}
@@ -101,7 +132,16 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function query($sql) {
-		return $this->handle->query($sql) === true;
+		$result = false;
+
+		try {
+			$result = $this->handle->query($sql) === true;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Query failed. '.$error->getMessage(), E_USER_WARNING);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -111,10 +151,19 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function multi_query($sql) {
-		$this->handle->multi_query($sql);
-		while ($this->handle->more_results() && $this->handle->next_result());
+		$result = false;
 
-		return $this->handle->errno == 0;
+		try {
+			$this->handle->multi_query($sql);
+			while ($this->handle->more_results() && $this->handle->next_result());
+
+			$result = $this->handle->errno == 0;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to execute queries. '.$error->getMessage(), E_USER_WARNING);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -126,11 +175,16 @@ class Database_MySQL extends Database {
 	public function get_results($sql) {
 		$result = array();
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			while ($row = $db_result->fetch_object())
-				$result[] = $row;
+		try {
+			if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+				while ($row = $db_result->fetch_object())
+					$result[] = $row;
 
-			$db_result->close();
+				$db_result->close();
+			}
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to get results. '.$error->getMessage(), E_USER_WARNING);
 		}
 
 		return $result;
@@ -146,12 +200,16 @@ class Database_MySQL extends Database {
 	public function get_row($sql, $index=0) {
 		$result = null;
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			if (!$db_result->data_seek($index))
-				return;
+		try {
+			if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+				if ($db_result->data_seek($index))
+					$result = $db_result->fetch_array();
 
-			$result = $db_result->fetch_array();
-			$db_result->close();
+				$db_result->close();
+			}
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to get row. '.$error->getMessage(), E_USER_WARNING);
 		}
 
 		return $result;
@@ -166,13 +224,18 @@ class Database_MySQL extends Database {
 	public function get_var($sql) {
 		$result = null;
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			$row = $db_result->fetch_array(MYSQLI_NUM);
+		try {
+			if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+				$row = $db_result->fetch_array(MYSQLI_NUM);
 
-			if (!is_null($row) && count($row) > 0)
-				$result = $row[0];
+				if (!is_null($row) && count($row) > 0)
+					$result = $row[0];
 
-			$db_result->close();
+				$db_result->close();
+			}
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to get value. '.$error->getMessage(), E_USER_WARNING);
 		}
 
 		return $result;
@@ -202,8 +265,17 @@ class Database_MySQL extends Database {
 	 * @param array/string $tables
 	 */
 	public function drop_tables($tables) {
-		$sql = 'DROP TABLES `'.implode('`, `', $tables).'`';
-		return $this->handle->query($sql) === true;
+		$result = false;
+
+		try {
+			$sql = 'DROP TABLES `'.implode('`, `', $tables).'`';
+			$result = $this->handle->query($sql) === true;
+
+		} catch (mysqli_sql_exception $error) {
+			trigger_error('MySQL: Unable to drop tables. '.$error->getMessage(), E_USER_WARNING);
+		}
+
+		return $result;
 	}
 
 	/**

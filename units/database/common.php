@@ -77,18 +77,9 @@ function database_initialize($create_database) {
 	$sql = file_get_contents($sql_file);
 
 	// create database if needed
-	if ($create_database) {
-		try {
-			$db->create($db_config['name']);
-			$db->select($db_config['name']);
-			$database_exists = true;
-
-		} catch (Exception $error) {
-			$database_exists = false;
-		}
-	} else {
+	if ($create_database)
+		$database_exists = $db->create($db_config['name']) && $db->select($db_config['name']); else
 		$database_exists = true;
-	}
 
 	// create database
 	if ($database_exists && $db->multi_query($sql)) {
