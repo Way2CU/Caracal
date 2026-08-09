@@ -59,10 +59,6 @@ function escape_chars($string, $strip_tags=true) {
 	global $db;
 
 	if (!is_array($string)) {
-		// get rid of slashes
-		if (version_compare(PHP_VERSION, '7.4.0') <= 0 && get_magic_quotes_gpc())
-			$string = stripcslashes($string);
-
 		// remove tags
 		if ($strip_tags)
 			$string = strip_tags($string);
@@ -70,7 +66,7 @@ function escape_chars($string, $strip_tags=true) {
 		// esape the rest of the string
 		if ($db->is_active())
 			$string = $db->escape_string($string); else
-			$string = mysql_real_escape_string($string);
+			$string = addslashes($string);
 
 	} else {
 		foreach($string as $key => $value)
