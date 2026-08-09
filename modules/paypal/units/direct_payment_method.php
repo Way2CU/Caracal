@@ -277,7 +277,7 @@ class PayPal_Direct extends PaymentMethod {
 			if ($start_timestamp < time())
 				$start_timestamp = time();
 
-			$recurring_fields['PROFILESTARTDATE'] = strftime('%Y-%m-%dT%T%z', $start_timestamp);
+			$recurring_fields['PROFILESTARTDATE'] = date('Y-m-d\TH:i:sO', $start_timestamp);
 
 			// set description
 			$recurring_fields['DESC'] = $shop->formatRecurring($plan_params);
