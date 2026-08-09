@@ -31,6 +31,7 @@ abstract class Module {
 	public $name;
 	public $path;
 	public $settings = null;
+	private static $all_settings = null;
 
 	/**
 	 * Constructor
@@ -219,6 +220,10 @@ abstract class Module {
 	/**
 	 * Load and return module settings from database.
 	 *
+	 * Settings for every module are retrieved in a single query the first time any
+	 * module asks for them. Prior to this each module issued its own query, which
+	 * meant one round trip per active module on every request.
+	 *
 	 * @return array
 	 */
 	protected function load_settings() {
@@ -227,20 +232,32 @@ abstract class Module {
 		$result = array();
 
 		// make sure we have database connection
-		if (is_null($db))
-			return $result;
+		if (!is_null($db)) {
+			if (is_null(self::$all_settings))
+				self::load_all_settings();
 
-		// get manager
-		$manager = SettingsManager::get_instance();
-
-		// get values from the database
-		$settings = $manager->get_items($manager->get_field_names(), array('module' => $this->name));
-
-		if (count($settings) > 0)
-			foreach ($settings as $setting)
-				$result[$setting->variable] = $setting->value;
+			if (array_key_exists($this->name, self::$all_settings))
+				$result = self::$all_settings[$this->name];
+		}
 
 		return $result;
+	}
+
+	/**
+	 * Load settings for every module and group them by module name.
+	 */
+	private static function load_all_settings() {
+		self::$all_settings = array();
+
+		$manager = SettingsManager::get_instance();
+		$settings = $manager->get_items(array('module', 'variable', 'value'), array());
+
+		foreach ($settings as $setting) {
+			if (!array_key_exists($setting->module, self::$all_settings))
+				self::$all_settings[$setting->module] = array();
+
+			self::$all_settings[$setting->module][$setting->variable] = $setting->value;
+		}
 	}
 
 	/**
@@ -281,6 +298,10 @@ abstract class Module {
 						'value'		=> $value
 					));
 		}
+
+		// keep loaded settings in sync
+		if (!is_null(self::$all_settings))
+			self::$all_settings[$this->name][$name] = $value;
 	}
 
 	/**
