@@ -2852,20 +2852,20 @@ class gallery extends Module {
 			case 'jpg':
 			case 'jpeg':
 				$img_source = imagecreatefromjpeg($filename);
-				$save_function = @imagejpeg;
+				$save_function = 'imagejpeg';
 				$save_quality = 85;
 				break;
 
 			case 'png':
 				$img_source = imagecreatefrompng($filename);
-				$save_function = @imagepng;
+				$save_function = 'imagepng';
 				$save_quality = 9;
 				$has_alpha = true;
 				break;
 
 			case 'gif':
 				$img_source = imagecreatefromgif($filename);
-				$save_function = @imagegif;
+				$save_function = 'imagegif';
 				$has_alpha = true;
 		}
 
