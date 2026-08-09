@@ -140,11 +140,17 @@ class TemplateHandler {
 	/**
 	 * Constructor
 	 *
+	 * Parsed templates are shared for the duration of the request. Since `parse`
+	 * no longer modifies the tag tree the same structure can safely be reused by
+	 * every handler working on the same file.
+	 *
 	 * @param string $file
 	 * @return TemplateHandler
 	 */
 	public function __construct($file = '', $path = '') {
 		global $template_path;
+
+		static $parsed = array();
 
 		$this->active = false;
 		$this->params = array();
@@ -153,12 +159,16 @@ class TemplateHandler {
 		$this->file = $path.$file;
 		$this->cache = Cache::get_instance();
 
-		// if file exits then load
-		if (!empty($this->file) && file_exists($this->file)) {
-			$data = @file_get_contents($this->file);
-			$this->engine = new Core\XML\Parser($data, $this->file);
-			$this->engine->Parse();
+		// if file exists then load
+		if (is_file($this->file)) {
+			if (!array_key_exists($this->file, $parsed)) {
+				$data = @file_get_contents($this->file);
+				$engine = new Core\XML\Parser($data, $this->file);
+				$engine->Parse();
+				$parsed[$this->file] = $engine;
+			}
 
+			$this->engine = $parsed[$this->file];
 			$this->active = true;
 		}
 	}
@@ -192,10 +202,11 @@ class TemplateHandler {
 
 	/**
 	 * Restores XML to original state
+	 *
+	 * Parsing no longer modifies the tag tree so there is nothing to restore. Method
+	 * is kept because templates and modules call it in a large number of places.
 	 */
 	public function restore_xml() {
-		if (isset($this->engine))
-			$this->engine->Parse();
 	}
 
 	/**
@@ -308,71 +319,74 @@ class TemplateHandler {
 		for ($i=0; $i<$count; $i++) {
 			$tag = $tag_array[$i];
 
+			// work on a copy so parsed template can be reused
+			$attributes = $tag->tagAttrs;
+
 			// if tag has eval set
-			if (isset($tag->tagAttrs['cms:eval'])) {
-				$value = $tag->tagAttrs['cms:eval'];
+			if (isset($attributes['cms:eval'])) {
+				$value = $attributes['cms:eval'];
 				$eval_params = explode(',', $value);
 
 				foreach ($eval_params as $param) {
-					$to_eval = $tag->tagAttrs[$param];
+					$to_eval = $attributes[$param];
 					$response = $this->get_evaluated_value($to_eval);
 
 					if ($response !== false)
-						$tag->tagAttrs[$param] = $response; else
+						$attributes[$param] = $response; else
 						trigger_error('Error while trying to `cms:eval` "'.$to_eval.'" in file: '.$this->file, E_USER_WARNING);
 				}
 
 				// unset param
-				unset($tag->tagAttrs['cms:eval']);
+				unset($attributes['cms:eval']);
 			}
 
-			if (isset($tag->tagAttrs['cms:optional'])) {
+			if (isset($attributes['cms:optional'])) {
 				// get evaluation values
-				$optional_params = explode(',', $tag->tagAttrs['cms:optional']);
+				$optional_params = explode(',', $attributes['cms:optional']);
 
 				foreach ($optional_params as $param) {
-					$to_eval = $tag->tagAttrs[$param];
+					$to_eval = $attributes[$param];
 					$value = $this->get_evaluated_value($to_eval);
 
 					if ($value == false)
-						unset($tag->tagAttrs[$param]); else
-						$tag->tagAttrs[$param] = $value;
+						unset($attributes[$param]); else
+						$attributes[$param] = $value;
 				}
 
 				// unset param
-				unset($tag->tagAttrs['cms:optional']);
+				unset($attributes['cms:optional']);
 			}
 
 			// implement tooltip
-			if (isset($tag->tagAttrs['cms:tooltip'])) {
+			if (isset($attributes['cms:tooltip'])) {
 				if (!is_null($this->module))
-					$value = $this->module->get_language_constant($tag->tagAttrs['cms:tooltip']); else
-					$value = Language::get_text($tag->tagAttrs['cms:tooltip']);
+					$value = $this->module->get_language_constant($attributes['cms:tooltip']); else
+					$value = Language::get_text($attributes['cms:tooltip']);
 
 				if (!empty($value))
-					$tag->tagAttrs['data-tooltip'] = $value;
-				unset($tag->tagAttrs['cms:tooltip']);
+					$attributes['data-tooltip'] = $value;
+				unset($attributes['cms:tooltip']);
 			}
 
 			// implement constants
-			if (isset($tag->tagAttrs['cms:constant'])) {
-				$params = explode(',', $tag->tagAttrs['cms:constant']);
+			if (isset($attributes['cms:constant'])) {
+				$params = explode(',', $attributes['cms:constant']);
 
 				if (count($params) > 0)
 					foreach ($params as $param)
 						if (!is_null($this->module))
-							$tag->tagAttrs[$param] = $this->module->get_language_constant($tag->tagAttrs[$param]); else
-							$tag->tagAttrs[$param] = Language::get_text($tag->tagAttrs[$param]);
+							$attributes[$param] = $this->module->get_language_constant($attributes[$param]); else
+							$attributes[$param] = Language::get_text($attributes[$param]);
 
-				unset($tag->tagAttrs['cms:constant']);
+				unset($attributes['cms:constant']);
 			}
 
 			// check if specified tag shouldn't be cached
 			$skip_cache = false;
 			$no_cache_tags = array('cms:privacy', 'cms:test');
 
-			if (isset($tag->tagAttrs['cms:skip_cache']) || in_array($tag->tagName, $no_cache_tags)) {
-				unset($tag->tagAttrs['cms:skip_cache']);
+			if (isset($attributes['cms:skip_cache']) || in_array($tag->tagName, $no_cache_tags)) {
+				unset($attributes['cms:skip_cache']);
 
 				// only if current URL is being cached, we start dirty area
 				if ($this->cache->is_caching()) {
@@ -381,7 +395,7 @@ class TemplateHandler {
 
 					// reconstruct template for cache,
 					// ugly but we are not doing it a lot
-					$data = $this->get_data_for_cache($tag);
+					$data = $this->get_data_for_cache($tag, $attributes);
 					$this->cache->set_dirty_area_template($data);
 				}
 			}
@@ -389,8 +403,8 @@ class TemplateHandler {
 			// check if we should flush after tag is closed
 			$flush_data = false;
 
-			if (isset($tag->tagAttrs['cms:flush'])) {
-				unset($tag->tagAttrs['cms:skip_cache']);
+			if (isset($attributes['cms:flush'])) {
+				unset($attributes['cms:skip_cache']);
 				$flush_data = true;
 			}
 
@@ -398,24 +412,24 @@ class TemplateHandler {
 			switch ($tag->tagName) {
 				// handle tag used for setting session variable
 				case 'cms:session':
-					$name = $tag->tagAttrs['name'];
+					$name = $attributes['name'];
 
 					// allow setting referral only once per seesion
-					if (isset($tag->tagAttrs['once']))
-						$only_once = in_array($tag->tagAttrs['once'], array(1, 'yes')); else
+					if (isset($attributes['once']))
+						$only_once = in_array($attributes['once'], array(1, 'yes')); else
 						$only_once = false;
 
 					$should_set = ($only_once && !isset($_SESSION[$name])) || !$only_once;
 
 					// store value
 					if (!in_array($name, $this->protected_variables) && $should_set)
-						$_SESSION[$name] = $tag->tagAttrs['value'];
+						$_SESSION[$name] = $attributes['value'];
 
 					break;
 
 				// transfer control to module
 				case 'cms:module':
-					$module_name = $tag->tagAttrs['name'];
+					$module_name = $attributes['name'];
 
 					// make sure module is loaded
 					if (!ModuleHandler::is_loaded($module_name)) {
@@ -458,13 +472,13 @@ class TemplateHandler {
 
 					// transfer control to specified module
 					$module = call_user_func(array($module_name, 'get_instance'));
-					$module->transfer_control($tag->tagAttrs, $children);
+					$module->transfer_control($attributes, $children);
 					break;
 
 				// load other template
 				case 'cms:template':
-					$file = $tag->tagAttrs['file'];
-					$path = key_exists('path', $tag->tagAttrs) ? $tag->tagAttrs['path'] : '';
+					$file = $attributes['file'];
+					$path = key_exists('path', $attributes) ? $attributes['path'] : '';
 
 					// create new template handler
 					$new = new TemplateHandler($file, $path);
@@ -479,15 +493,15 @@ class TemplateHandler {
 
 				// raw text copy
 				case 'cms:raw':
-					if (key_exists('file', $tag->tagAttrs)) {
+					if (key_exists('file', $attributes)) {
 						// show content of the file
-						$file = $tag->tagAttrs['file'];
-						$path = key_exists('path', $tag->tagAttrs) ? $tag->tagAttrs['path'] : $template_path;
+						$file = $attributes['file'];
+						$path = key_exists('path', $attributes) ? $attributes['path'] : $template_path;
 						$text = file_get_contents($path.$file);
 
-					} elseif (key_exists('text', $tag->tagAttrs)) {
+					} elseif (key_exists('text', $attributes)) {
 						// show raw text
-						$text = $tag->tagAttrs['text'];
+						$text = $attributes['text'];
 
 					} else {
 						// show content of tag
@@ -500,8 +514,8 @@ class TemplateHandler {
 				// embed svg images
 				case 'cms:svg':
 					$path = _BASEPATH.'/'.$images_path;
-					$file = $tag->tagAttrs['file'];
-					$symbol = isset($tag->tagAttrs['symbol']) ? $tag->tagAttrs['symbol'] : null;
+					$file = $attributes['file'];
+					$symbol = isset($attributes['symbol']) ? $attributes['symbol'] : null;
 
 					if (is_null($symbol)) {
 						if ($file[0] != '/')
@@ -517,8 +531,8 @@ class TemplateHandler {
 								'fallback' => $cache_method != CacheType::NONE || !_BROWSER_OK
 							);
 
-						if (isset($tag->tagAttrs['class']))
-							$params['class'] = $tag->tagAttrs['class'];
+						if (isset($attributes['class']))
+							$params['class'] = $attributes['class'];
 
 						$template = new TemplateHandler('svg_symbol.xml', $system_template_path);
 						$template->set_mapped_module($this->module);
@@ -532,14 +546,14 @@ class TemplateHandler {
 
 				// multi language constants
 				case 'cms:text':
-					$constant = $tag->tagAttrs['constant'];
-					$language = (key_exists('language', $tag->tagAttrs)) ? $tag->tagAttrs['language'] : $language;
+					$constant = $attributes['constant'];
+					$language = (key_exists('language', $attributes)) ? $attributes['language'] : $language;
 					$text = "";
 
 					// check if constant is module based
-					if (key_exists('module', $tag->tagAttrs)) {
-						if (ModuleHandler::is_loaded($tag->tagAttrs['module'])) {
-							$module = call_user_func(array($tag->tagAttrs['module'], 'get_instance'));
+					if (key_exists('module', $attributes)) {
+						if (ModuleHandler::is_loaded($attributes['module'])) {
+							$module = call_user_func(array($attributes['module'], 'get_instance'));
 							$text = $module->get_language_constant($constant, $language);
 						}
 
@@ -553,11 +567,11 @@ class TemplateHandler {
 
 				// support for markdown
 				case 'cms:markdown':
-					$char_count = isset($tag->tagAttrs['chars']) ? fix_id($tag->tagAttrs['chars']) : null;
-					$end_with = isset($tag->tagAttrs['end_with']) ? fix_id($tag->tagAttrs['end_with']) : null;
-					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
-					$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
-					$clear_text = isset($tag->tagAttrs['clear_text']) ? $tag->tagAttrs['clear_text'] == 'yes' : false;
+					$char_count = isset($attributes['chars']) ? fix_id($attributes['chars']) : null;
+					$end_with = isset($attributes['end_with']) ? fix_id($attributes['end_with']) : null;
+					$name = isset($attributes['param']) ? $attributes['param'] : null;
+					$multilanguage = isset($attributes['multilanguage']) ? $attributes['multilanguage'] == 'yes' : false;
+					$clear_text = isset($attributes['clear_text']) ? $attributes['clear_text'] == 'yes' : false;
 
 					// get content for parsing
 					if (is_null($name))
@@ -583,7 +597,7 @@ class TemplateHandler {
 
 				// print multilanguage data
 				case 'cms:language_data':
-					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
+					$name = isset($attributes['param']) ? $attributes['param'] : null;
 
 					if (!isset($this->params[$name]) || !is_array($this->params[$name]) || is_null($name)) break;
 
@@ -605,8 +619,8 @@ class TemplateHandler {
 
 				// replace tag data string with matching params
 				case 'cms:replace':
-					if (isset($tag->tagAttrs['param'])) {
-						$keys = explode(',', fix_chars($tag->tagAttrs['param']));
+					if (isset($attributes['param'])) {
+						$keys = explode(',', fix_chars($attributes['param']));
 						$pool = array();
 
 						foreach ($keys as $key)
@@ -637,16 +651,16 @@ class TemplateHandler {
 					$condition = true;
 
 					// check if section is specified and matches
-					if (isset($tag->tagAttrs['section']))
-						$condition &= $tag->tagAttrs['section'] == $section;
+					if (isset($attributes['section']))
+						$condition &= $attributes['section'] == $section;
 
 					// check if page template matches value
-					if (isset($tag->tagAttrs['page_template']))
-						$condition &= $tag->tagAttrs['page_template'] == SectionHandler::get_matched_file();
+					if (isset($attributes['page_template']))
+						$condition &= $attributes['page_template'] == SectionHandler::get_matched_file();
 
 					// check custom condition
-					if (isset($tag->tagAttrs['condition'])) {
-						$to_eval = $tag->tagAttrs['condition'];
+					if (isset($attributes['condition'])) {
+						$to_eval = $attributes['condition'];
 						$eval_result = $this->get_evaluated_value($to_eval) == true;
 						$condition &= $eval_result;
 					}
@@ -665,8 +679,8 @@ class TemplateHandler {
 					if (isset($_SERVER['HTTP_SEC_GPC']) && $_SERVER['HTTP_SEC_GPC'] == 1)
 						$categories = array('system');
 
-					if (isset($tag->tagAttrs['type']))
-						$condition = in_array($tag->tagAttrs['type'], $categories);
+					if (isset($attributes['type']))
+						$condition = in_array($attributes['type'], $categories);
 
 					// parse children
 					if ($condition)
@@ -708,24 +722,24 @@ class TemplateHandler {
 					$template = $this->template_params;
 					$output = '';
 
-					if (isset($tag->tagAttrs['name'])) {
+					if (isset($attributes['name'])) {
 						// old method with eval
-						$to_eval = $tag->tagAttrs['name'];
+						$to_eval = $attributes['name'];
 						$output = $this->get_evaluated_value($to_eval);
 
-					} else if (isset($tag->tagAttrs['param'])) {
+					} else if (isset($attributes['param'])) {
 						// object parameter
-						$param = $tag->tagAttrs['param'];
-						$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
+						$param = $attributes['param'];
+						$multilanguage = isset($attributes['multilanguage']) ? $attributes['multilanguage'] == 'yes' : false;
 
 						if (isset($params[$param]))
 							if (!$multilanguage)
 								$output = $params[$param]; else
 								$output = $params[$param][$language];
 
-					} else if (isset($tag->tagAttrs['template'])) {
+					} else if (isset($attributes['template'])) {
 						// template parameter
-						$param = $tag->tagAttrs['template'];
+						$param = $attributes['template'];
 						$output = $this->template_params[$param];
 					}
 
@@ -734,22 +748,22 @@ class TemplateHandler {
 
 				// support for script tag
 				case 'cms:script':
-					if (isset($tag->tagAttrs['local'])) {
+					if (isset($attributes['local'])) {
 						// include local module script
-						$script = fix_chars($tag->tagAttrs['local']);
+						$script = fix_chars($attributes['local']);
 						$path = URL::from_file_path($this->module->path.'include/'.$script);
 						echo '<script type="text/javascript" src="'.$path.'"/>';
 
 					} else {
 						// treat script as generic page script and store it for later use
-						$this->script_list []= $tag->tagAttrs;
+						$this->script_list []= $attributes;
 					}
 					break;
 
 				// support for collection module
 				case 'cms:collection':
-					if (array_key_exists('include', $tag->tagAttrs) && ModuleHandler::is_loaded('collection')) {
-						$scripts = fix_chars(explode(',', $tag->tagAttrs['include']));
+					if (array_key_exists('include', $attributes) && ModuleHandler::is_loaded('collection')) {
+						$scripts = fix_chars(explode(',', $attributes['include']));
 
 						$collection = collection::get_instance();
 						$collection->includeScript($scripts);
@@ -758,28 +772,28 @@ class TemplateHandler {
 
 				// support for link tag
 				case 'cms:link':
-					$this->link_list []= $tag->tagAttrs;
+					$this->link_list []= $attributes;
 					break;
 
 				// automated testing support
 				case 'cms:test':
 					// select and show version
 					$handler = TestingHandler::get_instance();
-					$handler->show_version($this, $tag->tagAttrs, $tag->tagChildren);
+					$handler->show_version($this, $attributes, $tag->tagChildren);
 					break;
 
 				// support for parameter based choice
 				case 'cms:choice':
 					$param_value = null;
 
-					if (array_key_exists('param', $tag->tagAttrs)) {
+					if (array_key_exists('param', $attributes)) {
 						// grap param value from GET or POST parameters
-						$param_name = fix_chars($tag->tagAttrs['param']);
+						$param_name = fix_chars($attributes['param']);
 						$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
 
-					} else if (array_key_exists('value', $tag->tagAttrs)) {
+					} else if (array_key_exists('value', $attributes)) {
 						// use param value specified
-						$param_value = fix_chars($tag->tagAttrs['value']);
+						$param_value = fix_chars($attributes['value']);
 					}
 
 					// parse only option
@@ -815,12 +829,12 @@ class TemplateHandler {
 						$function = $handle['function'];
 
 						if (!array_key_exists($tag->tagName, $this->tag_children))
-							$obj->$function($tag->tagAttrs, $tag->tagChildren); else
-							$obj->$function($tag->tagAttrs, $this->tag_children[$tag->tagName]);
+							$obj->$function($attributes, $tag->tagChildren); else
+							$obj->$function($attributes, $this->tag_children[$tag->tagName]);
 
 					} else {
 						// default tag handler
-						echo '<'.$tag->tagName.$this->get_tag_params($tag->tagAttrs).'>';
+						echo '<'.$tag->tagName.$this->get_tag_params($attributes).'>';
 
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
@@ -881,12 +895,18 @@ class TemplateHandler {
 	/**
 	 * Reconstruct template for cache
 	 *
+	 * Attributes can be provided separately for cases where directives have
+	 * already been processed and must not end up in the stored template.
+	 *
 	 * @param object $tag
+	 * @param array $attributes
 	 * @return string
 	 */
-	private function get_data_for_cache($tag) {
+	private function get_data_for_cache($tag, $attributes=null) {
+		$tag_attributes = is_null($attributes) ? $tag->tagAttrs : $attributes;
+
 		// open tag
-		$result = '<'.$tag->tagName.$this->get_tag_params($tag->tagAttrs).'>';
+		$result = '<'.$tag->tagName.$this->get_tag_params($tag_attributes).'>';
 
 		// get tag children
 		if (count($tag->tagChildren) > 0)
