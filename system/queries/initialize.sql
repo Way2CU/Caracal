@@ -10,7 +10,9 @@ CREATE TABLE `system_access` (
 	`verified` boolean NOT NULL DEFAULT FALSE,
 	`agreed` boolean NOT NULL DEFAULT FALSE,
 	`salt` char(64) COLLATE ascii_bin NOT NULL DEFAULT '',
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	KEY `index_by_username` (`username`),
+	KEY `index_by_email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_access_verification` (
@@ -47,7 +49,8 @@ CREATE TABLE `system_retries` (
 	`day` tinyint NOT NULL,
 	`address` varchar(15) NOT NULL,
 	`count` tinyint NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	KEY `index_by_address` (`address`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_settings` (

@@ -24,5 +24,6 @@ CREATE TABLE `shop_transactions` (
 	`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`),
 	KEY `buyer` (`buyer`),
-	KEY `address` (`address`)
+	KEY `address` (`address`),
+	KEY `index_by_uid` (`uid`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;

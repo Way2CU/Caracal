@@ -11,5 +11,7 @@ CREATE TABLE `shop_buyers` (
 	`agreed` boolean NOT NULL DEFAULT '0',
 	`promotions` boolean NOT NULL DEFAULT '0',
 	`uid` varchar(50) NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	KEY `index_by_uid` (`uid`),
+	KEY `index_by_email` (`email`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;
