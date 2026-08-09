@@ -305,6 +305,7 @@ abstract class ItemManager {
 		$sql = "SELECT {$item} FROM {$this->table_name}";
 		if (!empty($conditionals))
 			$sql .= " WHERE ".$this->get_delimited_data($conditionals, ' AND ');
+		$sql .= " LIMIT 1";
 
 		$result = $db->get_var($sql);
 
