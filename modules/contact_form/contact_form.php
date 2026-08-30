@@ -583,12 +583,12 @@ class contact_form extends Module {
 		// require both form and field
 		if (!is_object($form) || !count($fields) > 0) {
 			trigger_error('ContactForm: Unable to submit. Missing form or fields.', E_USER_WARNING);
-			return _AJAX_REQUEST ? '{}' : '';
+			return;
 		}
 
 		// check submission timing
 		$failed_render_time_check = false;
-		if (!array_key_exists('contact_form_render_time')) {
+		if (!array_key_exists('contact_form_render_time', $_SESSION)) {
 			trigger_error('ContactForm: Missing render time storage. Likely bot submission without session.', E_USER_WARNING);
 			$failed_render_time_check = true;
 		}
