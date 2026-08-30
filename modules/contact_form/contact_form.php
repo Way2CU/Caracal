@@ -608,9 +608,10 @@ class contact_form extends Module {
 			if (_AJAX_REQUEST) {
 				// return JSON object as response
 				$response = array(
-						'error'				=> true,
-						'messages'			=> array(),
-						'missing_fields'	=> array()
+						'error'          => true,
+						'message'        => 'Failed time check.',
+						'messages'       => array(),
+						'missing_fields' => array()
 					);
 
 				print json_encode($response);
@@ -622,9 +623,10 @@ class contact_form extends Module {
 				$template->set_template_params_from_array($children);
 
 				$params = array(
-						'error'				=> true,
-						'messages'			=> array(),
-						'missing_fields'	=> array()
+						'error'          => true,
+						'message'        => 'Failed time check.',
+						'messages'       => array(),
+						'missing_fields' => array()
 					);
 
 				$template->restore_xml();
