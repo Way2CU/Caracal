@@ -598,7 +598,7 @@ class contact_form extends Module {
 			$failed_render_time_check = true;
 		}
 
-		if ($_SESSION['contact_form_render_time'][$form->id] + $minimum_submission_time < time()) {
+		if (time() - $_SESSION['contact_form_render_time'][$form->id] <= $minimum_submission_time) {
 			trigger_error("ContactForm: Submitted data too fast. Minimum {$minimum_submission_time} seconds.", E_USER_WARNING);
 			$failed_render_time_check = true;
 		}
