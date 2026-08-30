@@ -583,7 +583,7 @@ class contact_form extends Module {
 		// require both form and field
 		if (!is_object($form) || !count($fields) > 0) {
 			trigger_error('ContactForm: Unable to submit. Missing form or fields.', E_USER_WARNING);
-			return;
+			return false;
 		}
 
 		// check submission timing
