@@ -583,24 +583,55 @@ class contact_form extends Module {
 		// require both form and field
 		if (!is_object($form) || !count($fields) > 0) {
 			trigger_error('ContactForm: Unable to submit. Missing form or fields.', E_USER_WARNING);
-			return;
+			return _AJAX_REQUEST ? '{}' : '';
 		}
 
 		// check submission timing
+		$failed_render_time_check = false;
 		if (!array_key_exists('contact_form_render_time')) {
 			trigger_error('ContactForm: Missing render time storage. Likely bot submission without session.', E_USER_WARNING);
-			return;
+			$failed_render_time_check = true;
 		}
 
 		if (!array_key_exists($form->id, $_SESSION['contact_form_render_time'])) {
 			trigger_error('ContactForm: Missing render form render time. Likely bot submission without session.', E_USER_WARNING);
-			return;
+			$failed_render_time_check = true;
 		}
 
 		if ($_SESSION['contact_form_render_time'][$form->id] + $minimum_submission_time < time()) {
 			trigger_error("ContactForm: Submitted data too fast. Minimum {$minimum_submission_time} seconds.", E_USER_WARNING);
-			return;
+			$failed_render_time_check = true;
 		}
+
+		// render result and send to client when render time checks failed
+		if ($failed_render_time_check)
+			if (_AJAX_REQUEST) {
+				// return JSON object as response
+				$response = array(
+						'error'				=> true,
+						'messages'			=> array(),
+						'missing_fields'	=> array()
+					);
+
+				print json_encode($response);
+				return false;
+
+			} else {
+				// show response from template
+				$template = $this->load_template($tag_params, 'response.xml');
+				$template->set_template_params_from_array($children);
+
+				$params = array(
+						'error'				=> true,
+						'messages'			=> array(),
+						'missing_fields'	=> array()
+					);
+
+				$template->restore_xml();
+				$template->set_local_params($params);
+				$template->parse();
+				return false;
+			}
 
 		// collect data
 		$data = array();
