@@ -555,6 +555,8 @@ class contact_form extends Module {
 	 * @return boolean
 	 */
 	private function submitForm($tag_params, $children) {
+		global $minimum_submission_time;
+
 		$id = isset($_REQUEST['form_id']) ? fix_id($_REQUEST['form_id']) : null;
 		$result = false;
 
@@ -581,6 +583,22 @@ class contact_form extends Module {
 		// require both form and field
 		if (!is_object($form) || !count($fields) > 0) {
 			trigger_error('ContactForm: Unable to submit. Missing form or fields.', E_USER_WARNING);
+			return;
+		}
+
+		// check submission timing
+		if (!array_key_exists('contact_form_render_time')) {
+			trigger_error('ContactForm: Missing render time storage. Likely bot submission without session.', E_USER_WARNING);
+			return;
+		}
+
+		if (!array_key_exists($form->id, $_SESSION['contact_form_render_time'])) {
+			trigger_error('ContactForm: Missing render form render time. Likely bot submission without session.', E_USER_WARNING);
+			return;
+		}
+
+		if ($_SESSION['contact_form_render_time'][$form->id] + $minimum_submission_time < time()) {
+			trigger_error("ContactForm: Submitted data too fast. Minimum {$minimum_submission_time} seconds.", E_USER_WARNING);
 			return;
 		}
 
@@ -740,6 +758,9 @@ class contact_form extends Module {
 					trigger_error('Form submission failed with "'.$mailer_name.'".', E_USER_WARNING);
 			}
 		}
+
+		// clear session variable
+		unset($_SESSION['contact_form_render_time'][$form->id]);
 
 		// notify listeners
 		if ($send_result)
@@ -3026,6 +3047,12 @@ class contact_form extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		if (is_object($item)) {
+			// store time of form rendering for checking later
+			if (!array_key_exists('contact_form_render_time', $_SESSION))
+				$_SESSION['contact_form_render_time'] = array();
+			$_SESSION['contact_form_render_time'][$item->id] = time();
+
+			// get form fields
 			$fields = $field_manager->get_items(
 				array('id'),
 				array(

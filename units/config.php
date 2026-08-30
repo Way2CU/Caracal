@@ -64,4 +64,7 @@ $gravatar_url = 'gravatar.com/avatar/{email_hash}?s={size}&amp;d={default}&amp;r
 $gravatar_rating = 'x';
 $gravatar_default = 'mm';
 
+// contact form, and others, configuration
+$minimum_submission_time = 5;  // seconds
+
 ?>
