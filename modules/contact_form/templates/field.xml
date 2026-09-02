@@ -314,6 +314,24 @@
 						/>
 				</option>
 
+				<!-- Captcha protection -->
+				<option value="captcha" default="0">
+					<cms:if condition="ModuleHandler::is_loaded('captcha')">
+						<cms:module
+							name="captcha"
+							action="print_image_tag"
+							/>
+						<input
+							type="text"
+							name="$params['name']"
+							required="$params['required'] ? 'required' : false"
+							maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
+							cms:optional="required,maxlength"
+							cms:eval="name"
+							/>
+					</cms:if>
+				</option>
+
 				<!-- Text input -->
 				<option value="text" default="1">
 					<input

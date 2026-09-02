@@ -38,6 +38,7 @@
     "field_value_mobile": "Mobile",
     "field_values": "Values",
     "field_week": "Week and year",
+    "field_captcha": "CAPTCHA verification",
     "fields": "Fields",
     "fieldsets": "Fieldsets",
     "form_default": "Default fields",
