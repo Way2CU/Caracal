@@ -327,6 +327,13 @@ class captcha extends Module {
 	}
 
 	/**
+	 * Reset session value after use.
+	 */
+	public function resetValue() {
+		unset($_SESSION['captcha']);
+	}
+
+	/**
 	 * Converts points to pixels based on DPI
 	 *
 	 * @param integer $points
