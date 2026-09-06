@@ -6,7 +6,7 @@
  */
 
 var Caracal = Caracal || new Object();
-var Caracal.Captcha = Caracal.Captcha || new Object();
+Caracal.Captcha = Caracal.Captcha || new Object();
 
 
 /**
