@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<img
+		class="captcha"
 		src="$params['url']"
 		alt="$params['alt']"
 		cms:eval="src,alt"
