@@ -324,9 +324,9 @@
 						<input
 							type="text"
 							name="$params['name']"
-							required="$params['required'] ? 'required' : false"
+							required="required"
 							maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
-							cms:optional="required,maxlength"
+							cms:optional="maxlength"
 							cms:eval="name"
 							/>
 					</cms:if>
