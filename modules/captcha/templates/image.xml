@@ -5,6 +5,7 @@
 		class="captcha"
 		src="$params['url']"
 		alt="$params['alt']"
-		cms:eval="src,alt"
+		title="$params['alt']"
+		cms:eval="src,alt,title"
 	/>
 </document>
