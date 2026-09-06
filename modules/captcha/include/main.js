@@ -30,6 +30,6 @@ Caracal.Captcha.handle_image_click = function(event) {
 
 // connect events
 window.addEventListener('load', function() {
-	var images = document.querySelectAll('img.captcha');
+	var images = document.querySelectorAll('img.captcha');
 	images.forEach((image) => image.addEventListener('click', Caracal.Captcha.handle_image_click));
 });
