@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+
+use Core\Events;
 use Core\Module;
 
 
@@ -26,6 +28,8 @@ class captcha extends Module {
 	 */
 	protected function __construct() {
 		parent::__construct(__FILE__);
+
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 	}
 
 	/**
@@ -66,6 +70,18 @@ class captcha extends Module {
 				default:
 					break;
 			}
+	}
+
+	/**
+	 * Add scripts and styles needed for backend operation.
+	 */
+	public function add_tags() {
+		$head_tag = head_tag::get_instance();
+		$head_tag->add_tag(
+			'script', array(
+				'src' => URL::from_file_path($this->path.'include/main.js'),
+				'type'=>'text/javascript'
+			));
 	}
 
 	/**

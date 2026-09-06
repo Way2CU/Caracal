@@ -4,7 +4,6 @@
 	<img
 		src="$params['url']"
 		alt="$params['alt']"
-		onclick="'javascript:this.src=\''.$params['url'].'?\'+Date.now().toString();'"
-		cms:eval="src,alt,onclick"
+		cms:eval="src,alt"
 	/>
 </document>
