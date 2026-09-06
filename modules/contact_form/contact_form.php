@@ -676,6 +676,26 @@ class contact_form extends Module {
 					}
 					break;
 
+				case 'captcha':
+					if (!ModuleHandler::is_loaded('captcha')) {
+						trigger_error('ContactForm: CAPTCHA field exists, but module is not loaded.', E_USER_WARNING);
+						return;
+					}
+
+					$captcha = captcha::get_instance();
+					if (!$captcha->isCaptchaValid($value)) {
+						$missing_fields[$name] = array(
+												$field->label,
+												$field->placeholder
+											);
+
+						$message = $this->get_language_constant('message_missing_field');
+						if (!in_array($message, $messages))
+							$messages[] = $message;
+						trigger_error('ContactForm: Failed CAPTCHA verification!', E_USER_NOTICE);
+					}
+					break;
+
 				case 'transfer-param':
 					if (isset($transfer_params[$field->name]))
 						$value = $transfer_params[$field->name]; else
