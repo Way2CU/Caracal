@@ -401,22 +401,12 @@ Caracal.Gallery.Slider = function(visible_items, vertical) {
 		});
 
 		// position elements
-		if (direction == 1) {
-			incoming.forEach(function(image) {
-				image.style[params.property_name] = params.container_size.toString() + 'px';
-			});
-			outgoing.forEach(function(image) {
-				image.style[params.property_name] = '-100%';
-			});
-
-		} else {
-			incoming.forEach(function(image) {
-				image.style[params.property_name] = '-100%';
-			});
-			outgoing.forEach(function(image) {
-				image.style[params.property_name] = params.container_size.toString() + 'px';
-			});
-		}
+		incoming.forEach(function(image) {
+			image.style[params.property_name] = params.container_size.toString() + 'px';
+		});
+		outgoing.forEach(function(image) {
+			image.style[params.property_name] = '-100%';
+		});
 
 		// trigger reflow and enable transitions
 		incoming.forEach(function(image) {
