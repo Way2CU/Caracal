@@ -93,7 +93,7 @@ class contact_form extends Module {
 		}
 
 		// register events
-		Events::register($this->name, 'email-sent', 4);  // params: mailer, recipient, subject, data
+		Events::register($this->name, 'email-sent', 4);  // params: mailer-name, recipient-string, subject, data
 		Events::register($this->name, 'submitted', 4);  // params: sender, recipients, template, data
 
 		// create mailer support
