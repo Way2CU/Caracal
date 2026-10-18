@@ -111,7 +111,16 @@ class Database_SQLite extends Database {
 	 * @return boolean
 	 */
 	public function query($sql) {
-		return $this->handle->exec($sql) === false;
+		$result = false;
+
+		try {
+			$result = $this->handle->exec($sql) === true;
+
+		} catch (Exception $error) {
+			trigger_error('SQLite: Query failed. '.$error->getMessage(), E_USER_WARNING);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -134,8 +143,8 @@ class Database_SQLite extends Database {
 		$result = array();
 
 		if ($db_result = $this->handle->query($sql)) {
-			while ($row = $db_result->fetchArray())
-				$result[] = $row;
+			while ($row = $db_result->fetchArray(SQLITE3_ASSOC))
+				$result[] = (object) $row;
 
 			$db_result->finalize();
 		}
@@ -155,9 +164,9 @@ class Database_SQLite extends Database {
 		$result = null;
 
 		if ($db_result = $this->handle->query($sql)) {
-			while ($row = $db_result->fetchArray()) {
+			while ($row = $db_result->fetchArray(SQLITE3_ASSOC)) {
 				if ($index == $i++) {
-					$result = $row;
+					$result = (object) $row;
 					break;
 				}
 			}
@@ -180,9 +189,9 @@ class Database_SQLite extends Database {
 		$result = null;
 
 		if ($db_result = $this->handle->query($sql)) {
-			$row = $db_result->fetchArray(MYSQLI_NUM);
+			$row = $db_result->fetchArray(SQLITE3_NUM);
 
-			if (!is_null($row) && count($row) > 0)
+			if ($row !== false && count($row) > 0)
 				$result = $row[0];
 
 			$db_result->finalize();
@@ -215,8 +224,13 @@ class Database_SQLite extends Database {
 	 * @param array/string $tables
 	 */
 	public function drop_tables($tables) {
-		$sql = 'DROP TABLES `'.implode('`, `', $tables).'`';
-		return $this->handle->exec($sql) === true;
+		$result = true;
+
+		// sqlite can only drop one table per statement
+		foreach ((array) $tables as $table)
+			$result = $this->query('DROP TABLE IF EXISTS `'.$table.'`') && $result;
+
+		return $result;
 	}
 
 	/**
