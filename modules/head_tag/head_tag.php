@@ -107,6 +107,15 @@ class head_tag extends Module {
 	}
 
 	/**
+	 * Check if any title parts were provided by modules or templates.
+	 *
+	 * @return boolean
+	 */
+	public function has_title_parts() {
+		return count($this->title_parts) > 0;
+	}
+
+	/**
 	 * Add tag attribute content to page title.
 	 *
 	 * @param array $tag_params

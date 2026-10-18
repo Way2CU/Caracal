@@ -231,47 +231,65 @@ class page_description extends Module {
 
 	/**
 	 * Handle head tag event and set page title and add page description to the
-	 * page if it's not already added.
+	 * page if it's not already added. Only pages matched by section handler
+	 * are handled, error pages never get entries. Titles provided by modules
+	 * take precedence as they know better what their pages are called.
 	 */
 	public function set_title_and_description() {
 		global $language;
 
 		$result = array('', -1);  // ignore title with negative priority
+		$is_backend = isset($_REQUEST['section']);
+		$is_matched = !is_null(SectionHandler::get_matched_file());
 
-		// skip page if requested
-		if ($this->skip_page)
-			return $result;
-
-		// don't handle backend links
-		if (isset($_REQUEST['section']))
-			return $result;
-
-		// get request path
-		$request_path = URL::get_request_path();
-
-		// get page description
-		$manager = Manager::get_instance();
-		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $request_path));
-
-		if (is_object($item)) {
-			// add description to head tag
+		if (!$this->skip_page && !$is_backend && $is_matched) {
+			$url = self::normalize_url(URL::get_request_path());
 			$head_tag = head_tag::get_instance();
-			$head_tag->add_tag('meta',
-						array(
-							'name'		=> 'description',
-							'content'	=> $item->content[$language]
-						));
 
-			// store title in return value
-			if (!empty($item->title[$language]))
-				$result = array($item->title[$language], 10);
+			// get page description
+			$manager = Manager::get_instance();
+			$item = $manager->get_single_item($manager->get_field_names(), array('url' => $url));
 
-		} else {
-			// no entry was found, insert and ignore
-			$manager->insert_item(array('url' => $request_path));
+			if (is_object($item)) {
+				// add description to head tag
+				if (!empty($item->content[$language]))
+					$head_tag->add_tag('meta',
+								array(
+									'name'		=> 'description',
+									'content'	=> $item->content[$language]
+								));
+
+				// store title in return value
+				if (!empty($item->title[$language]) && !$head_tag->has_title_parts())
+					$result = array($item->title[$language], 10);
+
+			} else {
+				// no entry was found, insert and ignore
+				$manager->insert_item(array('url' => escape_chars($url)));
+			}
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Reduce request path to form shared by all variants of the same page.
+	 * Language prefix and trailing slash are removed so `/he/about/` and
+	 * `/about` point to the same entry.
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public static function normalize_url($path) {
+		global $available_languages;
+
+		$parts = explode('/', trim($path, '/'));
+
+		// drop language prefix
+		if (count($parts) > 0 && in_array($parts[0], $available_languages))
+			array_shift($parts);
+
+		return '/'.implode('/', $parts);
 	}
 
 	/**
