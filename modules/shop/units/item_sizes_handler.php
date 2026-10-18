@@ -6,13 +6,17 @@
  * Author: Mladen Mijatov
  */
 
-use Modules\Shop\Item\Manager as ItemManager;
+namespace Modules\Shop\Size;
 
 require_once('item_sizes_manager.php');
 require_once('item_size_values_manager.php');
 
+use URL;
+use TemplateHandler;
+use Modules\Shop\Item\Manager as ItemManager;
 
-class ShopItemSizesHandler {
+
+class Handler {
 	private static $_instance;
 	private $_parent;
 	private $name;
@@ -33,7 +37,7 @@ class ShopItemSizesHandler {
 	* Public function that creates a single instance
 	*
 	* @param object $parent
-	* @return ShopItemSizesHandler
+	* @return Handler
 	*/
 	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
@@ -199,7 +203,7 @@ class ShopItemSizesHandler {
 	 */
 	private function changeValue() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::get_instance();
+		$manager = ValueManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -227,7 +231,7 @@ class ShopItemSizesHandler {
 	 * Save new or changed item data
 	 */
 	private function saveItem() {
-		$manager = ShopItemSizesManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$name = fix_chars($_REQUEST['name']);
@@ -259,7 +263,7 @@ class ShopItemSizesHandler {
 	 * Save new or changed item size value
 	 */
 	private function saveValue() {
-		$manager = ShopItemSizeValuesManager::get_instance();
+		$manager = ValueManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$definition = isset($_REQUEST['definition']) ? fix_id($_REQUEST['definition']) : null;
@@ -300,7 +304,7 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteItem() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizesManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
@@ -336,8 +340,8 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteItem_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizesManager::get_instance();
-		$values_manager = ShopItemSizeValuesManager::get_instance();
+		$manager = Manager::get_instance();
+		$values_manager = ValueManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$values_manager->delete_items(array('definition' => $id));
@@ -363,7 +367,7 @@ class ShopItemSizesHandler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::get_instance();
+		$manager = ValueManager::get_instance();
 
 		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
@@ -399,7 +403,7 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteValue_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::get_instance();
+		$manager = ValueManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
@@ -446,7 +450,7 @@ class ShopItemSizesHandler {
 	 * @param array $chilren
 	 */
 	public function tag_SizeList($tag_params, $children) {
-		$manager = ShopItemSizesManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
@@ -514,7 +518,7 @@ class ShopItemSizesHandler {
 	 * @param array $childen
 	 */
 	public function tag_ValueList($tag_params, $children) {
-		$manager = ShopItemSizeValuesManager::get_instance();
+		$manager = ValueManager::get_instance();
 		$conditions = array();
 		$selected = null;
 

@@ -6,10 +6,9 @@
  */
 
 namespace Modules\Shop\Transaction;
-use ItemManager;
 
 
-class PromotionManager extends ItemManager {
+class PromotionManager extends \ItemManager {
 	private static $_instance;
 
 	/**

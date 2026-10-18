@@ -7,12 +7,19 @@
  * Author: Mladen Mijatov
  */
 
-use Modules\Shop\Item\Manager as ItemManager;
+namespace Modules\Shop\Manufacturer;
 
 require_once('manufacturer_manager.php');
 
+use URL;
+use TemplateHandler;
+use ModuleHandler;
+use GalleryManager;
+use gallery;
+use Modules\Shop\Item\Manager as ItemManager;
 
-class ShopManufacturerHandler {
+
+class Handler {
 	private static $_instance;
 	private $_parent;
 	private $name;
@@ -121,7 +128,7 @@ class ShopManufacturerHandler {
 	 */
 	private function changeManufacturer() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -154,7 +161,7 @@ class ShopManufacturerHandler {
 	 */
 	private function saveManufacturer() {
 		$id = null;
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 		$gallery_addon = '';
 
 		if (isset($_REQUEST['id']))
@@ -224,7 +231,7 @@ class ShopManufacturerHandler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
@@ -260,7 +267,7 @@ class ShopManufacturerHandler {
 	 */
 	private function deleteManufacturer_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 		$item_manager = ItemManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
@@ -287,7 +294,7 @@ class ShopManufacturerHandler {
 	 * @param array $children
 	 */
 	public function tag_Manufacturer($tag_params, $children) {
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// collect params
@@ -326,7 +333,7 @@ class ShopManufacturerHandler {
 	public function tag_ManufacturerList($tag_params, $children) {
 		global $section;
 
-		$manager = ShopManufacturerManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;

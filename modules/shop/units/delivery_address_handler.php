@@ -4,12 +4,10 @@
  * Handler class for shop delivery addresses.
  */
 
-namespace Modules\Shop;
-
-use \ShopDeliveryAddressManager as DeliveryAddressManager;
+namespace Modules\Shop\DeliveryAddress;
 
 
-class DeliveryAddressHandler {
+class Handler {
 	private static $_instance;
 	private $_parent;
 
@@ -48,7 +46,7 @@ class DeliveryAddressHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryAddress($tag_params, $children) {
-		$manager = DeliveryAddressManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// get conditions

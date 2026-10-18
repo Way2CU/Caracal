@@ -1,6 +1,9 @@
 <?php
 
-class ShopTransactionPlansManager extends ItemManager {
+namespace Modules\Shop\Transaction;
+
+
+class PlanManager extends \ItemManager {
 	private static $_instance;
 
 	/**

@@ -4,11 +4,25 @@
  * Handler for shop transactions
  */
 
+namespace Modules\Shop\Transaction;
+
+use URL;
+use TemplateHandler;
+use UserManager;
+use TransactionStatus;
+use TransactionType;
+use shop;
 use Modules\Shop\Transaction;
+use Modules\Shop\UnknownTransactionError;
 use Modules\Shop\Item\Manager as ItemManager;
+use Modules\Shop\Buyer\Manager as BuyerManager;
+use Modules\Shop\Currency\Manager as CurrencyManager;
+use Modules\Shop\DeliveryAddress\Manager as DeliveryAddressManager;
+use Modules\Shop\DeliveryAddress\Handler as DeliveryAddressHandler;
+use Modules\Shop\Size\Handler as SizeHandler;
 
 
-class ShopTransactionsHandler {
+class Handler {
 	private static $_instance;
 	private $parent;
 	private $name;
@@ -91,9 +105,9 @@ class ShopTransactionsHandler {
 	 * Show details for specified transaction
 	 */
 	private function showTransactionDetails() {
-		$manager = ShopTransactionsManager::get_instance();
-		$buyer_manager = ShopBuyersManager::get_instance();
-		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$manager = Manager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
+		$address_manager = DeliveryAddressManager::get_instance();
 		$user_manager = UserManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
@@ -179,11 +193,11 @@ class ShopTransactionsHandler {
 	 * Show template for printing and automatically show print dialog.
 	 */
 	private function printTransaction() {
-		$manager = ShopTransactionsManager::get_instance();
-		$buyer_manager = ShopBuyersManager::get_instance();
-		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$manager = Manager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
+		$address_manager = DeliveryAddressManager::get_instance();
 		$user_manager = UserManager::get_instance();
-		$item_manager = ShopTransactionItemsManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
 		$transaction = $manager->get_single_item(
@@ -272,8 +286,8 @@ class ShopTransactionsHandler {
 	 * @param array $children
 	 */
 	public function tag_TransactionList($tag_params, $children) {
-		$manager = ShopTransactionsManager::get_instance();
-		$buyers_manager = ShopBuyersManager::get_instance();
+		$manager = Manager::get_instance();
+		$buyers_manager = BuyerManager::get_instance();
 		$user_manager = UserManager::get_instance();
 		$conditions = array();
 		$order_by = array('id');
@@ -302,7 +316,7 @@ class ShopTransactionsHandler {
 		}
 
 		// load template
-		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::get_instance($this->parent);
+		$delivery_address_handler = DeliveryAddressHandler::get_instance($this->parent);
 
 		$template = $this->parent->load_template($tag_params, 'transaction_list_item.xml');
 		$template->set_template_params_from_array($children);
@@ -383,10 +397,10 @@ class ShopTransactionsHandler {
 	 * Handle drawing list of items in transaction
 	 */
 	public function tag_TransactionItemList($tag_params, $children) {
-		$manager = ShopTransactionItemsManager::get_instance();
+		$manager = ItemManager::get_instance();
 		$item_manager = ItemManager::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$currency_manager = ShopCurrenciesManager::get_instance();
+		$transaction_manager = Manager::get_instance();
+		$currency_manager = CurrencyManager::get_instance();
 		$conditions = array();
 
 		// get conditions
@@ -460,7 +474,7 @@ class ShopTransactionsHandler {
 			}
 
 		if (count($items) > 0) {
-			$sizes_handler = ShopItemSizesHandler::get_instance($this->parent);
+			$sizes_handler = SizeHandler::get_instance($this->parent);
 			$template = $this->parent->load_template($tag_params, 'transaction_details_item.xml');
 			$template->set_template_params_from_array($children);
 			$template->register_tag_handler('cms:value_list', $sizes_handler, 'tag_ValueList');
@@ -490,7 +504,7 @@ class ShopTransactionsHandler {
 
 		// get transaction id
 		if (isset($tag_params['transaction'])) {
-			$manager = ShopTransactionsManager::get_instance();
+			$manager = Manager::get_instance();
 			$conditions = array();
 
 			if (is_numeric($tag_params['transaction']))

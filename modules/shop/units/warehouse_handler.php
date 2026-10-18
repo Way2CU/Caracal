@@ -4,10 +4,15 @@
  * Handle shop warehouses
  */
 
+namespace Modules\Shop\Warehouse;
+
 require_once('warehouse_manager.php');
 
+use URL;
+use TemplateHandler;
 
-class ShopWarehouseHandler {
+
+class Handler {
 	private static $_instance;
 	private $_parent;
 	private $name;
@@ -115,7 +120,7 @@ class ShopWarehouseHandler {
 	 */
 	private function changeWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -166,7 +171,7 @@ class ShopWarehouseHandler {
 			);
 
 		// get instance of warehouse manager
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		if (is_null($id)) {
 			$manager->insert_item($data);
@@ -197,7 +202,7 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
@@ -233,7 +238,7 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
@@ -268,7 +273,7 @@ class ShopWarehouseHandler {
 	 * @param array $children
 	 */
 	public function tag_WarehouseList($tag_params, $children) {
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		$template = $this->_parent->load_template($tag_params, 'warehouse_list_item.xml');

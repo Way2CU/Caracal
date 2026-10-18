@@ -6,7 +6,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopDeliveryAddressManager extends ItemManager {
+namespace Modules\Shop\DeliveryAddress;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

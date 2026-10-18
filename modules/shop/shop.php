@@ -55,6 +55,27 @@ use Modules\Shop\TokenManager as TokenManager;
 use Modules\Shop\Item\Handler as ItemHandler;
 use Modules\Shop\Item\Manager as ItemManager;
 use Modules\Shop\Property\Manager as PropertyManager;
+use Modules\Shop\Buyer\Manager as BuyerManager;
+use Modules\Shop\Category\Handler as CategoryHandler;
+use Modules\Shop\Category\Manager as CategoryManager;
+use Modules\Shop\Currency\Handler as CurrencyHandler;
+use Modules\Shop\Currency\Manager as CurrencyManager;
+use Modules\Shop\DeliveryAddress\Manager as DeliveryAddressManager;
+use Modules\Shop\Item\MembershipManager as ItemMembershipManager;
+use Modules\Shop\Item\RelatedManager as RelatedItemManager;
+use Modules\Shop\Size\Handler as SizeHandler;
+use Modules\Shop\Size\Manager as SizeManager;
+use Modules\Shop\Size\ValueManager as SizeValueManager;
+use Modules\Shop\Manufacturer\Handler as ManufacturerHandler;
+use Modules\Shop\Manufacturer\Manager as ManufacturerManager;
+use Modules\Shop\Stock\Manager as StockManager;
+use Modules\Shop\Warehouse\Handler as WarehouseHandler;
+use Modules\Shop\Warehouse\Manager as WarehouseManager;
+use Modules\Shop\Transaction\Handler as TransactionHandler;
+use Modules\Shop\Transaction\Manager as TransactionManager;
+use Modules\Shop\Transaction\ItemManager as TransactionItemManager;
+use Modules\Shop\Transaction\PlanManager as TransactionPlanManager;
+use Modules\Shop\Transaction\RecurringPaymentManager;
 
 
 final class TransactionType {
@@ -286,12 +307,12 @@ class shop extends Module {
 
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
-			$membership_manager = ShopItemMembershipManager::get_instance();
+			$membership_manager = ItemMembershipManager::get_instance();
 			$category = fix_chars($this->search_params['category']);
 			$item_ids = array();
 
 			if (!is_numeric($category)) {
-				$category_manager = ShopCategoryManager::get_instance();
+				$category_manager = CategoryManager::get_instance();
 				$raw_category = $category_manager->get_single_item(array('id'), array('text_id' => $category));
 
 				if (is_object($raw_category))
@@ -407,7 +428,7 @@ class shop extends Module {
 	 * @param object $user
 	 */
 	public function handle_user_create($user) {
-		$manager = ShopBuyersManager::get_instance();
+		$manager = BuyerManager::get_instance();
 
 		// get user data
 		$data = array(
@@ -444,12 +465,12 @@ class shop extends Module {
 				break;
 
 			case 'show_category':
-				$handler = ShopCategoryHandler::get_instance($this);
+				$handler = CategoryHandler::get_instance($this);
 				$handler->tag_Category($params, $children);
 				break;
 
 			case 'show_category_list':
-				$handler = ShopCategoryHandler::get_instance($this);
+				$handler = CategoryHandler::get_instance($this);
 				$handler->tag_CategoryList($params, $children);
 				break;
 
@@ -464,12 +485,12 @@ class shop extends Module {
 				break;
 
 			case 'show_manufacturer':
-				$handler = ShopManufacturerHandler::get_instance($this);
+				$handler = ManufacturerHandler::get_instance($this);
 				$handler->tag_Manufacturer($params, $children);
 				break;
 
 			case 'show_manufacturer_list':
-				$handler = ShopManufacturerHandler::get_instance($this);
+				$handler = ManufacturerHandler::get_instance($this);
 				$handler->tag_ManufacturerList($params, $children);
 				break;
 
@@ -494,7 +515,7 @@ class shop extends Module {
 				break;
 
 			case 'show_transaction_list':
-				$handler = ShopTransactionsHandler::get_instance($this);
+				$handler = TransactionHandler::get_instance($this);
 				$handler->tag_TransactionList($params, $children);
 				break;
 
@@ -560,12 +581,12 @@ class shop extends Module {
 				break;
 
 			case 'add_category_to_title':
-				$manager = ShopCategoryManager::get_instance();
+				$manager = CategoryManager::get_instance();
 				$manager->add_property_to_title('title', array('id', 'text_id'), $params);
 				break;
 
 			case 'add_manufacturer_to_title':
-				$manager = ShopManufacturerManager::get_instance();
+				$manager = ManufacturerManager::get_instance();
 				$manager->add_property_to_title('name', array('id'), $params);
 				break;
 
@@ -667,12 +688,12 @@ class shop extends Module {
 				break;
 
 			case 'currencies':
-				$handler = ShopCurrenciesHandler::get_instance($this);
+				$handler = CurrencyHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
 			case 'categories':
-				$handler = ShopCategoryHandler::get_instance($this);
+				$handler = CategoryHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
@@ -682,17 +703,17 @@ class shop extends Module {
 				break;
 
 			case 'sizes':
-				$handler = ShopItemSizesHandler::get_instance($this);
+				$handler = SizeHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
 			case 'transactions':
-				$handler = ShopTransactionsHandler::get_instance($this);
+				$handler = TransactionHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
 			case 'manufacturers':
-				$handler = ShopManufacturerHandler::get_instance($this);
+				$handler = ManufacturerHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
@@ -702,7 +723,7 @@ class shop extends Module {
 				break;
 
 			case 'warehouses':
-				$handler = ShopWarehouseHandler::get_instance($this);
+				$handler = WarehouseHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
@@ -755,33 +776,33 @@ class shop extends Module {
 	private function get_export_managers() {
 		return array(
 				// catalog
-				'currencies'             => ShopCurrenciesManager::get_instance(),
-				'manufacturers'          => ShopManufacturerManager::get_instance(),
+				'currencies'             => CurrencyManager::get_instance(),
+				'manufacturers'          => ManufacturerManager::get_instance(),
 				'suppliers'              => \Modules\Shop\Supplier\Manager::get_instance(),
-				'categories'             => ShopCategoryManager::get_instance(),
+				'categories'             => CategoryManager::get_instance(),
 				'items'                  => ItemManager::get_instance(),
-				'item_membership'        => ShopItemMembershipManager::get_instance(),
+				'item_membership'        => ItemMembershipManager::get_instance(),
 				'item_properties'        => PropertyManager::get_instance(),
 				'item_remarks'           => \Modules\Shop\Item\RemarkManager::get_instance(),
-				'item_sizes'             => ShopItemSizesManager::get_instance(),
-				'item_size_values'       => ShopItemSizeValuesManager::get_instance(),
-				'related_items'          => ShopRelatedItemsManager::get_instance(),
-				'warehouses'             => ShopWarehouseManager::get_instance(),
-				'stock'                  => ShopStockManager::get_instance(),
+				'item_sizes'             => SizeManager::get_instance(),
+				'item_size_values'       => SizeValueManager::get_instance(),
+				'related_items'          => RelatedItemManager::get_instance(),
+				'warehouses'             => WarehouseManager::get_instance(),
+				'stock'                  => StockManager::get_instance(),
 
 				// promotions
 				'coupons'                => \Modules\Shop\Promotion\CouponsManager::get_instance(),
 				'coupon_codes'           => \Modules\Shop\Promotion\CouponCodesManager::get_instance(),
 
 				// buyers and transactions
-				'buyers'                 => ShopBuyersManager::get_instance(),
-				'delivery_addresses'     => ShopDeliveryAddressManager::get_instance(),
+				'buyers'                 => BuyerManager::get_instance(),
+				'delivery_addresses'     => DeliveryAddressManager::get_instance(),
 				'payment_tokens'         => TokenManager::get_instance(),
-				'transactions'           => ShopTransactionsManager::get_instance(),
-				'transaction_items'      => ShopTransactionItemsManager::get_instance(),
-				'transaction_plans'      => ShopTransactionPlansManager::get_instance(),
+				'transactions'           => TransactionManager::get_instance(),
+				'transaction_items'      => TransactionItemManager::get_instance(),
+				'transaction_plans'      => TransactionPlanManager::get_instance(),
 				'transaction_promotions' => \Modules\Shop\Transaction\PromotionManager::get_instance(),
-				'recurring_payments'     => ShopRecurringPaymentsManager::get_instance()
+				'recurring_payments'     => RecurringPaymentManager::get_instance()
 			);
 	}
 
@@ -1367,7 +1388,7 @@ class shop extends Module {
 		$user_id = null;
 		$transaction_id = null;
 
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 
 		// try to get user id
 		if (isset($tag_params['user']))
@@ -1444,9 +1465,9 @@ class shop extends Module {
 		$result = null;
 
 		// get managers
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$plan_manager = ShopTransactionPlansManager::get_instance();
-		$recurring_manager = ShopRecurringPaymentsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
+		$plan_manager = TransactionPlanManager::get_instance();
+		$recurring_manager = RecurringPaymentManager::get_instance();
 
 		// try to get currently logged user
 		if (is_null($user_id) && $_SESSION['logged'])
@@ -1500,7 +1521,7 @@ class shop extends Module {
 	 */
 	public function setTransactionStatus($transaction_id, $status) {
 		$result = false;
-		$manager = ShopTransactionsManager::get_instance();
+		$manager = TransactionManager::get_instance();
 
 		// try to get transaction with specified id
 		$transaction = $manager->get_single_item(
@@ -1606,7 +1627,7 @@ class shop extends Module {
 			$conditions['token'] = $token;
 
 		// get transaction
-		$manager = ShopTransactionsManager::get_instance();
+		$manager = TransactionManager::get_instance();
 		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// cancel transaction
@@ -1637,10 +1658,10 @@ class shop extends Module {
 		$result = false;
 
 		// get managers
-		$manager = ShopRecurringPaymentsManager::get_instance();
-		$plan_manager = ShopTransactionPlansManager::get_instance();
-		$buyer_manager = ShopBuyersManager::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$manager = RecurringPaymentManager::get_instance();
+		$plan_manager = TransactionPlanManager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 
 		// get transaction and associated plan
 		$plan = $plan_manager->get_single_item(
@@ -1851,9 +1872,9 @@ class shop extends Module {
 	 */
 	private function json_GetAccountInfo() {
 		// get managers
-		$buyer_manager = ShopBuyersManager::get_instance();
-		$delivery_address_manager = ShopDeliveryAddressManager::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
+		$delivery_address_manager = DeliveryAddressManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 
 		// get buyer from specified email
 		if ($_SESSION['logged'])
@@ -1949,7 +1970,7 @@ class shop extends Module {
 	 */
 	private function json_ShowCart() {
 		$manager = ItemManager::get_instance();
-		$values_manager = ShopItemSizeValuesManager::get_instance();
+		$values_manager = SizeValueManager::get_instance();
 		$gallery = ModuleHandler::is_loaded('gallery') ? gallery::get_instance() : null;
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
@@ -2047,8 +2068,8 @@ class shop extends Module {
 	private function json_SetCartFromTransaction() {
 		$uid = fix_chars($_REQUEST['uid']);
 		$item_manager = ItemManager::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$transaction_item_manager = ShopTransactionItemsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
+		$transaction_item_manager = TransactionItemManager::get_instance();
 
 		// find specified transaction
 		$transaction = $transaction_manager->get_single_item(
@@ -2315,7 +2336,7 @@ class shop extends Module {
 	private function json_GetShoppingCartSummary() {
 		$result = array();
 		$uid = $_SESSION['transaction']['uid'];
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 		$payment_method = $this->getPaymentMethod(null);
 
 		// get specified transaction
@@ -2340,7 +2361,7 @@ class shop extends Module {
 	private function json_SaveRemark() {
 		$result = false;
 		$transaction = Transaction::get_current();
-		$manager = ShopTransactionsManager::get_instance();
+		$manager = TransactionManager::get_instance();
 		$append = isset($_REQUEST['append']) && $_REQUEST['append'] == 1 ? true : false;
 
 		if (!is_null($transaction)) {
@@ -2402,8 +2423,8 @@ class shop extends Module {
 		$currency = null;
 
 		// get currency associated with transaction
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$currency_manager = ShopCurrenciesManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
+		$currency_manager = CurrencyManager::get_instance();
 
 		$transaction = $transaction_manager->get_single_item(
 							array('currency', 'shipping', 'handling'),
@@ -2651,7 +2672,7 @@ class shop extends Module {
 		// get warehouse address
 		// TODO: Instead of picking up the first warehouse we need to
 		// choose proper one based on location of items
-		$warehouse_manager = ShopWarehouseManager::get_instance();
+		$warehouse_manager = WarehouseManager::get_instance();
 		$warehouse = $warehouse_manager->get_single_item($warehouse_manager->get_field_names(), array());
 
 		if (!is_object($warehouse)) {
@@ -2705,7 +2726,7 @@ class shop extends Module {
 	 */
 	private function getUserAccount() {
 		$result = null;
-		$manager = ShopBuyersManager::get_instance();
+		$manager = BuyerManager::get_instance();
 		$existing_user = isset($_POST['existing_user']) ? escape_chars($_POST['existing_user']) : null;
 
 		// set proper account data based on users choice
@@ -2888,7 +2909,7 @@ class shop extends Module {
 	 * Get user's address.
 	 */
 	private function getAddress($buyer, $shipping_information) {
-		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$address_manager = DeliveryAddressManager::get_instance();
 
 		// try to associate address with transaction
 		$address = $address_manager->get_single_item(
@@ -2946,9 +2967,9 @@ class shop extends Module {
 		global $db;
 
 		$result = array();
-		$transactions_manager = ShopTransactionsManager::get_instance();
-		$transaction_items_manager = ShopTransactionItemsManager::get_instance();
-		$transaction_plans_manager = ShopTransactionPlansManager::get_instance();
+		$transactions_manager = TransactionManager::get_instance();
+		$transaction_items_manager = TransactionItemManager::get_instance();
+		$transaction_plans_manager = TransactionPlanManager::get_instance();
 		$promotion_manager = \Modules\Shop\Transaction\PromotionManager::get_instance();
 
 		// update buyer
@@ -3024,7 +3045,7 @@ class shop extends Module {
 			$result['total'] = $summary['total'];
 
 			// get default currency
-			$currency_manager = ShopCurrenciesManager::get_instance();
+			$currency_manager = CurrencyManager::get_instance();
 			$default_currency = $this->settings['default_currency'];
 			$currency = $currency_manager->get_single_item(array('id'), array('currency' => $default_currency));
 
@@ -3177,8 +3198,8 @@ class shop extends Module {
 	 */
 	public function updateBuyerInformation($transaction_uid, $buyer_data) {
 		$result = false;
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$buyer_manager = ShopBuyersManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
 
 		// make sure buyer is marked as guest if password is not specified
 		if (!isset($buyer_data['password']))
@@ -3289,7 +3310,7 @@ class shop extends Module {
 		$fields['time'] = date($this->get_language_constant('format_time_short'), $timestamp);
 
 		// get currency
-		$currency_manager = ShopCurrenciesManager::get_instance();
+		$currency_manager = CurrencyManager::get_instance();
 		$currency = $currency_manager->get_single_item(
 				$currency_manager->get_field_names(),
 				array('id' => $transaction->currency)
@@ -3299,7 +3320,7 @@ class shop extends Module {
 			$fields['currency'] = $currency->currency;
 
 		// add buyer information
-		$buyer_manager = ShopBuyersManager::get_instance();
+		$buyer_manager = BuyerManager::get_instance();
 		$buyer = $buyer_manager->get_single_item(
 				$buyer_manager->get_field_names(),
 				array('id' => $transaction->buyer)
@@ -3316,7 +3337,7 @@ class shop extends Module {
 		}
 
 		// add buyer address
-		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$address_manager = DeliveryAddressManager::get_instance();
 		$address = $address_manager->get_single_item(
 			$address_manager->get_field_names(),
 			array('id' => $transaction->address)
@@ -3339,7 +3360,7 @@ class shop extends Module {
 			case TransactionType::REGULAR:
 				$subtotal = 0;
 				$item_manager = ItemManager::get_instance();
-				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
+				$transaction_item_manager = TransactionItemManager::get_instance();
 				$items = $transaction_item_manager->get_items(
 					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
@@ -3456,7 +3477,7 @@ class shop extends Module {
 			case TransactionType::DELAYED:
 				$subtotal = 0;
 				$item_manager = ItemManager::get_instance();
-				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
+				$transaction_item_manager = TransactionItemManager::get_instance();
 				$items = $transaction_item_manager->get_items(
 					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
@@ -3554,7 +3575,7 @@ class shop extends Module {
 				break;
 
 			case TransactionType::SUBSCRIPTION:
-				$plan_manager = ShopTransactionPlansManager::get_instance();
+				$plan_manager = TransactionPlanManager::get_instance();
 				$plan = $plan_manager->get_single_item(
 					$plan_manager->get_field_names(),
 					array('transaction' => $transaction->id)
@@ -3698,8 +3719,8 @@ class shop extends Module {
 				$billing_information = $this->getBillingInformation($payment_method);
 
 				// get buyer and address associated with transaction
-				$buyer_manager = ShopBuyersManager::get_instance();
-				$address_manager = ShopDeliveryAddressManager::get_instance();
+				$buyer_manager = BuyerManager::get_instance();
+				$address_manager = DeliveryAddressManager::get_instance();
 
 				// get transaction with specified unique id
 				$transaction = Transaction::get_current();

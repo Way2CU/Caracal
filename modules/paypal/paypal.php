@@ -7,6 +7,8 @@
  * Author: Mladen Mijatov
  */
 use Core\Module;
+use Modules\Shop\Transaction\Manager as TransactionManager;
+use Modules\Shop\Transaction\PlanManager as TransactionPlanManager;
 
 require_once('units/helper.php');
 require_once('units/plans_manager.php');
@@ -447,7 +449,7 @@ class paypal extends Module {
 	private function handleRecurringIPN($transaction, $type, $amount) {
 		$result = false;
 		$shop = shop::get_instance();
-		$plan_manager = ShopTransactionPlansManager::get_instance();
+		$plan_manager = TransactionPlanManager::get_instance();
 
 		// get plan associated with this transaction
 		$plan = $plan_manager->get_single_item(
@@ -494,7 +496,7 @@ class paypal extends Module {
 		}
 
 		// get objects
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 
 		// get data
 		$handled = false;

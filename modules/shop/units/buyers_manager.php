@@ -7,7 +7,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopBuyersManager extends ItemManager {
+namespace Modules\Shop\Buyer;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

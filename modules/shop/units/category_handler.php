@@ -4,7 +4,17 @@
  * Item category handler.
  */
 
-class ShopCategoryHandler {
+namespace Modules\Shop\Category;
+
+use URL;
+use TemplateHandler;
+use ModuleHandler;
+use backend;
+use gallery;
+use Modules\Shop\Item\MembershipManager as ItemMembershipManager;
+
+
+class Handler {
 	private static $_instance;
 	private $_parent;
 	private $name;
@@ -141,7 +151,7 @@ class ShopCategoryHandler {
 	 */
 	private function changeCategory() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -180,7 +190,7 @@ class ShopCategoryHandler {
 	 * Save new or changed category data
 	 */
 	private function saveCategory() {
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
@@ -227,7 +237,7 @@ class ShopCategoryHandler {
 	 */
 	private function deleteCategory() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$title = $manager->get_item_value('title', array('id' => $id));
 
@@ -263,7 +273,7 @@ class ShopCategoryHandler {
 	 */
 	private function deleteCategory_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
@@ -289,7 +299,7 @@ class ShopCategoryHandler {
 		$backend = backend::get_instance();
 
 		// get order editor and configure it
-		$editor = $backend->get_order_editor(ShopCategoryManager::get_instance());
+		$editor = $backend->get_order_editor(Manager::get_instance());
 		$editor->set_form_action(backend_UrlMake($this->name, 'categories', 'order_save'));
 
 		// show interface
@@ -301,7 +311,7 @@ class ShopCategoryHandler {
 	 */
 	private function order_save() {
 		$backend = backend::get_instance();
-		$editor = $backend->get_order_editor(ShopCategoryManager::get_instance());
+		$editor = $backend->get_order_editor(Manager::get_instance());
 		$saved = $editor->save_changes();
 
 		if ($saved)
@@ -330,7 +340,7 @@ class ShopCategoryHandler {
 	 * @param arrat $children
 	 */
 	public function tag_Category($tag_params, $children) {
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// create conditions
@@ -380,7 +390,7 @@ class ShopCategoryHandler {
 	public function tag_CategoryList($tag_params, $children) {
 		global $language;
 
-		$manager = ShopCategoryManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
@@ -416,7 +426,7 @@ class ShopCategoryHandler {
 
 		$item_id = isset($tag_params['item']) ? fix_id($tag_params['item']) : null;
 		if (!is_null($item_id)) {
-			$membership_manager = ShopItemMembershipManager::get_instance();
+			$membership_manager = ItemMembershipManager::get_instance();
 			$membership_items = $membership_manager->get_items(
 												array('category'),
 												array('item' => $item_id)

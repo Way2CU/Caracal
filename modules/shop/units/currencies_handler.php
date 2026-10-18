@@ -4,10 +4,17 @@
  * Currency converter and manager
  */
 
+namespace Modules\Shop\Currency;
+
 require_once('currencies_manager.php');
 
+use URL;
+use TemplateHandler;
+use shop;
+use Core\XML\Parser;
 
-class ShopCurrenciesHandler {
+
+class Handler {
 	private static $_instance;
 	private $_parent;
 	private $_cache = null;
@@ -39,7 +46,7 @@ class ShopCurrenciesHandler {
 			// get XML file
 			$data = file_get_contents($filename);
 
-			$xml = new Core\XML\Parser($data, $filename);
+			$xml = new Parser($data, $filename);
 			$xml->Parse();
 
 			$currencies = array();
@@ -191,7 +198,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function saveCurrency() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = ShopCurrenciesManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$data = array(
 					'currency' => fix_chars($_REQUEST['currency'])
@@ -218,7 +225,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function deleteCurrency() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCurrenciesManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$currency = $manager->get_item_value('currency', array('id' => $id));
 
@@ -254,7 +261,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function deleteCurrency_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCurrenciesManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
@@ -346,7 +353,7 @@ class ShopCurrenciesHandler {
 	 * @param array $children
 	 */
 	public function tag_CurrencyList($tag_params, $children) {
-		$manager = ShopCurrenciesManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);

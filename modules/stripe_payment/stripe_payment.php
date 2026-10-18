@@ -14,6 +14,9 @@ require_once('units/customer_manager.php');
 
 use Core\Module;
 use Modules\Shop\Transaction;
+use Modules\Shop\Buyer\Manager as BuyerManager;
+use Modules\Shop\Currency\Manager as CurrencyManager;
+use Modules\Shop\Transaction\Manager as TransactionManager;
 
 
 class stripe_payment extends Module {
@@ -345,7 +348,7 @@ class stripe_payment extends Module {
 	 * @return object
 	 */
 	public static function getCustomer($transaction_uid) {
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 		$customer_manager = Stripe_CustomerManager::get_instance();
 		$conditions = array();
 
@@ -386,8 +389,8 @@ class stripe_payment extends Module {
 		$redirect_url = fix_chars($_REQUEST['redirect_url']);
 		$transaction_uid = fix_chars($_REQUEST['transaction_uid']);
 		$shop = shop::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
-		$currency_manager = ShopCurrenciesManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
+		$currency_manager = CurrencyManager::get_instance();
 
 		// get card details
 		$card = array(
@@ -446,7 +449,7 @@ class stripe_payment extends Module {
 	 */
 	private function subscribe() {
 		$shop = shop::get_instance();
-		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_manager = TransactionManager::get_instance();
 		$customer_manager = Stripe_CustomerManager::get_instance();
 		$stripe_token = isset($_REQUEST['stripe_token']) ? fix_chars($_REQUEST['stripe_token']) : null;
 		$transaction_uid = fix_chars($_REQUEST['transaction']);
@@ -498,7 +501,7 @@ class stripe_payment extends Module {
 
 			// get email from buyer
 			if ($transaction->buyer != 0 && !isset($customer_data['email'])) {
-				$buyer_manager = ShopBuyersManager::get_instance();
+				$buyer_manager = BuyerManager::get_instance();
 				$buyer = $buyer_manager->get_single_item(
 										array('email'),
 										array('id' => $transaction->buyer)

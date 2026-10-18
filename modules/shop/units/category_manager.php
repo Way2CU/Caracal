@@ -8,7 +8,12 @@
 * Author: Mladen Mijatov
 */
 
-class ShopCategoryManager extends ItemManager {
+namespace Modules\Shop\Category;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**
