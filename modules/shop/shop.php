@@ -28,6 +28,7 @@ require_once('units/item_size_values_manager.php');
 require_once('units/transactions_manager.php');
 require_once('units/transactions_handler.php');
 require_once('units/warehouse_handler.php');
+require_once('units/stock_manager.php');
 require_once('units/transaction_items_manager.php');
 require_once('units/transaction_plans_manager.php');
 require_once('units/transaction_promotions_manager.php');
@@ -720,6 +721,68 @@ class shop extends Module {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Prepare data for export. Everything is included, catalog as well as
+	 * buyers, transactions and stored payment tokens. Item images are gallery
+	 * groups and get exported along with gallery module.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		return $this->export_tables($this->get_export_managers());
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$this->import_tables($data, $this->get_export_managers());
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				// catalog
+				'currencies'             => ShopCurrenciesManager::get_instance(),
+				'manufacturers'          => ShopManufacturerManager::get_instance(),
+				'suppliers'              => \Modules\Shop\Supplier\Manager::get_instance(),
+				'categories'             => ShopCategoryManager::get_instance(),
+				'items'                  => ItemManager::get_instance(),
+				'item_membership'        => ShopItemMembershipManager::get_instance(),
+				'item_properties'        => PropertyManager::get_instance(),
+				'item_remarks'           => \Modules\Shop\Item\RemarkManager::get_instance(),
+				'item_sizes'             => ShopItemSizesManager::get_instance(),
+				'item_size_values'       => ShopItemSizeValuesManager::get_instance(),
+				'related_items'          => ShopRelatedItemsManager::get_instance(),
+				'warehouses'             => ShopWarehouseManager::get_instance(),
+				'stock'                  => ShopStockManager::get_instance(),
+
+				// promotions
+				'coupons'                => \Modules\Shop\Promotion\CouponsManager::get_instance(),
+				'coupon_codes'           => \Modules\Shop\Promotion\CouponCodesManager::get_instance(),
+
+				// buyers and transactions
+				'buyers'                 => ShopBuyersManager::get_instance(),
+				'delivery_addresses'     => ShopDeliveryAddressManager::get_instance(),
+				'payment_tokens'         => TokenManager::get_instance(),
+				'transactions'           => ShopTransactionsManager::get_instance(),
+				'transaction_items'      => ShopTransactionItemsManager::get_instance(),
+				'transaction_plans'      => ShopTransactionPlansManager::get_instance(),
+				'transaction_promotions' => \Modules\Shop\Transaction\PromotionManager::get_instance(),
+				'recurring_payments'     => ShopRecurringPaymentsManager::get_instance()
+			);
 	}
 
 	/**
