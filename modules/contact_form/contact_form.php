@@ -334,6 +334,50 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Prepare data for export. Form definitions, templates and submissions
+	 * are all included. Uploaded files are never stored, they are only
+	 * attached to emails, so there is nothing to export besides tables.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		return $this->export_tables($this->get_export_managers());
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$this->import_tables($data, $this->get_export_managers());
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				'forms'             => ContactForm_FormManager::get_instance(),
+				'fields'            => ContactForm_FormFieldManager::get_instance(),
+				'field_values'      => ContactForm_FieldValueManager::get_instance(),
+				'fieldsets'         => ContactForm_FieldsetManager::get_instance(),
+				'fieldset_fields'   => ContactForm_FieldsetFieldsManager::get_instance(),
+				'templates'         => ContactForm_TemplateManager::get_instance(),
+				'mailers'           => ContactForm_MailerManager::get_instance(),
+				'domains'           => ContactForm_DomainManager::get_instance(),
+				'submissions'       => ContactForm_SubmissionManager::get_instance(),
+				'submission_fields' => ContactForm_SubmissionFieldManager::get_instance()
+			);
+	}
+
+	/**
 	 * Event triggered upon module initialization
 	 */
 	public function initialize() {
