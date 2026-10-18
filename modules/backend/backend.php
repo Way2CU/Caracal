@@ -842,11 +842,34 @@ class backend extends Module {
 	 * Show configuration dialog
 	 */
 	private function import_options() {
-		// load information from the file
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
-		$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
-		$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
-		$file->close();
+
+		// load information from the file, anything can end up in backup directory
+		try {
+			$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
+			$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
+			$file->close();
+
+		} catch (Core\Exports\UnknownSectionException $error) {
+			$description = '';
+
+		} catch (Core\Exports\InvalidExportException $error) {
+			error_log("Invalid exports file '{$file_name}'. Unable to show import options!");
+
+			// show error message about invalid file
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+			$params = array(
+					'message' => $this->get_language_constant('message_import_error_file'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('system_import_data')
+				);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+			return;
+		}
 
 		// render user interface
 		$template = new TemplateHandler('import_options.xml', $this->path.'templates/');

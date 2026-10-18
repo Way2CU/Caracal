@@ -150,33 +150,65 @@ class File {
 	 */
 	private function read_header($verify_hash) {
 		fseek($this->handle, 0);
-		$header = fread($this->handle, strlen(Section::HEADER));
+		$header = $this->read_bytes(strlen(Section::HEADER));
 
 		// make sure out header strings match
 		if ($header != Section::HEADER)
 			throw new InvalidExportException('File header mismatch!');
 
 		// read version
-		$version_length = strlen(pack(Format::VERSION, ''));
-		$unpacked_data = unpack(Format::VERSION, fread($this->handle, $version_length));
-		$this->version = trim(array_pop($unpacked_data));
+		$this->version = trim($this->read_packed(Format::VERSION));
 
 		if (!in_array($this->version, $this->supported_versions))
 			throw new InvalidExportException('Unsupported version: '.$this->version);
 
-		// read encryption information
-		if ($this->find_section(Section::KEY_HASH)) {
-			$hash_size = $this->read_size(Format::DATA);
-			$hash = fread($this->handle, $hash_size);
+		// read encryption information, both sections are mandatory
+		if (!$this->find_section(Section::KEY_HASH))
+			throw new InvalidExportException('Key hash section is missing!');
 
-			if ($verify_hash && $hash != hash('sha256', $this->key, true))
-				throw new InvalidKeyException('Hash mismatch!');
-		}
+		$hash_size = $this->read_size(Format::DATA);
+		$hash = $this->read_bytes($hash_size);
 
-		if ($this->find_section(Section::CIPHER)) {
-			$cipher_size = $this->read_size(Format::DATA);
-			$this->cipher = fread($this->handle, $cipher_size);
-		}
+		if ($verify_hash && !hash_equals(hash('sha256', $this->key, true), $hash))
+			throw new InvalidKeyException('Hash mismatch!');
+
+		if (!$this->find_section(Section::CIPHER))
+			throw new InvalidExportException('Cipher section is missing!');
+
+		$cipher_size = $this->read_size(Format::DATA);
+		$this->cipher = $this->read_bytes($cipher_size);
+
+		// make sure cipher stored in file is something we can actually use
+		if (!in_array(strtolower($this->cipher), openssl_get_cipher_methods(true)))
+			throw new InvalidExportException('Unsupported cipher: '.$this->cipher);
+	}
+
+	/**
+	 * Read exact number of bytes from the archive. Short read means
+	 * file was truncated or is not an export file at all.
+	 *
+	 * @param integer $length
+	 * @return string
+	 */
+	private function read_bytes($length) {
+		$data = $length > 0 ? fread($this->handle, $length) : '';
+
+		if ($data === FALSE || strlen($data) != $length)
+			throw new InvalidExportException('Unexpected end of export file.');
+
+		return $data;
+	}
+
+	/**
+	 * Read and unpack single value of specified format from the archive.
+	 *
+	 * @param string $format
+	 * @return mixed
+	 */
+	private function read_packed($format) {
+		$size = strlen(pack($format, 0));
+		$unpacked_data = unpack($format, $this->read_bytes($size));
+		return array_pop($unpacked_data);
 	}
 
 	/**
@@ -186,9 +218,7 @@ class File {
 	 * @return integer
 	 */
 	private function read_size($format) {
-		$size = strlen(pack($format, 0));
-		$unpacked_data = unpack($format, fread($this->handle, $size));
-		return array_pop($unpacked_data);
+		return $this->read_packed($format);
 	}
 
 	/**
@@ -202,22 +232,20 @@ class File {
 	 */
 	private function find_section($section, $key_name=null) {
 		$result = false;
-		$section_size = strlen(pack(Format::SECTION, 0));
 
 		// jump to beginning of all sections
 		$stats = fstat($this->handle);
 		fseek($this->handle, strlen(Section::HEADER) + strlen(pack(Format::VERSION, '')));
 
-		// search through sections
-		while (True) {
-			$unpacked_data = unpack(Format::SECTION, fread($this->handle, $section_size));
-			$current_section = array_pop($unpacked_data);
+		// search through sections until we run out of file
+		while (ftell($this->handle) < $stats['size']) {
+			$current_section = $this->read_packed(Format::SECTION);
 			$current_key_name = null;
 
 			// read key name if needed
 			if (in_array($current_section, $this->extended_sections)) {
 				$key_size = $this->read_size(Format::KEY_NAME);
-				$current_key_name = $key_size > 0 ? fread($this->handle, $key_size) : '';
+				$current_key_name = $this->read_bytes($key_size);
 			}
 
 			// bail if we found requested section
@@ -227,15 +255,25 @@ class File {
 			}
 
 			// move file pointer forward by data size
-			$data_size = $this->read_size(Format::DATA);
-			fseek($this->handle, $data_size, SEEK_CUR);
-
-			// make sure we stop parsing after we pass end of bounds
-			if (ftell($this->handle) >= $stats['size'])
-				break;
+			$this->skip_data($stats['size']);
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Skip over data of the current section. File pointer must be
+	 * positioned at the data size field.
+	 *
+	 * @param integer $file_size
+	 */
+	private function skip_data($file_size) {
+		$data_size = $this->read_size(Format::DATA);
+		fseek($this->handle, $data_size, SEEK_CUR);
+
+		// section claims more data than file contains
+		if (ftell($this->handle) > $file_size)
+			throw new InvalidExportException('Unexpected end of export file.');
 	}
 
 	/**
@@ -347,15 +385,14 @@ class File {
 			if ($size < $this->iv_size)
 				throw new InvalidExportException("Section {$section} and/or {$key_name} is too short to be encrypted.");
 
-			// empty string encrypts to empty string, avoid zero-length read
-			$data_iv = fread($this->handle, $this->iv_size);
-			$raw_size = $size - $this->iv_size;
-			$raw_data = $raw_size > 0 ? fread($this->handle, $raw_size) : '';
+			// empty string encrypts to empty string, read handles zero length
+			$data_iv = $this->read_bytes($this->iv_size);
+			$raw_data = $this->read_bytes($size - $this->iv_size);
 			$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
 
 		} else {
 			// read unencrypted data
-			$data = fread($this->handle, $size);
+			$data = $this->read_bytes($size);
 		}
 
 		if ($data === FALSE)  // should not happen, but account for it anyway
@@ -404,34 +441,26 @@ class File {
 			throw new Exception("Section {$section} doesn't contain keys.");
 
 		$result = array();
-		$section_size = strlen(pack(Format::SECTION, 0));
 
 		// jump to beginning of all sections
 		$stats = fstat($this->handle);
 		fseek($this->handle, strlen(Section::HEADER) + strlen(pack(Format::VERSION, '')));
 
-		// search through sections
-		while (True) {
-			$unpacked_data = unpack(Format::SECTION, fread($this->handle, $section_size));
-			$current_section = array_pop($unpacked_data);
-			$current_key_name = null;
+		// search through sections until we run out of file
+		while (ftell($this->handle) < $stats['size']) {
+			$current_section = $this->read_packed(Format::SECTION);
 
 			// read key name if needed
 			if (in_array($current_section, $this->extended_sections)) {
 				$key_size = $this->read_size(Format::KEY_NAME);
-				$current_key_name = $key_size > 0 ? fread($this->handle, $key_size) : '';
+				$current_key_name = $this->read_bytes($key_size);
 
 				if ($current_section == $section)
 					$result []= $current_key_name;
 			}
 
 			// move file pointer forward by data size
-			$data_size = $this->read_size(Format::DATA);
-			fseek($this->handle, $data_size, SEEK_CUR);
-
-			// make sure we stop parsing after we pass end of bounds
-			if (ftell($this->handle) >= $stats['size'])
-				break;
+			$this->skip_data($stats['size']);
 		}
 
 		return $result;
