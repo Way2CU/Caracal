@@ -171,6 +171,42 @@ class news extends Module {
 	}
 
 	/**
+	 * Prepare data for export.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		return $this->export_tables($this->get_export_managers());
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$this->import_tables($data, $this->get_export_managers());
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				'groups'     => NewsGroupManager::get_instance(),
+				'news'       => NewsManager::get_instance(),
+				'membership' => NewsMembershipManager::get_instance(),
+				'feeds'      => NewsFeedManager::get_instance()
+			);
+	}
+
+	/**
 	 * Event triggered upon module initialization
 	 */
 	public function initialize() {
