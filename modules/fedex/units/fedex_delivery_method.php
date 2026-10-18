@@ -334,6 +334,42 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	public function isInternational() {
 		return true;
 	}
+
+	/**
+	 * Whether delivery method provides custom interface. FedEx offers
+	 * delivery types through `getDeliveryTypes` so no custom interface
+	 * is needed.
+	 *
+	 * @return boolean
+	 */
+	public function hasCustomInterface() {
+		return false;
+	}
+
+	/**
+	 * Get custom delivery method interface. Not used as there's no
+	 * custom interface.
+	 *
+	 * @return string
+	 */
+	public function getInterface() {
+		return '';
+	}
+
+	/**
+	 * Get delivery price for selection. Not used as there's no custom
+	 * interface, estimates are provided through `getDeliveryTypes`.
+	 *
+	 * @param array $items
+	 * @param array $shipper
+	 * @param array $recipient
+	 * @param string $selection
+	 * @param object $transaction
+	 * @return float
+	 */
+	public function getCustomEstimate($items, $shipper, $recipient, $selection, $transaction=null) {
+		return 0;
+	}
 }
 
 ?>
