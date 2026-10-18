@@ -378,6 +378,43 @@ abstract class Module {
 	 */
 	public function export_data(&$options, &$export_file) {
 	}
+
+	/**
+	 * Export all rows from specified managers. Resulting array has the same
+	 * keys as `$managers` and is suitable for returning from `export_data`
+	 * or merging with module specific data.
+	 *
+	 * @param array $managers
+	 * @return array
+	 */
+	protected function export_tables($managers) {
+		$result = array();
+
+		foreach ($managers as $key => $manager)
+			$result[$key] = $manager->get_items($manager->get_field_names(), array());
+
+		return $result;
+	}
+
+	/**
+	 * Replace all rows in tables with ones from exported data. Only keys
+	 * present in `$data` are touched so partial or older exports are safe
+	 * to import. Values are raw database content and get escaped here.
+	 *
+	 * @param array $data
+	 * @param array $managers
+	 */
+	protected function import_tables(&$data, $managers) {
+		foreach ($managers as $key => $manager) {
+			if (!isset($data[$key]) || !is_array($data[$key]))
+				continue;
+
+			$manager->delete_items(array());
+
+			foreach ($data[$key] as $item)
+				$manager->insert_item(escape_chars($manager->get_data_from_object($item), false));
+		}
+	}
 }
 
 ?>
