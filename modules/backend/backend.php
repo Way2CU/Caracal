@@ -891,7 +891,6 @@ class backend extends Module {
 	 * Perform data import.
 	 */
 	private function import_commit() {
-		$manager = SettingsManager::get_instance();
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
 		$encryption_key = $_REQUEST['key'];
 		$options = array (
@@ -917,80 +916,23 @@ class backend extends Module {
 				$module_settings []= substr($key, 9);
 		}
 
-		// load import file and log the whole process
+		// restore data and log the whole process
 		error_log("Loading export file for import '{$file_name}'...");
 		try {
-			$file = new Core\Exports\File($file_name, $encryption_key);
+			ModuleHandler::import_data($encryption_key, $file_name, $options, $module_data, $module_settings);
+			error_log('Import completed!');
+			$params['message'] = $this->get_language_constant('message_import_completed');
 
 		} catch (Core\Exports\InvalidKeyException $error) {
 			error_log('Invalid key specified. Unable to import!');
-
-			// show error message about invalid key
 			$params['message'] = $this->get_language_constant('message_import_error_key');
-			$template->restore_xml();
-			$template->set_local_params($params);
-			$template->parse();
-			return;
 
 		} catch (Core\Exports\InvalidExportException $error) {
 			error_log('Invalid exports file provided. Unable to import!');
-
-			// show error message about invalid key
 			$params['message'] = $this->get_language_constant('message_import_error_file');
-			$template->restore_xml();
-			$template->set_local_params($params);
-			$template->parse();
-			return;
 		}
 
-		// restore data
-		$key_list_data = $file->get_key_names(Core\Exports\Section::DATA);
-		$key_list_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
-		$module_list = array_unique(array_merge($key_list_data, $key_list_settings), SORT_REGULAR);
-
-		foreach ($module_list as $module_name) {
-			// make sure module is loaded
-			if (!ModuleHandler::is_loaded($module_name))
-				continue;
-
-			// get module instance
-			$module = call_user_func(array($module_name, 'get_instance'));
-
-			// import module data
-			if (in_array($module_name, $module_data)) {
-				$data = $file->read(Core\Exports\Section::DATA, $module_name);
-				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
-				$module->import_data($data, $options, $file);
-			}
-
-			// import module settings
-			if (in_array($module_name, $module_settings)) {
-				$data = $file->read(Core\Exports\Section::SETTINGS, $module_name);
-				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
-
-				if ($data !== FALSE)
-					// Replace variable value instead of calling
-					// update. This way we ensure value is inserted.
-					foreach ($data as $row) {
-						$manager->delete_items(array(
-							'module'   => $module_name,
-							'variable' => $row->variable
-						));
-						$manager->insert_item(array(
-							'module'   => $module_name,
-							'variable' => $row->variable,
-							'value'    => $row->value
-						));
-					}
-			}
-		}
-
-		// complete import
-		$file->close();
-		error_log('Import completed!');
-
-		// show completed message
-		$params['message'] = $this->get_language_constant('message_import_completed');
+		// show message
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();

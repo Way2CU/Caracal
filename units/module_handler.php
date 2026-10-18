@@ -300,99 +300,80 @@ class ModuleHandler {
 	}
 
 	/**
-	 * Load specified file and restore backup for specified modules.
+	 * Load specified export file and restore data and settings for specified
+	 * modules. Lists of modules for data and settings are independent, `null`
+	 * restores everything present in the file while empty array restores nothing.
+	 * Modules which are not loaded are skipped.
 	 *
-	 * The following options are recognized:
-	 *	- include_files: boolean - Whether files should be included in export;
-	 *	- include_settings: boolean - Whether module settings should be included. This
-	 *		one is handled by the system itself modules can ignore it;
+	 * Options are passed on to modules during import call. The following are
+	 * recognized:
+	 *	- include_files: boolean - Whether files should be restored as well;
+	 *
+	 * Exceptions from export file are propagated, most notably
+	 * `Core\Exports\InvalidKeyException` and `Core\Exports\InvalidExportException`.
 	 *
 	 * @param string $key
 	 * @param string $file_name
 	 * @param array $options
-	 * @param array $modules
+	 * @param array $data_modules
+	 * @param array $settings_modules
 	 * @return boolean
 	 */
-	public static function import_data($key, $file_name, $options=array(), $modules=null) {
-		global $backup_path;
+	public static function import_data($key, $file_name, $options=array(), $data_modules=null, $settings_modules=null) {
+		// open export file, this verifies key as well
+		$file = new Core\Exports\File($file_name, $key);
 
-		// load and parse backup file
-		if (!file_exists($backup_path.$file_name.'.backup'))
-			return false;
+		// default to everything stored in the file
+		$key_list_data = $file->get_key_names(Core\Exports\Section::DATA);
+		$key_list_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
 
-		$backup = json_decode(file_get_contents($backup_path.$file_name.'.backup'), true);
-		if ($backup === NULL)
-			return false;
+		if (is_null($data_modules))
+			$data_modules = $key_list_data;
+		if (is_null($settings_modules))
+			$settings_modules = $key_list_settings;
 
-		// bail if no modules are specified
-		$modules = is_null($modules) ? self::$loaded_modules : $modules;
-		if (empty($modules))
-			return false;
-
-		// increase security a little bit by extending key length through hash function
-		// as people don't have a tendency to choose long passwords
-		$key = hash('sha512', $key, true);
-
-		// verify key validity
-		if (hash('sha256', $key) != $backup['key_hash'])
-			throw new InvalidKeyException('Backup key does not match provided key. Unable to restore!');
-
-		// get size of initialization vector to use
-		$iv_size = openssl_cipher_iv_length(self::CIPHER);
-
-		// prepare commonly used variables
+		// get settings manager instance for later use
 		$manager = SettingsManager::get_instance();
-		$import_settings = isset($options['import_settings']) && $options['import_settings'];
 
-		// process data
-		foreach ($modules as $module_name) {
+		// restore data and settings for each module
+		$module_list = array_unique(array_merge($key_list_data, $key_list_settings), SORT_REGULAR);
+		foreach ($module_list as $module_name) {
 			// skip modules which are not loaded
 			if (!self::is_loaded($module_name))
 				continue;
 
-			// clear existing and import new settings for specific module
-			if ($import_settings && isset($backup['module_settings'][$module_name])) {
-				$raw_settings = base64_decode($backup['module_settings'][$module_name]);
-
-				// get initialization vector for settings
-				$settings_iv = substr($raw_settings, 0, $iv_size);
-				$raw_settings = substr($raw_settings, $iv_size);
-
-				// decrypt settings data
-				$raw_settings = openssl_decrypt($raw_settings, self::CIPHER, $key, OPENSSL_RAW_DATA, $settings_iv);
-
-				// restore settings
-				if ($raw_settings !== FALSE) {
-					$settings = unserialize($raw_settings, array('allowed_classes' => array('stdClass')));
-
-					$manager->delete_items(array('module' => $module_name));
-					foreach ($settings as $variable => $value)
-						$manager->insert_item(array(
-								'module'   => $module_name,
-								'variable' => $variable,
-								'value'    => $value
-							));
-				}
-			}
+			$module = call_user_func(array($module_name, 'get_instance'));
 
 			// restore module data
-			if (isset($backup['module_data'][$module_name])) {
-				// get initialization vector for data
-				$raw_data = base64_decode($backup['module_data'][$module_name]);
-				$data_iv = substr($raw_data, 0, $iv_size);
-				$raw_data = substr($raw_data, $iv_size);
+			if (in_array($module_name, $data_modules) && in_array($module_name, $key_list_data)) {
+				$data = $file->read(Core\Exports\Section::DATA, $module_name);
+				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
+				$module->import_data($data, $options, $file);
+			}
 
-				// decrypt module data
-				$raw_data = openssl_decrypt($raw_data, self::CIPHER, $key, OPENSSL_RAW_DATA, $data_iv);
+			// restore module settings
+			if (in_array($module_name, $settings_modules) && in_array($module_name, $key_list_settings)) {
+				$data = $file->read(Core\Exports\Section::SETTINGS, $module_name);
+				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
 
-				// pass the remaining data to module
-				if ($raw_data !== FALSE) {
-					$data = unserialize($raw_data, array('allowed_classes' => array('stdClass')));
-					$module = call_user_func(array($module_name, 'get_instance'));
-					$module->import_data($data, $options);
-				}
+				if ($data !== FALSE)
+					// replace variable value instead of calling
+					// update, this way we ensure value is inserted
+					foreach ($data as $row) {
+						$manager->delete_items(array(
+							'module'   => $module_name,
+							'variable' => $row->variable
+						));
+						$manager->insert_item(array(
+							'module'   => $module_name,
+							'variable' => $row->variable,
+							'value'    => $row->value
+						));
+					}
 			}
 		}
+
+		$file->close();
 
 		return true;
 	}
