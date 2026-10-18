@@ -16,10 +16,10 @@
  *	[section][key-size][key-name][data-size][data]
  *
  * All numbers and ids are written in big endian order and in unsigned
- * format. This is to ensure cross-platform compatibility. Maximum key name
- * name length is 256 characters while maximum data size for each section is
- * 4GB (this is format support, maximum file size still depends on underlying
- * file system).
+ * format. This is to ensure cross-platform compatibility. Key name length
+ * is stored in a single byte so key names must be between 1 and 255 bytes
+ * long. Maximum data size for each section is 4GB (this is format support,
+ * maximum file size still depends on underlying file system).
  *
  * Author: Mladen Mijatov
  */
@@ -67,6 +67,7 @@ class Format {
 class File {
 	const CURRENT_VERSION = '1.0';
 	const PREFERRED_CIPHER = 'aes-256-ctr';
+	const MAX_KEY_LENGTH = 255;  // key size is stored as unsigned char
 
 	private $handle;
 	private $key;
@@ -216,7 +217,7 @@ class File {
 			// read key name if needed
 			if (in_array($current_section, $this->extended_sections)) {
 				$key_size = $this->read_size(Format::KEY_NAME);
-				$current_key_name = fread($this->handle, $key_size);
+				$current_key_name = $key_size > 0 ? fread($this->handle, $key_size) : '';
 			}
 
 			// bail if we found requested section
@@ -239,7 +240,8 @@ class File {
 
 	/**
 	 * Write data to specified section in the file. Some sections
-	 * such as DATA, SETTINGS and FILES require `$key_name` to be specified.
+	 * such as DATA, SETTINGS and FILES require `$key_name` to be specified
+	 * and it must be between 1 and `MAX_KEY_LENGTH` bytes long.
 	 *
 	 * Return value denotes number of bytes written.
 	 *
@@ -256,6 +258,11 @@ class File {
 		if (!$this->writable)
 			throw new InvalidExportException('Export file was opened for reading only.');
 
+		// make sure key name fits the format
+		$requires_key = in_array($section, $this->extended_sections);
+		if ($requires_key && (strlen($key_name) == 0 || strlen($key_name) > self::MAX_KEY_LENGTH))
+			throw new Exception("Key name for section {$section} must be between 1 and ".self::MAX_KEY_LENGTH." bytes long.");
+
 		// protect data
 		if ($encrypted) {
 			$data_iv = openssl_random_pseudo_bytes($this->iv_size);
@@ -271,9 +278,9 @@ class File {
 		fwrite($this->handle, pack(Format::SECTION, $section));
 
 		// some sections require key name
-		if (in_array($section, $this->extended_sections)) {
+		if ($requires_key) {
 			fwrite($this->handle, pack(Format::KEY_NAME, strlen($key_name)));
-			fwrite($this->handle, $key_name, 256);
+			fwrite($this->handle, $key_name);
 		}
 
 		// write data
@@ -409,7 +416,7 @@ class File {
 			// read key name if needed
 			if (in_array($current_section, $this->extended_sections)) {
 				$key_size = $this->read_size(Format::KEY_NAME);
-				$current_key_name = fread($this->handle, $key_size);
+				$current_key_name = $key_size > 0 ? fread($this->handle, $key_size) : '';
 
 				if ($current_section == $section)
 					$result []= $current_key_name;
