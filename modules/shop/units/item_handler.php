@@ -35,6 +35,8 @@ use Core\Events;
 use TemplateHandler;
 use ModuleHandler;
 use URL;
+use PageSwitch;
+use Thumbnail;
 use gallery;
 use youtube;
 use shop;
