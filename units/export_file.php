@@ -338,21 +338,24 @@ class File {
 		// get size of data to read
 		$size = $this->read_size(Format::DATA);
 
-		if ($size > 0) {
-			if ($encrypted) {
-				// decrypt data
-				$data_iv = fread($this->handle, $this->iv_size);
-				$raw_data = fread($this->handle, $size - $this->iv_size);
-				$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
-
-			} else {
-				// read unencrypted data
-				$data = fread($this->handle, $size);
-			}
-
-		} else {
+		if ($size == 0) {
 			// section is empty
 			$data = '';
+
+		} else if ($encrypted) {
+			// encrypted sections always start with initialization vector
+			if ($size < $this->iv_size)
+				throw new InvalidExportException("Section {$section} and/or {$key_name} is too short to be encrypted.");
+
+			// empty string encrypts to empty string, avoid zero-length read
+			$data_iv = fread($this->handle, $this->iv_size);
+			$raw_size = $size - $this->iv_size;
+			$raw_data = $raw_size > 0 ? fread($this->handle, $raw_size) : '';
+			$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+
+		} else {
+			// read unencrypted data
+			$data = fread($this->handle, $size);
 		}
 
 		if ($data === FALSE)  // should not happen, but account for it anyway
