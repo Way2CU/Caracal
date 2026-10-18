@@ -296,6 +296,10 @@ class backend extends Module {
 					$this->export_commit();
 					break;
 
+				case 'export_download':
+					$this->export_download();
+					break;
+
 				// ---
 				case 'users':
 				case 'users_create':
@@ -939,6 +943,33 @@ class backend extends Module {
 	}
 
 	/**
+	 * Send export file to the browser. Backup directory is not accessible
+	 * directly from the web so this is the only way to get the file.
+	 */
+	private function export_download() {
+		global $backup_path;
+
+		$file_name = basename(str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name'])));
+		$full_path = $backup_path.$file_name;
+		$suffix = Core\Exports\File::TEMPORARY_SUFFIX;
+
+		// only finished exports can be downloaded
+		$is_temporary = substr($file_name, -strlen($suffix)) == $suffix;
+		if (empty($file_name) || $is_temporary || !is_file($full_path)) {
+			SectionHandler::show_error_page(404);
+			return;
+		}
+
+		// send file and stop rendering so nothing gets appended
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.$file_name.'"');
+		header('Content-Length: '.filesize($full_path));
+		header('X-Content-Type-Options: nosniff');
+		readfile($full_path);
+		exit();
+	}
+
+	/**
 	 * Show configuration dialog for exporting data.
 	 */
 	private function export_options() {
@@ -1241,7 +1272,14 @@ class backend extends Module {
 							)),
 					'item_download' => URL::make_hyperlink(
 							$this->get_language_constant('download'),
-							URL::from_file_path(_BASEPATH.'/'.$backup_path.$file_name)
+							URL::make_query(
+								'backend_module',
+								'transfer_control',
+								array('module', $this->name),
+								array('backend_action', 'export_download'),
+								array('file_name', $file_name),
+								array('csrf_token', \Core\Session\Manager::get_csrf_token())
+							)
 						)
 				);
 

@@ -15,6 +15,9 @@
 	# (FilesMatch matches only the basename, so a path-anchored rule is required)
 	RewriteRule ^site/.*\.(php|php[3457]|phtml|phps|phar|pl|py|cgi|sh|asp|aspx|jsp)$ - [F,NC]
 
+	# deny direct access to data exports, backend serves them to authenticated users
+	RewriteRule ^site/backups/ - [F,NC]
+
 	# don't rewrite site content
 	RewriteRule ^/site/ - [NC,L]
 
