@@ -993,6 +993,8 @@ class backend extends Module {
 	 * Create data export with specified configuration.
 	 */
 	private function export_commit() {
+		global $backup_path;
+
 		// collect data
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
 		$key = $_REQUEST['key'];
@@ -1012,9 +1014,15 @@ class backend extends Module {
 				);
 
 		// perform export
-		if (ModuleHandler::export_data($key, $file_name, $options))
-			$params['message'] = $this->get_language_constant('message_export_completed'); else
+		if (file_exists($backup_path.$file_name)) {
+			$params['message'] = $this->get_language_constant('message_export_error_exists');
+
+		} else if (ModuleHandler::export_data($key, $file_name, $options)) {
+			$params['message'] = $this->get_language_constant('message_export_completed');
+
+		} else {
 			$params['message'] = $this->get_language_constant('message_export_error');
+		}
 
 		// render message
 		$template->restore_xml();

@@ -57,6 +57,7 @@
     "menu_users": "Администрација корисника",
     "message_export_completed": "Data export is completed.",
     "message_export_error": "There was a problem while exporting data.",
+    "message_export_error_exists": "Export file with this name already exists. Please choose a different name.",
     "message_import_completed": "Data import is completed.",
     "message_import_error_key": "Invalid decryption key was provided! Please try again!",
     "message_import_error_file": "Unknown exports file type. We are unable to load and restore data from this file.",

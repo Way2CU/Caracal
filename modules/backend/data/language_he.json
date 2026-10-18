@@ -57,6 +57,7 @@
     "menu_users": "ניהול משתמשים",
     "message_export_completed": "ייצוא המידע הסתיים",
     "message_export_error": "נתקלנו בבעיה בתהליך ייצוא המידע",
+    "message_export_error_exists": "קובץ ייצוא בשם זה כבר קיים. אנא בחרו שם אחר.",
     "message_import_completed": "ייצוא המידע הסתיים",
     "message_import_error_key": "סופק מפתח פענוח לא חוקי! אנא נסו שוב!",
     "message_import_error_file": "סוג קובץ ייצוא לא ידוע. אין באפשרותנו לטעון ולשחזר נתונים מקובץ זה.",

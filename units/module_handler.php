@@ -228,7 +228,8 @@ class ModuleHandler {
 	 * avoid potential issues with neglected backups. Output is then placed in
 	 * globally defined `$backup_path` with specified `$file_name`.
 	 *
-	 * If omitted module list defaults to all modules.
+	 * If omitted module list defaults to all modules. Existing files are never
+	 * overwritten, function returns `false` in that case.
 	 *
 	 * Options is associative array which is passed on to modules during export call.
 	 * Keys and values it can contain can be customized but for standardization purpose
@@ -253,6 +254,11 @@ class ModuleHandler {
 		// bail if no modules are specified
 		$modules = is_null($modules) ? self::$loaded_modules : $modules;
 		if (empty($modules))
+			return false;
+
+		// refuse to overwrite existing exports, opening existing file would
+		// make it read-only and verify key against the old one
+		if (file_exists($backup_path.basename($file_name)))
 			return false;
 
 		// get settings manager instance for later use

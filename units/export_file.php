@@ -72,6 +72,7 @@ class File {
 	private $key;
 	private $iv_size;
 	private $is_new_file;
+	private $writable;
 	private $cipher = self::PREFERRED_CIPHER;
 	private $version = self::CURRENT_VERSION;
 	private $extended_sections = array(  // list of sections containing keys
@@ -96,14 +97,16 @@ class File {
 		// as people don't have a tendency to choose long passwords
 		$this->key = hash('sha512', $key, true);
 
-		// try to open file
+		// existing files are opened read-only, new files are created for writing
 		if (file_exists($full_path)) {
 			$this->handle = fopen($full_path, 'r');
 			$this->is_new_file = false;
+			$this->writable = false;
 
 		} else {
 			$this->handle = fopen($full_path, 'w');
 			$this->is_new_file = true;
+			$this->writable = true;
 		}
 
 		if ($this->handle === FALSE)
@@ -249,6 +252,9 @@ class File {
 	public function write($section, $raw_data, $key_name=null, $encrypted=true) {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
+
+		if (!$this->writable)
+			throw new InvalidExportException('Export file was opened for reading only.');
 
 		// protect data
 		if ($encrypted) {
@@ -428,6 +434,16 @@ class File {
 	 */
 	public function is_new() {
 		return $this->is_new_file;
+	}
+
+	/**
+	 * Return boolean denoting if file can be written to. Only newly
+	 * created files are writable, existing files are opened read-only.
+	 *
+	 * @return boolean
+	 */
+	public function is_writable() {
+		return $this->writable;
 	}
 }
 
