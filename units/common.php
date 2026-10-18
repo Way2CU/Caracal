@@ -58,7 +58,10 @@ function fix_chars($string, $strip_tags=true) {
 function escape_chars($string, $strip_tags=true) {
 	global $db;
 
-	if (!is_array($string)) {
+	if (is_null($string)) {
+		// null has no characters to escape and maps to SQL NULL
+
+	} else if (!is_array($string)) {
 		// remove tags
 		if ($strip_tags)
 			$string = strip_tags($string);
@@ -70,7 +73,7 @@ function escape_chars($string, $strip_tags=true) {
 
 	} else {
 		foreach($string as $key => $value)
-			$string[$key] = escape_chars($value);
+			$string[$key] = escape_chars($value, $strip_tags);
 	}
 
 	return $string;
