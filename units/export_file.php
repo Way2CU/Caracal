@@ -446,16 +446,37 @@ class File {
 		if (!file_exists($path))
 			throw new Exception("Invalid file path specified '{$path}'.");
 
-		// get file data
-		if (substr($path, 0, strlen(_BASEPATH)) == _BASEPATH)
-			$key_name = substr($path, strlen(_BASEPATH)); else
-			$key_name = $path;
-		$data = file_get_contents($path);
-
 		// store file
-		$result = $this->write(Section::FILES, $data, $key_name);
+		$data = file_get_contents($path);
+		$result = $this->write(Section::FILES, $data, self::get_file_key($path));
 
 		return $result;
+	}
+
+	/**
+	 * Get key name under which file with specified path is stored. Paths
+	 * inside of the installation are stored relative to it so exports can
+	 * be restored on differently located installations.
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public static function get_file_key($path) {
+		if (substr($path, 0, strlen(_BASEPATH)) == _BASEPATH)
+			$result = substr($path, strlen(_BASEPATH)); else
+			$result = $path;
+
+		return $result;
+	}
+
+	/**
+	 * Check if file with specified path is stored in export.
+	 *
+	 * @param string $path
+	 * @return boolean
+	 */
+	public function has_file($path) {
+		return in_array(self::get_file_key($path), $this->get_key_names(Section::FILES));
 	}
 
 	/**
@@ -524,18 +545,19 @@ class File {
 	}
 
 	/**
-	 * Read file data from the specified relative path which is stored
-	 * as key name. To get list of all the stored files use  `get_key_names` function
-	 * with `Section::FILES` passed as section.
+	 * Read file data for the specified path. Path is converted to key name
+	 * the same way `write_file` does it so absolute paths inside of the
+	 * installation can be used directly. To get list of all the stored files
+	 * use `get_key_names` function with `Section::FILES` passed as section.
 	 *
-	 * @param string $key_name
+	 * @param string $path
 	 * @return string
 	 */
-	public function read_file($key_name) {
+	public function read_file($path) {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
 
-		return $this->read(Section::FILES, $key_name);
+		return $this->read(Section::FILES, self::get_file_key($path));
 	}
 
 	/**

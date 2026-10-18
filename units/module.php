@@ -347,9 +347,9 @@ abstract class Module {
 	 * `ModuleHandler::export_data` for more detailed information on this
 	 * parameter.
 	 *
-	 * Export file object is provided to give modules opportunity to import
-	 * its custom data. Files should not be imported as system itself will
-	 * import them if requested.
+	 * Export file object is provided to give modules opportunity to restore
+	 * their custom data and files. Files should be restored only when
+	 * `include_files` option is set.
 	 *
 	 * @param array $data
 	 * @param array $options
