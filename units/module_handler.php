@@ -328,6 +328,12 @@ class ModuleHandler {
 	 * @return boolean
 	 */
 	public static function import_data($key, $file_name, $options=array(), $data_modules=null, $settings_modules=null) {
+		global $backup_path;
+
+		// opening nonexistent file would create it, make sure it's there first
+		if (!is_file($backup_path.basename($file_name)))
+			throw new Core\Exports\InvalidExportException('Export file does not exist.');
+
 		// open export file, this verifies key as well
 		$file = new Core\Exports\File($file_name, $key);
 

@@ -472,6 +472,9 @@ class File {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
 
+		if ($this->writable)
+			throw new InvalidExportException('Export file was opened for writing only.');
+
 		if (!$this->find_section($section, $key_name))
 			throw new UnknownSectionException("Unable to find section {$section} and/or {$key_name}.");
 
@@ -582,6 +585,9 @@ class File {
 	public function get_key_names($section) {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
+
+		if ($this->writable)
+			throw new InvalidExportException('Export file was opened for writing only.');
 
 		// make sure section can contain keys in the first place
 		if (!in_array($section, $this->extended_sections))
