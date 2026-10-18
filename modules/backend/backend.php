@@ -1212,8 +1212,13 @@ class backend extends Module {
 		$template = $this->load_template($tag_params, 'exports_list_item.xml');
 
 		// render template if there are files for import
+		$suffix = Core\Exports\File::TEMPORARY_SUFFIX;
 		foreach(scandir($backup_path) as $file_name) {
 			if ($file_name == '.' || $file_name == '..')
+				continue;
+
+			// skip exports still being written
+			if (substr($file_name, -strlen($suffix)) == $suffix)
 				continue;
 
 			$params = array(

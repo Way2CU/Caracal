@@ -68,8 +68,11 @@ class File {
 	const CURRENT_VERSION = '1.0';
 	const PREFERRED_CIPHER = 'aes-256-ctr';
 	const MAX_KEY_LENGTH = 255;  // key size is stored as unsigned char
+	const TEMPORARY_SUFFIX = '.part';
 
 	private $handle;
+	private $path;
+	private $temporary_path;
 	private $key;
 	private $iv_size;
 	private $is_new_file;
@@ -92,20 +95,23 @@ class File {
 		// export files live directly in the backup directory, never in a subpath;
 		// reducing to the base name makes directory traversal impossible
 		$file_name = basename($file_name);
-		$full_path = $backup_path.$file_name;
+		$this->path = $backup_path.$file_name;
+		$this->temporary_path = $this->path.self::TEMPORARY_SUFFIX;
 
 		// increase security a little bit by extending key length through hash function
 		// as people don't have a tendency to choose long passwords
 		$this->key = hash('sha512', $key, true);
 
-		// existing files are opened read-only, new files are created for writing
-		if (file_exists($full_path)) {
-			$this->handle = fopen($full_path, 'r');
+		// existing files are opened read-only, new files are written under
+		// temporary name and moved in place on close so partial exports never
+		// show up as valid files
+		if (file_exists($this->path)) {
+			$this->handle = fopen($this->path, 'r');
 			$this->is_new_file = false;
 			$this->writable = false;
 
 		} else {
-			$this->handle = fopen($full_path, 'w');
+			$this->handle = fopen($this->temporary_path, 'w');
 			$this->is_new_file = true;
 			$this->writable = true;
 		}
@@ -417,13 +423,41 @@ class File {
 	}
 
 	/**
-	 * Close file and flush all buffers.
+	 * Close file and flush all buffers. Newly created files are moved
+	 * from temporary to their final location.
 	 */
 	public function close() {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
 
 		fclose($this->handle);
+		$this->handle = FALSE;
+
+		if ($this->writable && !rename($this->temporary_path, $this->path))
+			throw new InvalidExportException('Unable to move export file in place.');
+	}
+
+	/**
+	 * Close file and remove it. Only newly created files can be
+	 * discarded, existing files are left untouched. Safe to call
+	 * on already closed file.
+	 */
+	public function discard() {
+		if ($this->handle !== FALSE) {
+			fclose($this->handle);
+			$this->handle = FALSE;
+		}
+
+		if ($this->writable && file_exists($this->temporary_path))
+			unlink($this->temporary_path);
+	}
+
+	/**
+	 * Make sure unfinished exports don't linger around.
+	 */
+	public function __destruct() {
+		if ($this->handle !== FALSE)
+			$this->discard();
 	}
 
 	/**

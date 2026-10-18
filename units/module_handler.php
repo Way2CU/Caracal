@@ -266,35 +266,43 @@ class ModuleHandler {
 
 		// create new exports file
 		$file = new Core\Exports\File($file_name, $key);
-		$file->write(Core\Exports\Section::TIMESTAMP, date('c'));
-		$file->write(Core\Exports\Section::DOMAIN, _DOMAIN);
-		if (isset($options['description']))  // write non-encrypted description
-			$file->write(Core\Exports\Section::DESCRIPTION, $options['description'], null, false);
 
-		// collect export data from each module
-		foreach ($modules as $module_name) {
-			// skip modules which are not loaded
-			if (!self::is_loaded($module_name))
-				continue;
+		// collect export data from each module, discarding
+		// partial file if anything goes wrong along the way
+		try {
+			$file->write(Core\Exports\Section::TIMESTAMP, date('c'));
+			$file->write(Core\Exports\Section::DOMAIN, _DOMAIN);
+			if (isset($options['description']))  // write non-encrypted description
+				$file->write(Core\Exports\Section::DESCRIPTION, $options['description'], null, false);
 
-			// get module instance and its data
-			$module = call_user_func(array($module_name, 'get_instance'));
-			$raw_data = serialize($module->export_data($options, $file));
+			foreach ($modules as $module_name) {
+				// skip modules which are not loaded
+				if (!self::is_loaded($module_name))
+					continue;
 
-			// get settings from systems table
-			$variable_list = $manager->get_items(array('variable', 'value'), array('module' => $module_name));
-			$raw_settings = array();
-			if (count($variable_list) > 0)
-				foreach($variable_list as $variable => $value)
-					$raw_settings[$variable] = $value;
-			$raw_settings = serialize($raw_settings);
+				// get module instance and its data
+				$module = call_user_func(array($module_name, 'get_instance'));
+				$raw_data = serialize($module->export_data($options, $file));
 
-			// store encrypted data
-			$file->write(Core\Exports\Section::DATA, $raw_data, $module_name);
-			$file->write(Core\Exports\Section::SETTINGS, $raw_settings, $module_name);
+				// get settings from systems table
+				$variable_list = $manager->get_items(array('variable', 'value'), array('module' => $module_name));
+				$raw_settings = array();
+				if (count($variable_list) > 0)
+					foreach($variable_list as $variable => $value)
+						$raw_settings[$variable] = $value;
+				$raw_settings = serialize($raw_settings);
+
+				// store encrypted data
+				$file->write(Core\Exports\Section::DATA, $raw_data, $module_name);
+				$file->write(Core\Exports\Section::SETTINGS, $raw_settings, $module_name);
+			}
+
+			$file->close();
+
+		} catch (Throwable $error) {
+			$file->discard();
+			throw $error;
 		}
-
-		$file->close();
 
 		return true;
 	}
