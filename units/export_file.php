@@ -21,14 +21,20 @@
  * long. Maximum data size for each section is 4GB (this is format support,
  * maximum file size still depends on underlying file system).
  *
+ * Encryption key is derived from user supplied password using PBKDF2 with
+ * random salt stored in KDF section along with iteration count. Encrypted
+ * sections use authenticated cipher (AES-256-GCM) and have the following
+ * data layout:
+ *	[iv][tag][ciphertext]
+ *
+ * Section id and key name are used as additional authenticated data so
+ * sections can't be moved around or swapped without detection. Sections
+ * written unencrypted (description) are not authenticated.
+ *
  * Author: Mladen Mijatov
  */
 namespace Core\Exports;
 use \Exception;
-
-// make sure constant exists, it was added in 5.4
-if (!defined('OPENSSL_RAW_DATA'))
-	define('OPENSSL_RAW_DATA', 1);
 
 
 class InvalidKeyException extends Exception{};
@@ -47,6 +53,7 @@ class Section {
 	const DATA = 6;
 	const SETTINGS = 7;
 	const FILES = 8;
+	const KDF = 9;
 
 	// values until number 50 are reserved for future
 	// use by the backup system
@@ -61,19 +68,30 @@ class Format {
 	const VERSION = 'A5'; // SPACE-padded string
 	const KEY_NAME = 'C'; // unsigned char
 	const DATA = 'N';     // unsigned long (always 32 bit, big endian byte order)
+	const ITERATIONS = 'N';
 }
 
 
 class File {
-	const CURRENT_VERSION = '1.0';
-	const PREFERRED_CIPHER = 'aes-256-ctr';
+	const CURRENT_VERSION = '2.0';
+	const PREFERRED_CIPHER = 'aes-256-gcm';
 	const MAX_KEY_LENGTH = 255;  // key size is stored as unsigned char
 	const TEMPORARY_SUFFIX = '.part';
+
+	// key derivation parameters
+	const KDF_ALGORITHM = 'sha256';
+	const KDF_ITERATIONS = 600000;
+	const KDF_MIN_ITERATIONS = 100000;
+	const SALT_SIZE = 16;
+	const KEY_SIZE = 32;  // 256 bits
+	const TAG_SIZE = 16;
 
 	private $handle;
 	private $path;
 	private $temporary_path;
-	private $key;
+	private $key = null;
+	private $salt;
+	private $iterations = self::KDF_ITERATIONS;
 	private $iv_size;
 	private $is_new_file;
 	private $writable;
@@ -87,9 +105,27 @@ class File {
 	 * List of supported export file versions.
 	 * @var array
 	 */
-	private $supported_versions = array('1.0');
+	private $supported_versions = array('2.0');
 
-	public function __construct($file_name, $key, $verify_hash=true) {
+	/**
+	 * List of ciphers allowed in export files. Only authenticated
+	 * ciphers are acceptable as there's no separate integrity check.
+	 * @var array
+	 */
+	private $supported_ciphers = array('aes-256-gcm');
+
+	/**
+	 * Open export file. New files are created and written with specified
+	 * password while existing files are opened for reading. When `$verify_hash`
+	 * is `false` password is ignored, no key is derived and only unencrypted
+	 * sections can be read. This avoids cost of key derivation when only
+	 * listing contents of the file.
+	 *
+	 * @param string $file_name
+	 * @param string $password
+	 * @param boolean $verify_hash
+	 */
+	public function __construct($file_name, $password, $verify_hash=true) {
 		global $backup_path;
 
 		// export files live directly in the backup directory, never in a subpath;
@@ -97,10 +133,6 @@ class File {
 		$file_name = basename($file_name);
 		$this->path = $backup_path.$file_name;
 		$this->temporary_path = $this->path.self::TEMPORARY_SUFFIX;
-
-		// increase security a little bit by extending key length through hash function
-		// as people don't have a tendency to choose long passwords
-		$this->key = hash('sha512', $key, true);
 
 		// existing files are opened read-only, new files are written under
 		// temporary name and moved in place on close so partial exports never
@@ -121,40 +153,71 @@ class File {
 
 		// create new file header
 		if ($this->is_new_file)
-			$this->write_header(); else
-			$this->read_header($verify_hash);
+			$this->write_header($password); else
+			$this->read_header($password, $verify_hash);
 
 		// get size of initialization vector to use
 		$this->iv_size = openssl_cipher_iv_length($this->cipher);
 	}
 
 	/**
-	 * Write header to file.
+	 * Derive encryption key from password using parameters stored
+	 * in the object. Password is not retained.
+	 *
+	 * @param string $password
 	 */
-	private function write_header() {
+	private function derive_key($password) {
+		$this->key = hash_pbkdf2(
+				self::KDF_ALGORITHM,
+				$password,
+				$this->salt,
+				$this->iterations,
+				self::KEY_SIZE,
+				true
+			);
+	}
+
+	/**
+	 * Calculate value used for verifying password without decrypting
+	 * data. Derived key is high entropy so plain hash is sufficient.
+	 *
+	 * @return string
+	 */
+	private function get_key_hash() {
+		return hash('sha256', $this->key, true);
+	}
+
+	/**
+	 * Write header to file.
+	 *
+	 * @param string $password
+	 */
+	private function write_header($password) {
 		fseek($this->handle, 0);
 		fwrite($this->handle, Section::HEADER);
 
 		// write format version
 		fwrite($this->handle, pack(Format::VERSION, $this->version));
 
-		// store key hash and cipher used for protection
-		$hash = hash('sha256', $this->key, true);
-		fwrite($this->handle, pack(Format::SECTION, Section::KEY_HASH));
-		fwrite($this->handle, pack(Format::DATA, strlen($hash)));
-		fwrite($this->handle, $hash);
+		// generate salt and derive key before anything can be written
+		$this->salt = random_bytes(self::SALT_SIZE);
+		$this->iterations = self::KDF_ITERATIONS;
+		$this->derive_key($password);
 
-		fwrite($this->handle, pack(Format::SECTION, Section::CIPHER));
-		fwrite($this->handle, pack(Format::DATA, strlen($this->cipher)));
-		fwrite($this->handle, $this->cipher);
+		// store key derivation parameters, key hash and cipher used for protection
+		$this->write(Section::KDF, pack(Format::ITERATIONS, $this->iterations).$this->salt, null, false);
+		$this->write(Section::KEY_HASH, $this->get_key_hash(), null, false);
+		$this->write(Section::CIPHER, $this->cipher, null, false);
 	}
 
 	/**
-	 * Read and verify header.
+	 * Read and verify header. Key is derived and verified only when
+	 * requested as derivation is deliberately slow.
 	 *
+	 * @param string $password
 	 * @param boolean $verify_hash
 	 */
-	private function read_header($verify_hash) {
+	private function read_header($password, $verify_hash) {
 		fseek($this->handle, 0);
 		$header = $this->read_bytes(strlen(Section::HEADER));
 
@@ -168,25 +231,48 @@ class File {
 		if (!in_array($this->version, $this->supported_versions))
 			throw new InvalidExportException('Unsupported version: '.$this->version);
 
-		// read encryption information, both sections are mandatory
-		if (!$this->find_section(Section::KEY_HASH))
-			throw new InvalidExportException('Key hash section is missing!');
-
-		$hash_size = $this->read_size(Format::DATA);
-		$hash = $this->read_bytes($hash_size);
-
-		if ($verify_hash && !hash_equals(hash('sha256', $this->key, true), $hash))
-			throw new InvalidKeyException('Hash mismatch!');
-
-		if (!$this->find_section(Section::CIPHER))
-			throw new InvalidExportException('Cipher section is missing!');
-
-		$cipher_size = $this->read_size(Format::DATA);
-		$this->cipher = $this->read_bytes($cipher_size);
-
 		// make sure cipher stored in file is something we can actually use
-		if (!in_array(strtolower($this->cipher), openssl_get_cipher_methods(true)))
+		$this->cipher = $this->read_section(Section::CIPHER);
+		if (!in_array($this->cipher, $this->supported_ciphers))
 			throw new InvalidExportException('Unsupported cipher: '.$this->cipher);
+
+		// read key derivation parameters
+		$kdf = $this->read_section(Section::KDF);
+		$iterations_size = strlen(pack(Format::ITERATIONS, 0));
+
+		if (strlen($kdf) != $iterations_size + self::SALT_SIZE)
+			throw new InvalidExportException('Key derivation section is malformed!');
+
+		$unpacked_data = unpack(Format::ITERATIONS, substr($kdf, 0, $iterations_size));
+		$this->iterations = array_pop($unpacked_data);
+		$this->salt = substr($kdf, $iterations_size);
+
+		// refuse files which would make password guessing cheap
+		if ($this->iterations < self::KDF_MIN_ITERATIONS)
+			throw new InvalidExportException('Key derivation iteration count is too low!');
+
+		// derive and verify key
+		$hash = $this->read_section(Section::KEY_HASH);
+		if ($verify_hash) {
+			$this->derive_key($password);
+
+			if (!hash_equals($this->get_key_hash(), $hash))
+				throw new InvalidKeyException('Hash mismatch!');
+		}
+	}
+
+	/**
+	 * Read mandatory unencrypted header section.
+	 *
+	 * @param integer $section
+	 * @return string
+	 */
+	private function read_section($section) {
+		if (!$this->find_section($section))
+			throw new InvalidExportException("Mandatory section {$section} is missing!");
+
+		$size = $this->read_size(Format::DATA);
+		return $this->read_bytes($size);
 	}
 
 	/**
@@ -307,10 +393,20 @@ class File {
 		if ($requires_key && (strlen($key_name) == 0 || strlen($key_name) > self::MAX_KEY_LENGTH))
 			throw new Exception("Key name for section {$section} must be between 1 and ".self::MAX_KEY_LENGTH." bytes long.");
 
-		// protect data
+		// protect data, section id and key name are authenticated as well
 		if ($encrypted) {
-			$data_iv = openssl_random_pseudo_bytes($this->iv_size);
-			$data = openssl_encrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+			$data_iv = random_bytes($this->iv_size);
+			$tag = '';
+			$cipher_text = openssl_encrypt(
+					$raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA,
+					$data_iv, $tag, $this->get_authenticated_data($section, $key_name), self::TAG_SIZE
+				);
+
+			if ($cipher_text === FALSE)
+				throw new InvalidExportException("Unable to encrypt data for section {$section} and/or {$key_name}.");
+
+			$data = $tag.$cipher_text;
+
 		} else {
 			$data_iv = '';
 			$data = $raw_data;
@@ -382,29 +478,46 @@ class File {
 		// get size of data to read
 		$size = $this->read_size(Format::DATA);
 
-		if ($size == 0) {
-			// section is empty
-			$data = '';
+		if ($encrypted) {
+			if (is_null($this->key))
+				throw new InvalidExportException('File was opened without key, unable to read encrypted sections.');
 
-		} else if ($encrypted) {
-			// encrypted sections always start with initialization vector
-			if ($size < $this->iv_size)
+			// encrypted sections always start with initialization vector and tag
+			$overhead = $this->iv_size + self::TAG_SIZE;
+			if ($size < $overhead)
 				throw new InvalidExportException("Section {$section} and/or {$key_name} is too short to be encrypted.");
 
 			// empty string encrypts to empty string, read handles zero length
 			$data_iv = $this->read_bytes($this->iv_size);
-			$raw_data = $this->read_bytes($size - $this->iv_size);
-			$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+			$tag = $this->read_bytes(self::TAG_SIZE);
+			$raw_data = $this->read_bytes($size - $overhead);
+			$data = openssl_decrypt(
+					$raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA,
+					$data_iv, $tag, $this->get_authenticated_data($section, $key_name)
+				);
+
+			// wrong key or tampered data fail authentication
+			if ($data === FALSE)
+				throw new InvalidExportException("Integrity check failed for section {$section} and/or {$key_name}.");
 
 		} else {
-			// read unencrypted data
+			// read unencrypted data, empty sections are allowed
 			$data = $this->read_bytes($size);
 		}
 
-		if ($data === FALSE)  // should not happen, but account for it anyway
-			throw new Exception("Unable to decrypt data for section {$section} and/or {$key_name}.");
-
 		return $data;
+	}
+
+	/**
+	 * Get additional authenticated data for the section. Binding section
+	 * id and key name to the cipher text prevents moving data between sections.
+	 *
+	 * @param integer $section
+	 * @param string $key_name
+	 * @return string
+	 */
+	private function get_authenticated_data($section, $key_name) {
+		return pack(Format::SECTION, $section).(string) $key_name;
 	}
 
 	/**
