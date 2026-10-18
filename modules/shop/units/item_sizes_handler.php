@@ -18,7 +18,7 @@ use Modules\Shop\Item\Manager as ItemManager;
 
 class Handler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -28,9 +28,9 @@ class Handler {
 	* @param object $parent
 	*/
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -111,11 +111,11 @@ class Handler {
 
 		$params = array(
 					'link_new' => URL::make_hyperlink(
-										$this->_parent->get_language_constant('add_size_definition'),
+										$this->parent->get_language_constant('add_size_definition'),
 										window_Open( // on click open window
 											'shop_item_size_add',
 											370,
-											$this->_parent->get_language_constant('title_size_add'),
+											$this->parent->get_language_constant('title_size_add'),
 											true, true,
 											backend_UrlMake($this->name, 'sizes', 'add')
 										)
@@ -139,18 +139,18 @@ class Handler {
 
 		$params = array(
 					'link_new' => URL::make_hyperlink(
-										$this->_parent->get_language_constant('add_size_value'),
+										$this->parent->get_language_constant('add_size_value'),
 										window_Open( // on click open window
 											'shop_item_size_values_add',
 											370,
-											$this->_parent->get_language_constant('title_size_value_add'),
+											$this->parent->get_language_constant('title_size_value_add'),
 											true, true,
 											URL::make_query(
 												'backend_module',
 												'transfer_control',
 												array('backend_action', 'sizes'),
 												array('sub_action', 'value_add'),
-												array('module', $this->_parent->name),
+												array('module', $this->parent->name),
 												array('definition', fix_id($_REQUEST['definition']))
 											)
 										)
@@ -210,7 +210,7 @@ class Handler {
 		if (is_object($item)) {
 			// create template
 			$template = new TemplateHandler('value_change.xml', $this->path.'templates/');
-			$template->set_mapped_module($this->_parent->name);
+			$template->set_mapped_module($this->parent->name);
 
 			// prepare parameters
 			$params = array(
@@ -249,8 +249,8 @@ class Handler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant('message_item_size_saved'),
-					'button'	=> $this->_parent->get_language_constant('close'),
+					'message'	=> $this->parent->get_language_constant('message_item_size_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_sizes').';'
 				);
 
@@ -267,7 +267,7 @@ class Handler {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$definition = isset($_REQUEST['definition']) ? fix_id($_REQUEST['definition']) : null;
-		$value = $this->_parent->get_multilanguage_field('value');
+		$value = $this->parent->get_multilanguage_field('value');
 
 		$data = array(
 					'definition'	=> $definition,
@@ -288,8 +288,8 @@ class Handler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant('message_item_size_value_saved'),
-					'button'	=> $this->_parent->get_language_constant('close'),
+					'message'	=> $this->parent->get_language_constant('message_item_size_value_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_size_values').';'
 				);
 
@@ -309,13 +309,13 @@ class Handler {
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->get_language_constant("message_size_delete"),
+					'message'		=> $this->parent->get_language_constant("message_size_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->_parent->get_language_constant("delete"),
-					'no_text'		=> $this->_parent->get_language_constant("cancel"),
+					'yes_text'		=> $this->parent->get_language_constant("delete"),
+					'no_text'		=> $this->parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_delete',
 											URL::make_query(
@@ -347,11 +347,11 @@ class Handler {
 		$values_manager->delete_items(array('definition' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant("message_size_deleted"),
-					'button'	=> $this->_parent->get_language_constant("close"),
+					'message'	=> $this->parent->get_language_constant("message_size_deleted"),
+					'button'	=> $this->parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_item_size_delete').";".window_ReloadContent('shop_item_sizes')
 				);
 
@@ -372,13 +372,13 @@ class Handler {
 		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->get_language_constant("message_size_value_delete"),
+					'message'		=> $this->parent->get_language_constant("message_size_value_delete"),
 					'name'			=> $item->value[$language],
-					'yes_text'		=> $this->_parent->get_language_constant("delete"),
-					'no_text'		=> $this->_parent->get_language_constant("cancel"),
+					'yes_text'		=> $this->parent->get_language_constant("delete"),
+					'no_text'		=> $this->parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_values_delete',
 											URL::make_query(
@@ -408,11 +408,11 @@ class Handler {
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant("message_size_value_deleted"),
-					'button'	=> $this->_parent->get_language_constant("close"),
+					'message'	=> $this->parent->get_language_constant("message_size_value_deleted"),
+					'button'	=> $this->parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_item_size_values_delete').";".window_ReloadContent('shop_item_size_values')
 				);
 
@@ -459,7 +459,7 @@ class Handler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
-		$template = $this->_parent->load_template($tag_params, 'size_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'size_list_item.xml');
 		$template->set_template_params_from_array($children);
 
 		// parse template
@@ -470,11 +470,11 @@ class Handler {
 							'name'			=> $item->name,
 							'selected'		=> $selected,
 							'item_delete'	=> URL::make_hyperlink(
-													$this->_parent->get_language_constant('delete'),
+													$this->parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_delete', 	// window id
 														400,				// width
-														$this->_parent->get_language_constant('title_size_delete'), // title
+														$this->parent->get_language_constant('title_size_delete'), // title
 														false, false,
 														URL::make_query(
 															'backend_module',
@@ -487,11 +487,11 @@ class Handler {
 													)
 												),
 							'item_values'	=> URL::make_hyperlink(
-													$this->_parent->get_language_constant('values'),
+													$this->parent->get_language_constant('values'),
 													window_Open(
 														'shop_item_size_values', 	// window id
 														400,				// width
-														$this->_parent->get_language_constant('title_size_values'), // title
+														$this->parent->get_language_constant('title_size_values'), // title
 														true, true,
 														URL::make_query(
 															'backend_module',
@@ -538,7 +538,7 @@ class Handler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
-		$template = $this->_parent->load_template($tag_params, 'values_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'values_list_item.xml');
 		$template->set_template_params_from_array($children);
 
 		// parse template
@@ -560,11 +560,11 @@ class Handler {
 							'value'			=> $item->value,
 							'selected'		=> $selected_value,
 							'item_change'	=> URL::make_hyperlink(
-													$this->_parent->get_language_constant('change'),
+													$this->parent->get_language_constant('change'),
 													window_Open(
 														'shop_item_size_values_change', 	// window id
 														370,				// width
-														$this->_parent->get_language_constant('title_size_value_change'), // title
+														$this->parent->get_language_constant('title_size_value_change'), // title
 														true, true,
 														URL::make_query(
 															'backend_module',
@@ -577,11 +577,11 @@ class Handler {
 													)
 												),
 							'item_delete'	=> URL::make_hyperlink(
-													$this->_parent->get_language_constant('delete'),
+													$this->parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_values_delete', 	// window id
 														400,				// width
-														$this->_parent->get_language_constant('title_size_value_delete'), // title
+														$this->parent->get_language_constant('title_size_value_delete'), // title
 														false, false,
 														URL::make_query(
 															'backend_module',

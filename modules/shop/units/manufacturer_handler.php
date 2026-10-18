@@ -21,7 +21,7 @@ use Modules\Shop\Item\Manager as ItemManager;
 
 class Handler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -29,9 +29,9 @@ class Handler {
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -88,11 +88,11 @@ class Handler {
 
 		$params = array(
 					'link_new' => URL::make_hyperlink(
-										$this->_parent->get_language_constant('add_manufacturer'),
+										$this->parent->get_language_constant('add_manufacturer'),
 										window_Open( // on click open window
 											'shop_manufacturer_add',
 											360,
-											$this->_parent->get_language_constant('title_manufacturer_add'),
+											$this->parent->get_language_constant('title_manufacturer_add'),
 											true, true,
 											backend_UrlMake($this->name, 'manufacturers', 'add')
 										)
@@ -169,7 +169,7 @@ class Handler {
 
 		// get data from request
 		$data = array(
-				'name'		=> $this->_parent->get_multilanguage_field('name'),
+				'name'		=> $this->parent->get_multilanguage_field('name'),
 				'web_site'	=> escape_chars($_REQUEST['web_site']),
 			);
 
@@ -214,8 +214,8 @@ class Handler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant('message_manufacturer_saved'),
-					'button'	=> $this->_parent->get_language_constant('close'),
+					'message'	=> $this->parent->get_language_constant('message_manufacturer_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_manufacturers').$gallery_addon
 				);
 
@@ -239,10 +239,10 @@ class Handler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->get_language_constant("message_manufacturer_delete"),
+					'message'		=> $this->parent->get_language_constant("message_manufacturer_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->_parent->get_language_constant("delete"),
-					'no_text'		=> $this->_parent->get_language_constant("cancel"),
+					'yes_text'		=> $this->parent->get_language_constant("delete"),
+					'no_text'		=> $this->parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_manufacturer_delete',
 											URL::make_query(
@@ -277,8 +277,8 @@ class Handler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant("message_manufacturer_deleted"),
-					'button'	=> $this->_parent->get_language_constant("close"),
+					'message'	=> $this->parent->get_language_constant("message_manufacturer_deleted"),
+					'button'	=> $this->parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_manufacturer_delete').";".window_ReloadContent('shop_manufacturers')
 				);
 
@@ -305,7 +305,7 @@ class Handler {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'manufacturer_list_item.xml');
 		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
@@ -358,7 +358,7 @@ class Handler {
 			);
 
 		// load template
-		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'manufacturer_list_item.xml');
 		$template->set_template_params_from_array($children);
 
 		if (count($items) == 0)
@@ -379,11 +379,11 @@ class Handler {
 
 			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
-									$this->_parent->get_language_constant('change'),
+									$this->parent->get_language_constant('change'),
 									window_Open(
 										'shop_manufacturer_change', 	// window id
 										360,				// width
-										$this->_parent->get_language_constant('title_manufacturer_change'), // title
+										$this->parent->get_language_constant('title_manufacturer_change'), // title
 										true, true,
 										URL::make_query(
 											'backend_module',
@@ -396,11 +396,11 @@ class Handler {
 								);
 
 				$params['item_delete'] = URL::make_hyperlink(
-										$this->_parent->get_language_constant('delete'),
+										$this->parent->get_language_constant('delete'),
 										window_Open(
 											'shop_manufacturer_delete', 	// window id
 											400,				// width
-											$this->_parent->get_language_constant('title_manufacturer_delete'), // title
+											$this->parent->get_language_constant('title_manufacturer_delete'), // title
 											false, false,
 											URL::make_query(
 												'backend_module',

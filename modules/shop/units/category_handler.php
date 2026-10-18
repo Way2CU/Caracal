@@ -16,7 +16,7 @@ use Modules\Shop\Item\MembershipManager as ItemMembershipManager;
 
 class Handler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
