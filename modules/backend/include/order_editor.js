@@ -29,11 +29,11 @@ Caracal.Backend.OrderEditor = function() {
 		var current_script = document.scripts[document.scripts.length - 1];
 		var backend_window = current_script.parentNode;
 
-		self.list = backend_window.querySelector('div.scrollable_list');
+		self.list = backend_window.querySelector('table.list tbody');
 		self.order_element = backend_window.querySelector('input[name=order]');
 
 		// find and configure items
-		var items = self.list.querySelectorAll('div.list_item');
+		var items = self.list.querySelectorAll('tr');
 		for (var i=0, count=items.length; i<count; i++) {
 			var item = items[i];
 			item.draggable = true;
@@ -52,7 +52,8 @@ Caracal.Backend.OrderEditor = function() {
 	 */
 	self.handlers.drag_start = function(event) {
 		event.dataTransfer.effectAllowed = 'move';
-		self.dragged_item = event.target;
+		event.dataTransfer.setData('text/plain', '');  // required by some browsers to start dragging
+		self.dragged_item = event.target.closest('tr');
 		self.dragged_item.classList.add('dragging');
 	};
 
@@ -62,15 +63,17 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_over = function(event) {
+		var item = event.target.closest('tr');
+
 		// make sure hovered item is a different one
-		if (self.dragged_item === event.target)
+		if (self.dragged_item === item)
 			return;
 
 		// store current item for moving later
-		self.hovered_item = event.target;
+		self.hovered_item = item;
 
 		// update looks
-		event.target.classList.add('drag-hover');
+		item.classList.add('drag-hover');
 	};
 
 	/**
@@ -79,7 +82,7 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_leave = function(event) {
-		event.target.classList.remove('drag-hover');
+		event.target.closest('tr').classList.remove('drag-hover');
 	};
 
 	/**
@@ -91,9 +94,11 @@ Caracal.Backend.OrderEditor = function() {
 		// remove special looks of the dragged item
 		self.dragged_item.classList.remove('dragging');
 
-		// swap two items
-		var list_content = self.list.querySelector('div.list_content');
-		list_content.insertBefore(self.dragged_item, self.hovered_item);
+		// move dragged item in front of the hovered one
+		if (self.hovered_item) {
+			self.hovered_item.classList.remove('drag-hover');
+			self.list.insertBefore(self.dragged_item, self.hovered_item);
+		}
 
 		// reset variables
 		self.dragged_item = null;
@@ -101,7 +106,7 @@ Caracal.Backend.OrderEditor = function() {
 
 		// update order field
 		var order = new Array();
-		var items = self.list.querySelectorAll('div.list_item');
+		var items = self.list.querySelectorAll('tr');
 
 		for (var i=0, count=items.length; i<count; i++)
 			order.push(items[i].dataset.id)

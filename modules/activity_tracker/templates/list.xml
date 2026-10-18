@@ -6,28 +6,30 @@
 		<cms:var name="$params['link_new']"/>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 200px;">
-				<cms:text constant="column_activity" module="activity_tracker"/>
-			</span>
-			<span class="column" style="width: 200px;">
-				<cms:text constant="column_function" module="activity_tracker"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_timeout" module="activity_tracker"/>
-			</span>
-			<span class="column" style="width: 100px; text-align: center">
-				<cms:text constant="column_ignore_address" module="activity_tracker"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
+	<!-- List -->
+	<table class="list" data-height="250">
+		<thead>
+			<tr>
+				<td style="width: 200px;">
+					<cms:text constant="column_activity" module="activity_tracker"/>
+				</td>
+				<td style="width: 200px;">
+					<cms:text constant="column_function" module="activity_tracker"/>
+				</td>
+				<td style="width: 70px;">
+					<cms:text constant="column_timeout" module="activity_tracker"/>
+				</td>
+				<td style="width: 100px; text-align: center;">
+					<cms:text constant="column_ignore_address" module="activity_tracker"/>
+				</td>
+				<td class="options">
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody>
 			<cms:list/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

@@ -44,13 +44,13 @@ ContactForm.hash_code = function(value) {
  * Add domain to contact form domain list.
  */
 ContactForm.add_domain = function() {
-	var list = $('div#contact_form_domain_list');
+	var list = $('#contact_form_domain_list');
 	var domain = $('#contact_form_add input[name=domain], #contact_form_edit input[name=domain]');
 
-	// create new list item
-	var item = $('<div>');
-	var name = $('<div>');
-	var options = $('<div>');
+	// create new list row
+	var item = $('<tr>');
+	var name = $('<td>');
+	var options = $('<td>');
 	var remove = $('<a>');
 	var field = $('<input>');
 	var field_name = 'domain_' + ContactForm.hash_code(domain.val());
@@ -73,19 +73,15 @@ ContactForm.add_domain = function() {
 		.appendTo(options);
 
 	name
-		.addClass('column')
-		.css('width', 250)
 		.html(domain.val())
 		.append(field)
 		.appendTo(item);
 
 	options
-		.addClass('column')
+		.addClass('options')
 		.appendTo(item);
 
-	item
-		.addClass('list_item')
-		.appendTo(list);
+	item.appendTo(list);
 
 	// clear input field
 	domain.val('');
@@ -95,6 +91,6 @@ ContactForm.add_domain = function() {
  * Remove list item from domain list.
  */
 ContactForm.remove_domain = function() {
-	var list_item = $(this).closest('.list_item');
-	list_item.remove();
+	var row = $(this).closest('tr');
+	row.remove();
 };

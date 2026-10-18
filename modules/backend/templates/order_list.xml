@@ -7,19 +7,21 @@
 		cms:eval="action"
 		>
 		<input type="hidden" name="order" value=""/>
-		<div class="scrollable_list">
-			<!-- Header -->
-			<div class="list_header">
-				<span class="column">
-					<cms:text constant="column_order_title" module="backend"/>
-				</span>
-			</div>
 
-			<!-- List -->
-			<div class="list_content" style="height: 400px">
+		<!-- List -->
+		<table class="list" data-height="400">
+			<thead>
+				<tr>
+					<td>
+						<cms:text constant="column_order_title" module="backend"/>
+					</td>
+				</tr>
+			</thead>
+
+			<tbody>
 				<cms:list/>
-			</div>
-		</div>
+			</tbody>
+		</table>
 
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 200px;">
+	<tr>
+		<td>
 			<cms:var name="$params['name']"/>
-		</span>
-		<span class="column" style="width: 150px;">
+		</td>
+		<td>
 			<cms:var name="$params['text_id']"/>
-		</span>
-		<span class="column" style="width: 50px;">
+		</td>
+		<td>
 			<cms:var name="$params['price']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

@@ -105,30 +105,26 @@ Caracal.Shop.remove_related_item = function(button) {
  * @param string color_value
  */
 Caracal.Shop.add_color_item = function(color_name, color_value) {
-	var container = $('div#color_list');
-	var item = $('<div>');
-	var span_column_name = $('<span>');
-	var span_column_value = $('<span>');
-	var span_options = $('<span>');
+	var container = $('#color_list');
+	var item = $('<tr>');
+	var column_name = $('<td>');
+	var column_value = $('<td>');
+	var column_options = $('<td>');
 	var span_preview = $('<span>');
 	var button_remove = $('<a>');
 
-	span_column_name
-		.addClass('column')
-		.css('width', 250)
+	column_name
 		.html(color_name)
 		.appendTo(item);
 
-	span_column_value
-		.addClass('column')
-		.css('width', 100)
+	column_value
 		.css('direction', 'ltr')
 		.html(color_value)
 		.append(span_preview)
 		.appendTo(item);
 
-	span_options
-		.addClass('column')
+	column_options
+		.addClass('options')
 		.html(button_remove)
 		.appendTo(item);
 
@@ -145,7 +141,6 @@ Caracal.Shop.add_color_item = function(color_name, color_value) {
 		});
 
 	item
-		.addClass('list_item')
 		.data('name', color_name)
 		.data('value', color_value)
 		.appendTo(container);
@@ -179,7 +174,7 @@ Caracal.Shop.add_color = function() {
  */
 Caracal.Shop.delete_color = function(event) {
 	var item = $(this);
-	var parent = item.closest('div.list_item');
+	var parent = item.closest('tr');
 	var colors = $('input[name=colors]');
 
 	// repack colors
@@ -689,33 +684,25 @@ Caracal.Shop.cancel_property_edit = function(button) {
  */
 Caracal.Shop.add_coupon_code = function(button, code, discount) {
 	// create new nodes
-	var list_item = document.createElement('div');
-	var column_code = document.createElement('span');
-	var column_discount = document.createElement('span');
-	var column_times = document.createElement('span');
-	var column_options = document.createElement('span');
+	var list_item = document.createElement('tr');
+	var column_code = document.createElement('td');
+	var column_discount = document.createElement('td');
+	var column_times = document.createElement('td');
+	var column_options = document.createElement('td');
 	var option_delete = document.createElement('a');
 
 	// configure and pack user interface
-	column_code.classList.add('column');
-	column_code.style.width = '180px';
-	column_discount.classList.add('column');
-	column_discount.style.width = '180px';
-	column_times.classList.add('column');
-	column_times.style.width = '80px';
-
 	var data = Caracal.language.getTextArray(null, ['delete', 'change']);
 	option_delete.appendChild(document.createTextNode(data['delete']));
 	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
 
-	column_options.classList.add('column');
+	column_options.classList.add('options');
 	column_options.appendChild(option_delete);
 
 	list_item.appendChild(column_code);
 	list_item.appendChild(column_discount);
 	list_item.appendChild(column_times);
 	list_item.appendChild(column_options);
-	list_item.classList.add('list_item');
 
 	// store data in the list
 	var get_data = !code && !discount;
@@ -757,7 +744,7 @@ Caracal.Shop.add_coupon_code = function(button, code, discount) {
 
 	// find parent window and add new option to it
 	var codes_window = document.getElementById('shop_coupon_codes');
-	var list = codes_window.querySelector('div.list_content');
+	var list = codes_window.querySelector('table.list tbody');
 	list.appendChild(list_item);
 
 	// close window
@@ -806,7 +793,7 @@ Caracal.Shop.generate_coupon_codes = function(sender) {
  */
 Caracal.Shop.delete_coupon_code = function(sender) {
 	var button = sender.target || sender;
-	var list_item = button.parentNode.parentNode;
+	var list_item = button.closest('tr');
 	list_item.parentNode.removeChild(list_item);
 };
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 340px;">
+	<tr>
+		<td>
 			<label style="vertical-align: middle;">
 				<input
 					type="checkbox"
@@ -14,6 +14,6 @@
 					/>
 				<cms:var name="$params['title'][$language]"/>
 			</label>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
