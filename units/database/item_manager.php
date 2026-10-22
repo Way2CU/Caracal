@@ -564,9 +564,15 @@ abstract class ItemManager {
 					// value is a conditioned
 					if (!is_array($field_value['value'])) {
 						$tmp[] = "{$field} {$field_value['operator']} ".($is_string ? "'{$field_value['value']}'" : $field_value['value']);
+					} else if (count($field_value['value']) == 0) {
+						// empty list is not valid SQL, `NOT IN ()` matches everything, `IN ()` nothing
+						$tmp[] = strtoupper(trim($field_value['operator'])) == 'NOT IN' ? '1' : '0';
 					} else {
 						$tmp[] = "{$field} {$field_value['operator']} (".($is_string ? "'".implode("', '", $field_value['value'])."'" : implode(', ', $field_value['value'])).")";
 					}
+				} else if (count($field_value) == 0) {
+					// empty list is not valid SQL and can't match any row
+					$tmp[] = '0';
 				} else {
 					// condition is a list, treat it that way
 					$tmp[] = "{$field} IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
