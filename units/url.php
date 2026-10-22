@@ -24,6 +24,10 @@ final class URL {
 		$matched_pattern = null;
 		$matched_params = null;
 
+		// templates may pass null instead of an empty parameter list
+		if (!is_array($params))
+			$params = array();
+
 		if (!(empty($params) && is_null($file))) {
 			// get list of URL templates matching specified file
 			$pattern_list = SectionHandler::get_patterns_for_file($file);

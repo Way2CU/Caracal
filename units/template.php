@@ -1032,40 +1032,49 @@ class TemplateHandler {
 	 * @return boolean
 	 */
 	public function handle_error($number, $message, $file=null, $line=null, $context=null) {
-		$data = array();
+		// custom handlers are called regardless of reporting level, respect it here
+		if (error_reporting() & $number) {
+			$data = array();
 
-		switch ($number) {
-			case E_USER_ERROR:
-				$data[] = 'Error: ';
-				break;
+			switch ($number) {
+				case E_USER_ERROR:
+					$data[] = 'Error: ';
+					break;
 
-			case E_WARNING:
-			case E_USER_WARNING:
-				$data[] = 'Warning: ';
-				break;
+				case E_WARNING:
+				case E_USER_WARNING:
+					$data[] = 'Warning: ';
+					break;
 
-			case E_NOTICE:
-			case E_USER_NOTICE:
-				$data[] = 'Notice: ';
-				break;
+				case E_DEPRECATED:
+				case E_USER_DEPRECATED:
+					$data[] = 'Deprecated: ';
+					break;
+
+				case E_NOTICE:
+				case E_USER_NOTICE:
+					$data[] = 'Notice: ';
+					break;
+			}
+
+			// include template name
+			$data[] = $message.' in template "';
+			$data[] = $this->file.'"';
+
+			// log query string as it might help
+			$data[] = ' with query string "'.$_SERVER['QUERY_STRING'].'"';
+
+			// if errors is in file include it
+			if (!is_null($file))
+				$data[] = ' ['.$file.' on line '.$line.']';
+
+			// show last evaluated code
+			$data[] = ' last eval -> '.$this->last_eval;
+
+			$text = implode('', $data);
+			error_log($text);
 		}
 
-		// include template name
-		$data[] = $message.' in template "';
-		$data[] = $this->file.'"';
-
-		// log query string as it might help
-		$data[] = ' with query string "'.$_SERVER['QUERY_STRING'].'"';
-
-		// if errors is in file include it
-		if (!is_null($file))
-			$data[] = ' ['.$file.' on line '.$line.']';
-
-		// show last evaluated code
-		$data[] = ' last eval -> '.$this->last_eval;
-
-		$text = implode('', $data);
-		error_log($text);
 		return true;
 	}
 }
