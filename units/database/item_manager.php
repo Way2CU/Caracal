@@ -417,8 +417,9 @@ abstract class ItemManager {
 				if (!empty($conditionals))
 					$result .= ' WHERE '.$this->get_delimited_data($conditionals, ' AND ');
 
+				// `RAND()` is the only non-field expression modules use for ordering
 				if (!is_null($order_by) && !empty($order_by))
-					$result .= ' ORDER BY '.$this->get_fields($order_by).($order_asc ? ' ASC' : ' DESC');
+					$result .= ' ORDER BY '.$this->get_fields($order_by, false, array('RAND()')).($order_asc ? ' ASC' : ' DESC');
 
 				if (!is_null($limit))
 					$result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
