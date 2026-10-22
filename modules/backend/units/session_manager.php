@@ -81,6 +81,12 @@ class SessionManager {
 		$manager = LoginRetryManager::get_instance();
 		$show_captcha = false;
 
+		// show error left by failed login attempt, only once
+		if (empty($message) && !empty($_SESSION['login_error'])) {
+			$message = $_SESSION['login_error'];
+			unset($_SESSION['login_error']);
+		}
+
 		// check if user has more than 3 failed atempts
 		$show_captcha = $manager->getRetryCount() > 3;
 
@@ -176,9 +182,14 @@ class SessionManager {
 		} else {
 			// user is not logged in properly, increase fail
 			// counter and present login window with message
-			$message = $this->parent->get_language_constant('message_login_error');
-			$this->login($message);
+			$_SESSION['login_error'] = $this->parent->get_language_constant('message_login_error');
 			$retry_manager->increaseCount();
+
+			// return to the login page which will display stored error
+			$url = URL::make_query($this->parent->name, '');
+			if (!headers_sent())
+				header('Location: '.$url, true, 303); else
+				URL::set_refresh($url, 0);
 		}
 	}
 

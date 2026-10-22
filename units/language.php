@@ -303,9 +303,14 @@ final class Language {
 
 			$browser_language = self::match_browser_language($available_languages, $language);
 			if ($browser_language != $language) {
+				// matched params hold raw `preg_match_all` result, names are in third group
+				$matched = SectionHandler::get_matched_params();
+				$names = is_array($matched) && isset($matched[2]) ? $matched[2] : array();
+
 				$params = array();
-				foreach (SectionHandler::get_matched_params() as $name)
-					$params[$name] = $_REQUEST[$name];
+				foreach ($names as $name)
+					if (isset($_REQUEST[$name]))
+						$params[$name] = $_REQUEST[$name];
 				$params['language'] = $browser_language;
 				$url = URL::make($params, SectionHandler::get_matched_file());
 				header('Location: '.$url, true, 302);
