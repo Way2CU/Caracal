@@ -467,7 +467,7 @@ class TemplateHandler {
 							);
 
 						// create new tag
-						$children[] = new XMLTag($tag_name, $tag_attributes);
+						$children[] = new Core\XML\XMLTag($tag_name, $tag_attributes);
 					}
 
 					// transfer control to specified module

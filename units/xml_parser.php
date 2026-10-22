@@ -121,7 +121,7 @@ class Parser
      */
     private function HandleError($code, $line, $col)
     {
-        trigger_error('XML Parsing Error at ('.$this->filename.') line:'.$line.', char:'.$col.'. Error '.$code.': '.xml_error_string($code));
+        trigger_error('XML Parsing Error at ('.$this->filename.') line:'.$line.', char:'.$col.'. Error '.$code.': '.xml_error_string($code), E_USER_WARNING);
     }
 
 
