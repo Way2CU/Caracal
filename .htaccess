@@ -34,6 +34,11 @@
 	Deny from all
 </FilesMatch>
 
+# deny access to editor and backup copies (config.php.old, config.php~, mailer.php.bak ...)
+<FilesMatch "(\.(bak|old|backup|orig|save|swp)|~)$">
+	Deny from all
+</FilesMatch>
+
 <FilesMatch "^(install|docs|libraries|.git|.tx)/">
 	Deny from all
 </FilesMatch>
