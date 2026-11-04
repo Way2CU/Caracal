@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Compra en línea",
+    "invoice_handling": "Gestión",
+    "invoice_shipping": "Envío",
+    "label_max_payments": "Número máximo de cuotas (1-12):",
+    "label_page_code": "Código de página:",
+    "label_sandbox": "¿Usar entorno de pruebas?",
+    "label_url_notify": "URL de notificación:",
+    "label_user_id": "ID de usuario:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "La nueva configuración se ha guardado.",
+    "message_url_notify": "Grow envía las confirmaciones de pago a esta dirección. El sitio debe ser accesible por HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Direcciones",
+    "title_settings": "Configuración de Grow"
+}

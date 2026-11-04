@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Онлайн-покупка",
+    "invoice_handling": "Обработка",
+    "invoice_shipping": "Доставка",
+    "label_max_payments": "Максимальное число платежей (1-12):",
+    "label_page_code": "Код страницы:",
+    "label_sandbox": "Использовать тестовую среду?",
+    "label_url_notify": "Адрес для уведомлений:",
+    "label_user_id": "Идентификатор пользователя:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "Новые настройки сохранены.",
+    "message_url_notify": "Grow отправляет подтверждения платежей на этот адрес. Сайт должен быть доступен по HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Адреса",
+    "title_settings": "Настройки Grow"
+}

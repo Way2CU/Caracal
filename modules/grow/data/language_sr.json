@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Куповина на мрежи",
+    "invoice_handling": "Обрада",
+    "invoice_shipping": "Достава",
+    "label_max_payments": "Највећи број рата (1-12):",
+    "label_page_code": "Код странице:",
+    "label_sandbox": "Користити тестно окружење?",
+    "label_url_notify": "Адреса за обавештења:",
+    "label_user_id": "Идентификатор корисника:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "Нова подешавања су снимљена.",
+    "message_url_notify": "Grow шаље потврде плаћања на ову адресу. Сајт мора бити доступан преко HTTPS-а.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Адресе",
+    "title_settings": "Grow подешавања"
+}

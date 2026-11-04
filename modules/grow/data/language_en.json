@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Online purchase",
+    "invoice_handling": "Handling",
+    "invoice_shipping": "Shipping",
+    "label_max_payments": "Maximum number of installments (1-12):",
+    "label_page_code": "Page code:",
+    "label_sandbox": "Use sandbox environment?",
+    "label_url_notify": "Notification URL:",
+    "label_user_id": "User ID:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "New settings were saved.",
+    "message_url_notify": "Grow sends payment confirmations to this address. Site must be reachable over HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "URLs",
+    "title_settings": "Grow Settings"
+}
