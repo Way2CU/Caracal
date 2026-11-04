@@ -5,11 +5,18 @@
 		<td>
 			<cms:var name="$params['name']"/>
 		</td>
-		<td>
+		<td class="code">
 			<cms:var name="$params['text_id']"/>
 		</td>
 		<td>
+			<cms:var name="$params['interval_count']"/>
+			<cms:raw text=" / "/>
+			<cms:var name="$params['interval']"/>
+		</td>
+		<td>
 			<cms:var name="$params['price']"/>
+			<cms:raw text=" "/>
+			<cms:var name="$params['currency']"/>
 		</td>
 	</tr>
 </document>

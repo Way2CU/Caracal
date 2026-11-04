@@ -2,30 +2,50 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<label>
-			<span><cms:text constant="label_secret_key" module="stripe_payment"/></span>
-			<input
-				type="text"
-				name="secret_key"
-				style="width: 325px;"
-				maxlength="40"
-				value="$settings['secret_key']"
-				cms:eval="value"
-				class="code"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_public_key" module="stripe_payment"/></span>
-			<input
-				type="text"
-				name="public_key"
-				style="width: 325px;"
-				maxlength="40"
-				value="$settings['public_key']"
-				cms:eval="value"
-				class="code"
-			/>
-		</label>
+		<div class="notebook">
+			<!-- API page -->
+			<div class="page" data-title="tab_api" cms:constant="data-title">
+				<label>
+					<span><cms:text constant="label_secret_key" module="stripe_payment"/></span>
+					<input
+						type="text"
+						class="code"
+						name="secret_key"
+						value="$settings['secret_key']"
+						cms:eval="value"
+						style="width: 325px;"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_webhook_secret" module="stripe_payment"/></span>
+					<input
+						type="text"
+						class="code"
+						name="webhook_secret"
+						value="$settings['webhook_secret']"
+						cms:eval="value"
+						style="width: 325px;"
+						/>
+				</label>
+			</div>
+
+			<!-- URLs page -->
+			<div class="page" data-title="tab_urls" cms:constant="data-title">
+				<label>
+					<span><cms:text constant="label_url_webhook" module="stripe_payment"/></span>
+					<input
+						type="text"
+						class="code"
+						name="webhook_url"
+						value="$params['webhook_url']"
+						cms:eval="value"
+						style="width: 350px;"
+						readonly="readonly"
+						/>
+				</label>
+				<p><cms:text constant="message_url_webhook" module="stripe_payment"/></p>
+			</div>
+		</div>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 		</div>

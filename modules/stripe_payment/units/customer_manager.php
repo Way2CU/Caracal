@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Stripe Customer Manager
+ *
+ * Maps shop buyers to Stripe customers so repeated subscriptions
+ * reuse the same customer record.
+ */
+
 class Stripe_CustomerManager extends ItemManager {
 	private static $_instance;
 
@@ -9,7 +16,7 @@ class Stripe_CustomerManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('stripe_customers');
 
-		$this->add_property('system_user', 'int');
+		$this->add_property('id', 'int');
 		$this->add_property('buyer', 'int');
 		$this->add_property('text_id', 'varchar');
 	}
