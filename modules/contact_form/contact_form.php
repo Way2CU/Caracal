@@ -648,12 +648,16 @@ class contact_form extends Module {
 		}
 
 		// render result and send to client when render time checks failed
-		if ($failed_render_time_check)
+		if ($failed_render_time_check) {
+			$message_too_fast = Language::get_text('message_too_fast');
+			if (empty($message_too_fast))
+				$message_too_fast = $this->get_language_constant('message_too_fast');
+
 			if (_AJAX_REQUEST) {
 				// return JSON object as response
 				$response = array(
 						'error'          => true,
-						'message'        => 'Failed time check.',
+						'message'        => $message_too_fast,
 						'messages'       => array(),
 						'missing_fields' => array()
 					);
@@ -668,7 +672,7 @@ class contact_form extends Module {
 
 				$params = array(
 						'error'          => true,
-						'message'        => 'Failed time check.',
+						'message'        => $message_too_fast,
 						'messages'       => array(),
 						'missing_fields' => array()
 					);
@@ -678,6 +682,7 @@ class contact_form extends Module {
 				$template->parse();
 				return false;
 			}
+		}
 
 		// collect data
 		$data = array();
