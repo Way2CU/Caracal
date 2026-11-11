@@ -5,14 +5,20 @@
  * Author: Mladen Mijatov
  *
  * This function creates helper object used for communication with backend.
+ *
+ * Constructor accepts either module name or URL. When module name is specified
+ * requests are sent to the system entry point with `section`, `action` and
+ * `language` parameters added automatically. When URL is specified, relative or
+ * absolute, requests are sent to that URL with only specified data, and `action`
+ * parameter is added only if provided.
  */
 
-function Communicator(module_name) {
+function Communicator(target) {
 	var self = this;
 
 	self._url = null;
 	self._url_path = '/index.php';
-	self._module = module_name;
+	self._module = null;
 	self._headers = {};
 	self._callback_success = null;
 	self._callback_error = null;
@@ -31,10 +37,17 @@ function Communicator(module_name) {
 	 * Complete object initialization.
 	 */
 	self._init = function() {
-		var base = document.querySelector('meta[property=base-url]');
-		var base_url = base !== null ? base.getAttribute('content') : '';
+		// module names are plain identifiers, anything else is treated as URL
+		if (/^\w+$/.test(target)) {
+			var base = document.querySelector('meta[property=base-url]');
+			var base_url = base !== null ? base.getAttribute('content') : '';
 
-		self._url = base_url + self._url_path;
+			self._module = target;
+			self._url = base_url + self._url_path;
+
+		} else {
+			self._url = String(target).replace(/#.*$/, '');
+		}
 	};
 
 	/**
@@ -173,11 +186,7 @@ function Communicator(module_name) {
 		var url = self._url;
 		var body = null;
 		var completed = false;
-		var params = {
-				section: self._module,
-				action: action,
-				language: Caracal.language.current_language
-			};
+		var params = {};
 		var headers = {
 				'accept': ['Accept', '*/*'],
 				'x-requested-with': ['X-Requested-With', 'XMLHttpRequest']
@@ -189,6 +198,16 @@ function Communicator(module_name) {
 		if (response_type in self._accept_types)
 			headers['accept'][1] = self._accept_types[response_type] + ', */*; q=0.01';
 
+		// add default parameters
+		if (self._module !== null) {
+			params.section = self._module;
+			params.action = action;
+			params.language = Caracal.language.current_language;
+
+		} else if (action !== undefined && action !== null) {
+			params.action = action;
+		}
+
 		// add optional parameters
 		if (data !== undefined && data !== null)
 			for (var key in data)
@@ -199,7 +218,9 @@ function Communicator(module_name) {
 		if (method == 'GET') {
 			if (!self._cache_response)
 				params._ = Date.now();
-			url += (url.indexOf('?') == -1 ? '?' : '&') + self._encode_data(params);
+			var query = self._encode_data(params);
+			if (query != '')
+				url += (url.indexOf('?') == -1 ? '?' : '&') + query;
 
 		} else {
 			body = self._encode_data(params);
@@ -341,7 +362,7 @@ function Communicator(module_name) {
 	/**
 	 * Send data to server with specified parameters.
 	 *
-	 * @param string action
+	 * @param string action			Optional when communicator was created with URL
 	 * @param object data
 	 * @param string response_type	Optional [json, html, xml, script]
 	 */
@@ -352,7 +373,7 @@ function Communicator(module_name) {
 	/**
 	 * Request data from server with specified parameters.
 	 *
-	 * @param string action
+	 * @param string action			Optional when communicator was created with URL
 	 * @param object data
 	 * @param string response_type	Optional [json, html, xml, script]
 	 */
