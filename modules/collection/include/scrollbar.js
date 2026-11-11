@@ -1,174 +1,280 @@
 /**
  * Universal Scrollbar Component
- * 
+ *
  * Copyright (c) 2012. by Way2CU
  * Author: Mladen Mijatov
  */
 
 /**
  * Constructor function for new scrollbar
- * 
- * @param mixed parent_selector	selector, DOM element or jQuery object for parent
+ *
+ * @param mixed parent_selector		selector, DOM element or list of elements for parent
  * @param string content_selector	selector for elements to be scrolled, must be a child of parent
  * @param boolean is_rtl			whether scrollbar needs to be located on the left or right
  */
 function Scrollbar(parent_selector, content_selector, is_rtl) {
 	var self = this;
 
-	// selector, DOM element or jQuery object are all accepted
-	this._parents = $(parent_selector);
-
-	if (is_rtl != undefined && is_rtl != null) 
-		this._is_rtl = is_rtl; else
-		if (typeof Caracal.language != 'undefined')
-			this._is_rtl = Caracal.language.is_rtl(); else
-			this._is_rtl = false;
+	self._parents = [];
+	self._items = [];
+	self._is_rtl = false;
+	self._drag = null;
 
 	/**
 	 * Complete object initialization
 	 */
-	this.init = function() {
+	self.init = function() {
+		self._parents = self._get_elements(parent_selector);
+
+		if (is_rtl != undefined && is_rtl != null)
+			self._is_rtl = is_rtl; else
+			if (typeof Caracal.language != 'undefined' && Caracal.language != null)
+				self._is_rtl = Caracal.language.is_rtl();
+
 		// create scrollbar for each parent
-		this._parents.each(function() {
-			var item = $(this);
-			var scroll_thumb = $('<div>');
-			var content = item.find(content_selector).eq(0);
-			var min_position = 0;
-			var max_position = item.height();
+		for (var i = 0; i < self._parents.length; i++)
+			self._create_scrollbar(self._parents[i]);
+	};
 
-			// create scroll thumb
-			scroll_thumb
-				.data('parent', item)
-				.data('content', content)
-				.addClass('scrollbar_thumb')
-				.drag(self._handle_drag)
-				.mousedown(self._handle_mouse_down);
+	/**
+	 * Return list of elements for specified selector, DOM element or
+	 * list of elements. Array-like collections, such as jQuery objects,
+	 * are supported for backwards compatibility.
+	 *
+	 * @param mixed source
+	 * @return array
+	 */
+	self._get_elements = function(source) {
+		var result = [];
 
-			$(document).mouseup(function(event) {
-					scroll_thumb.removeClass('active');
-				});
+		if (typeof source == 'string')
+			result = Array.prototype.slice.call(document.querySelectorAll(source)); else
+		if (source instanceof Node)
+			result = [source]; else
+		if (source && typeof source.length == 'number')
+			result = Array.prototype.slice.call(source);
 
-			if (self._is_rtl)
-				scroll_thumb.addClass('rtl');
+		return result;
+	};
 
-			// modify parent
-			item
-				.css('position', 'relative')
-				.append(scroll_thumb)
-				.data('scroll', scroll_thumb)
-				.mousewheel(self._handle_wheel);
+	/**
+	 * Return numeric value of specified style property.
+	 *
+	 * @param object element
+	 * @param string property
+	 * @return number
+	 */
+	self._get_style_value = function(element, property) {
+		return parseFloat(window.getComputedStyle(element)[property]) || 0;
+	};
 
-			content
-				.css('position', 'relative');
+	/**
+	 * Return height of the element without padding and border.
+	 *
+	 * @param object element
+	 * @return number
+	 */
+	self._get_height = function(element) {
+		var result = 0;
 
-			// position thumb and modify variables
-			if (scroll_thumb.css('margin-top') != undefined)
-				min_position += parseInt(scroll_thumb.css('margin-top').replace('px', ''));
+		if (element !== null)
+			result = element.clientHeight
+				- self._get_style_value(element, 'paddingTop')
+				- self._get_style_value(element, 'paddingBottom');
 
-			if (scroll_thumb.css('margin-bottom') != undefined)
-				max_position -= parseInt(scroll_thumb.css('margin-bottom').replace('px', ''));
+		return result;
+	};
 
-			// reduce max_position by the size of thumb
-			max_position -= scroll_thumb.height();
+	/**
+	 * Create scroll thumb for specified parent and connect events.
+	 *
+	 * @param object parent
+	 */
+	self._create_scrollbar = function(parent) {
+		var item = {
+				parent: parent,
+				content: parent.querySelector(content_selector),
+				thumb: document.createElement('div'),
+				min: 0,
+				max: 0
+			};
 
-			// store max and mix values and position element
-			scroll_thumb
-				.css('top', min_position)
-				.data('min', min_position)
-				.data('max', max_position);
+		// create scroll thumb
+		item.thumb.classList.add('scrollbar_thumb');
+		item.thumb.style.touchAction = 'none';
+
+		if (self._is_rtl)
+			item.thumb.classList.add('rtl');
+
+		item.thumb.addEventListener('pointerdown', function(event) {
+			self._handle_pointer_down(event, item);
 		});
+		item.thumb.addEventListener('pointermove', function(event) {
+			self._handle_pointer_move(event, item);
+		});
+		item.thumb.addEventListener('pointerup', function(event) {
+			self._handle_pointer_up(event, item);
+		});
+		item.thumb.addEventListener('pointercancel', function(event) {
+			self._handle_pointer_up(event, item);
+		});
+
+		// modify parent
+		parent.style.position = 'relative';
+		parent.appendChild(item.thumb);
+		parent.addEventListener('wheel', function(event) {
+			self._handle_wheel(event, item);
+		}, {passive: false});
+
+		if (item.content !== null)
+			item.content.style.position = 'relative';
+
+		self._items.push(item);
+		self._update_limits(item);
 	};
 
 	/**
-	 * Handle mouse down event on scroll thumb
+	 * Calculate minimum and maximum position of scroll thumb and
+	 * move it to the starting position.
+	 *
+	 * @param object item
 	 */
-	this._handle_mouse_down = function(event) {
-		var item = $(this);
-		
-		// add class to thumb
-		item.addClass('active');
+	self._update_limits = function(item) {
+		var min_position = self._get_style_value(item.thumb, 'marginTop');
+		var max_position = self._get_height(item.parent) - self._get_style_value(item.thumb, 'marginBottom');
 
-		// prevent default behavior
-		event.preventDefault();
+		// reduce max_position by the size of thumb
+		max_position -= self._get_height(item.thumb);
+
+		// store max and min values and position element
+		item.min = min_position;
+		item.max = max_position;
+		item.thumb.style.top = min_position + 'px';
 	};
 
 	/**
-	 * Handle dragging scroll thumb
-	 * 
-	 * @param object event
-	 * @param object position
+	 * Limit thumb position to allowed range.
+	 *
+	 * @param object item
+	 * @param number position
+	 * @return number
 	 */
-	this._handle_drag = function(event, position) {
-		var item = $(this);
-		var container = item.data('parent');
-		var content = item.data('content');
-		var max_position = item.data('max');
-		var min_position = item.data('min');
-		var content_offset = 0;
-		var difference = content.height() - container.height();
+	self._limit_position = function(item, position) {
+		var result = position;
 
-		// return if there's nothing to scroll
-		if (difference < 0)
-			return false;
+		if (result > item.max)
+			result = item.max;
 
-		// calculate new position
-		var new_position = position.offsetY - container.offset().top;
-		if (new_position > max_position)
-			new_position = max_position;
+		if (result < item.min)
+			result = item.min;
 
-		if (new_position < min_position)
-			new_position = min_position;
-
-		// set new position
-		item.css('top', new_position);
-
-		// move content
-		content_offset = Math.round((difference * (new_position - min_position)) / (max_position - min_position));
-		content.css('top', -content_offset);
-
-		// prevent default behavior
-		event.preventDefault();
+		return result;
 	};
 
 	/**
-	 * Handle mouse wheel scrolling
+	 * Handle pressing scroll thumb.
 	 *
 	 * @param object event
-	 * @param int delta
+	 * @param object item
 	 */
-	this._handle_wheel = function(event, delta) {
-		var item = $(this).data('scroll');
-		var container = item.data('parent');
-		var content = item.data('content');
-		var max_position = item.data('max');
-		var min_position = item.data('min');
-		var content_offset = 0;
-		var max_difference = content.height() - container.height();
-		var new_position = 0;
+	self._handle_pointer_down = function(event, item) {
+		if (event.button == 0) {
+			var thumb_top = item.thumb.getBoundingClientRect().top;
+			var parent_top = item.parent.getBoundingClientRect().top;
 
-		// return if there's nothing to scroll
-		if (max_difference < 0)
-			return false;
+			// store starting position
+			self._drag = {
+					item: item,
+					pointer: event.clientY,
+					offset: thumb_top - parent_top
+				};
 
-		// calculate position of content
-		content_offset = content.position().top + (delta * 100);
-		if (content_offset > 0)
-			content_offset = 0;
+			// add class to thumb
+			item.thumb.classList.add('active');
+			item.thumb.setPointerCapture(event.pointerId);
 
-		if (content_offset < -max_difference)
-			content_offset = -max_difference;
+			// prevent default behavior
+			event.preventDefault();
+		}
+	};
 
-		// calculate position of thumb
-		new_position = Math.round(((max_position - min_position) * Math.abs(content_offset)) / max_difference);
-		if (new_position > max_position)
-			new_position = max_position;
+	/**
+	 * Handle dragging scroll thumb.
+	 *
+	 * @param object event
+	 * @param object item
+	 */
+	self._handle_pointer_move = function(event, item) {
+		if (self._drag !== null && self._drag.item === item) {
+			var difference = self._get_height(item.content) - self._get_height(item.parent);
 
-		if (new_position < min_position)
-			new_position = min_position;
+			// move only if there is something to scroll
+			if (item.content !== null && difference >= 0 && item.max > item.min) {
+				var new_position = self._drag.offset + (event.clientY - self._drag.pointer);
+				new_position = self._limit_position(item, new_position);
 
-		// move content
-		content.css('top', content_offset);
-		item.css('top', new_position); 
+				// set new position
+				item.thumb.style.top = new_position + 'px';
+
+				// move content
+				var content_offset = Math.round((difference * (new_position - item.min)) / (item.max - item.min));
+				item.content.style.top = -content_offset + 'px';
+			}
+
+			// prevent default behavior
+			event.preventDefault();
+		}
+	};
+
+	/**
+	 * Handle releasing scroll thumb.
+	 *
+	 * @param object event
+	 * @param object item
+	 */
+	self._handle_pointer_up = function(event, item) {
+		self._drag = null;
+		item.thumb.classList.remove('active');
+
+		if (item.thumb.hasPointerCapture(event.pointerId))
+			item.thumb.releasePointerCapture(event.pointerId);
+	};
+
+	/**
+	 * Handle mouse wheel scrolling.
+	 *
+	 * @param object event
+	 * @param object item
+	 */
+	self._handle_wheel = function(event, item) {
+		var parent_height = self._get_height(item.parent);
+		var max_difference = self._get_height(item.content) - parent_height;
+		var distance = event.deltaY;
+
+		// convert lines and pages to pixels
+		if (event.deltaMode == 1)
+			distance *= 100 / 3; else
+		if (event.deltaMode == 2)
+			distance *= parent_height;
+
+		// move only if there is something to scroll
+		if (item.content !== null && max_difference > 0) {
+			// calculate position of content
+			var content_offset = self._get_style_value(item.content, 'top') - distance;
+			if (content_offset > 0)
+				content_offset = 0;
+
+			if (content_offset < -max_difference)
+				content_offset = -max_difference;
+
+			// calculate position of thumb
+			var new_position = item.min + Math.round(((item.max - item.min) * Math.abs(content_offset)) / max_difference);
+			new_position = self._limit_position(item, new_position);
+
+			// move content
+			item.content.style.top = content_offset + 'px';
+			item.thumb.style.top = new_position + 'px';
+		}
 
 		// prevent default behavior
 		event.preventDefault();
@@ -177,33 +283,17 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 	/**
 	 * Method called by the user when container size or content
 	 * was changed.
+	 *
+	 * @param integer index
 	 */
-	this.content_updated = function(index) {
+	self.content_updated = function(index) {
 		if (index == undefined || index == null)
-			var index = 0;
+			index = 0;
 
-		var item = this._parents.eq(index);
-		var scroll_thumb = item.data('scroll');
-		var max_position = item.height();
-		var min_position = 0;
-
-		// position thumb and modify variables
-		if (scroll_thumb.css('margin-top') != undefined)
-			min_position += parseInt(scroll_thumb.css('margin-top').replace('px', ''));
-
-		if (scroll_thumb.css('margin-bottom') != undefined)
-			max_position -= parseInt(scroll_thumb.css('margin-bottom').replace('px', ''));
-
-		// reduce max_position by the size of thumb
-		max_position -= scroll_thumb.height();
-
-		// store max and mix values and position element
-		scroll_thumb
-			.css('top', min_position)
-			.data('min', min_position)
-			.data('max', max_position);
+		if (index in self._items)
+			self._update_limits(self._items[index]);
 	};
 
 	// initialize object elements
-	this.init();
+	self.init();
 }
