@@ -26,7 +26,9 @@ function Beacon(activity, function_name, license) {
 	 * Complete object initialization.
 	 */
 	self.init = function() {
-		self._url = $('meta[property=base-url]').attr('content') + self._url_path;
+		var base = document.querySelector('meta[property=base-url]');
+
+		self._url = (base !== null ? base.getAttribute('content') : '') + self._url_path;
 	};
 
 	/**
@@ -51,27 +53,19 @@ function Beacon(activity, function_name, license) {
 	 * Handle interval.
 	 */
 	self._handle_interval = function() {
-		var params = {
-				url: self._url,
-				method: 'POST',
-				context: self,
-				dataType: 'json',
-				data: {
-					section: 'activity_tracker',
-					action: 'keep_alive',
-					activity: self._activity,
-					function: self._function,
-					license: self._license
-				},
-				cache: false,
-				async: true
+		var communicator = new Communicator(self._url);
+		var data = {
+				section: 'activity_tracker',
+				activity: self._activity,
+				function: self._function,
+				license: self._license
 			};
 
 		// assign callback
 		if (self._callback_interval != null)
-			params.success = self._callback_interval;
+			communicator.on_success(self._callback_interval);
 
-		$.ajax(params);
+		communicator.send('keep_alive', data);
 	};
 
 	/**
@@ -103,33 +97,25 @@ function Beacon(activity, function_name, license) {
 	 */
 	self.is_alive = function(function_name, callback) {
 		var result = false;
-		var params = {
-				url: self._url,
-				method: 'POST',
-				context: self,
-				dataType: 'json',
-				data: {
-					section: 'activity_tracker',
-					action: 'is_alive',
-					activity: self._activity,
-					function: function_name,
-					license: self._license
-				},
-				cache: false,
-				async: false,
-				success: function(data) {
-					result = data;
-				}
+		var communicator = new Communicator(self._url);
+		var data = {
+				section: 'activity_tracker',
+				activity: self._activity,
+				function: function_name,
+				license: self._license
 			};
 
 		// allow asynchronous callback
-		if (callback !== undefined) {
-			params.success = callback;
-			params.async = true;
-		}
+		if (callback !== undefined)
+			communicator.on_success(callback); else
+			communicator
+				.set_asynchronous(false)
+				.on_success(function(data) {
+					result = data;
+				});
 
 		// send notification
-		$.ajax(params);
+		communicator.send('is_alive', data);
 
 		return result;
 	};

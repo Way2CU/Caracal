@@ -508,6 +508,10 @@ class activity_tracker extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
+		// beacon uses communicator to talk to the server
+		if (ModuleHandler::is_loaded('collection'))
+			collection::get_instance()->includeScript(collection::COMMUNICATOR);
+
 		$head_tag = head_tag::get_instance();
 		$head_tag->add_tag(
 					'script',
