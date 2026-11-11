@@ -24,12 +24,8 @@ class collection extends Module {
 	const PROPERTY_EDITOR = 10;
 	const EVENT_SYSTEM = 11;
 
-	// jQuery and its extensions
+	// jQuery
 	const JQUERY = 50;
-	const JQUERY_EVENT_DRAG = 51;
-	const JQUERY_EVENT_SCROLL = 52;
-	const JQUERY_EVENT_OUTSIDE = 54;
-	const JQUERY_EXTENSIONS = 53;
 
 	// other scripts
 	const LESS = 100;
@@ -47,10 +43,6 @@ class collection extends Module {
 				collection::PROPERTY_EDITOR      => 'property_editor.js',
 				collection::EVENT_SYSTEM         => 'event_system.js',
 				collection::JQUERY               => 'jquery.js',
-				collection::JQUERY_EVENT_DRAG    => 'jquery.event.drag.js',
-				collection::JQUERY_EVENT_SCROLL  => 'jquery.mousewheel.js',
-				collection::JQUERY_EVENT_OUTSIDE => 'jquery.event.outside.js',
-				collection::JQUERY_EXTENSIONS    => 'jquery.extensions.js',
 				collection::LESS                 => 'less.js',
 				collection::SHOWDOWN             => 'showdown.js',
 				collection::PREFIX_FREE          => 'prefixfree.js'
@@ -72,10 +64,6 @@ class collection extends Module {
 				'property_editor'      => collection::PROPERTY_EDITOR,
 				'event_system'         => collection::EVENT_SYSTEM,
 				'jquery'               => collection::JQUERY,
-				'jquery_event_drag'    => collection::JQUERY_EVENT_DRAG,
-				'jquery_event_scroll'  => collection::JQUERY_EVENT_SCROLL,
-				'jquery_event_outside' => collection::JQUERY_EVENT_OUTSIDE,
-				'jquery_extensions'    => collection::JQUERY_EXTENSIONS,
 				'less'                 => collection::LESS,
 				'showdown'             => collection::SHOWDOWN,
 				'prefix_free'          => collection::PREFIX_FREE

@@ -459,8 +459,6 @@ class backend extends Module {
 
 		// include scripts from collection module
 		$collection->includeScript(collection::JQUERY);
-		$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-		$collection->includeScript(collection::JQUERY_EXTENSIONS);
 		$collection->includeScript(collection::SHOWDOWN);
 		$collection->includeScript(collection::COMMUNICATOR);
 
