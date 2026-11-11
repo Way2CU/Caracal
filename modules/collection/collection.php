@@ -52,7 +52,6 @@ class collection extends Module {
 	private $script_dependencies = array(
 				collection::DIALOG               => array(collection::COMMUNICATOR),
 				collection::PAGE_CONTROL         => array(collection::JQUERY),
-				collection::MOBILE_MENU          => array(collection::JQUERY),
 				collection::DYNAMIC_PAGE_CONTENT => array(collection::JQUERY, collection::COMMUNICATOR),
 				collection::PROPERTY_EDITOR      => array(collection::JQUERY)
 			);
