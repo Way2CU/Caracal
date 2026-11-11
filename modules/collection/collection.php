@@ -58,6 +58,12 @@ class collection extends Module {
 				collection::PREFIX_FREE          => 'prefixfree.js'
 			);
 
+	// scripts required by other scripts
+	private $script_dependencies = array(
+				collection::DIALOG               => array(collection::COMMUNICATOR),
+				collection::DYNAMIC_PAGE_CONTENT => array(collection::COMMUNICATOR)
+			);
+
 	private $script_names = array(
 				'animation_chain'      => collection::ANIMATION_CHAIN,
 				'dialog'               => collection::DIALOG,
@@ -163,6 +169,11 @@ class collection extends Module {
 
 		// add script to the list of included
 		$this->included []= $script;
+
+		// include scripts this one depends on
+		if (array_key_exists($script, $this->script_dependencies))
+			foreach ($this->script_dependencies[$script] as $dependency)
+				$this->includeScriptById($dependency);
 
 		if (is_array($data)) {
 			// script requires more than one file

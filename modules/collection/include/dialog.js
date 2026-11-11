@@ -333,13 +333,11 @@ Caracal.Dialog = function(config, constants) {
 		self._content_loaded = false;
 
 		// initiate loading process
-		$.ajax({
-			url: url,
-			async: true,
-			dataType: 'html',
-			headers: {'X-Requested-With': 'Dialog'},
-			success: self.handler.content_load
-		});
+		new Communicator(new URL(url, document.baseURI).href)
+			.use_cache(true)
+			.add_headers({'X-Requested-With': 'Dialog'})
+			.on_success(self.handler.content_load)
+			.get(null, null, 'html');
 
 		// reset scroll position
 		self._inner_content.style.top = 0;
