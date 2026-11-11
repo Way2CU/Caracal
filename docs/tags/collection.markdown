@@ -4,7 +4,6 @@ Collection module provides selection of predefined scripts and accompanying styl
 
 This tag accepts only one attribute (`include`) containing coma-separated values of scripts and styles to include. The following list of scripts is available for use:
 
-- `animation_chain`      - Old and outdated animation chaining support using jQuery's `.animate` function;
 - `dialog`               - Easy to customize and style general purpose dialog included by default on most configurations;
 - `scrollbar`            - Cross-browser custom scrollbar which allows styling of every component;
 - `page_control`         - Notebook-like widget allowing users to display more compact user interface;

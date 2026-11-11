@@ -15,7 +15,6 @@ class collection extends Module {
 	private static $_instance;
 
 	// internal scripts
-	const ANIMATION_CHAIN = 3;
 	const DIALOG = 4;
 	const SCROLLBAR = 5;
 	const PAGE_CONTROL = 6;
@@ -39,7 +38,6 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::ANIMATION_CHAIN      => 'animation_chain.js',
 				collection::DIALOG               => array('dialog.js', 'dialog.css'),
 				collection::SCROLLBAR            => 'scrollbar.js',
 				collection::PAGE_CONTROL         => 'page_control.js',
@@ -65,7 +63,6 @@ class collection extends Module {
 			);
 
 	private $script_names = array(
-				'animation_chain'      => collection::ANIMATION_CHAIN,
 				'dialog'               => collection::DIALOG,
 				'scrollbar'            => collection::SCROLLBAR,
 				'page_control'         => collection::PAGE_CONTROL,
