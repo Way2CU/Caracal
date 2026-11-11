@@ -21,10 +21,4 @@
 			<cms:text constant="save"/>
 		</button>
 	</form>
-
-	<script type="text/javascript">
-		$('#comment_input').submit(function (event) {
-
-		});
-	</script>
 </document>
