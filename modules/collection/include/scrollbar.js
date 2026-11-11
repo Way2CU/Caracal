@@ -8,16 +8,15 @@
 /**
  * Constructor function for new scrollbar
  * 
- * @param string parent_selector	selector for parent
+ * @param mixed parent_selector	selector, DOM element or jQuery object for parent
  * @param string content_selector	selector for elements to be scrolled, must be a child of parent
  * @param boolean is_rtl			whether scrollbar needs to be located on the left or right
  */
 function Scrollbar(parent_selector, content_selector, is_rtl) {
 	var self = this;
 
-	if (typeof(parent_selector) == 'string')
-		this._parents = $(parent_selector); else
-		this._parents = parent_selector;
+	// selector, DOM element or jQuery object are all accepted
+	this._parents = $(parent_selector);
 
 	if (is_rtl != undefined && is_rtl != null) 
 		this._is_rtl = is_rtl; else

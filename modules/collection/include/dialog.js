@@ -191,10 +191,10 @@ Caracal.Dialog = function(config, constants) {
 
 		// create scrollbar
 		if (typeof Scrollbar == 'function')
-			self._scrollbar = new Scrollbar($(self._content), 'div.inner_content');
+			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
 
 		if (typeof Caracal.Scrollbar == 'function')
-			self._scrollbar = new Caracal.Scrollbar($(self._content), 'div.inner_content');
+			self._scrollbar = new Caracal.Scrollbar(self._content, 'div.inner_content');
 
 		// load language constants used
 		self._load_constants();
@@ -258,17 +258,30 @@ Caracal.Dialog = function(config, constants) {
 	self.__make_deprecated('addClass', 'add_class');
 
 	/**
+	 * Return DOM element for specified object. Collections wrapping elements,
+	 * such as jQuery objects, are supported for backwards compatibility and
+	 * their first element is returned. Other values are returned unchanged.
+	 *
+	 * @param mixed object
+	 * @return mixed
+	 */
+	self._unwrap_element = function(object) {
+		var result = object;
+
+		if (object && typeof object == 'object' && !(object instanceof Node) && typeof object.get == 'function')
+			result = object.get(0);
+
+		return result;
+	};
+
+	/**
 	 * Add control to command bar.
 	 *
 	 * @param object control
 	 * @return object
 	 */
 	self.add_control = function(control) {
-		// support jQuery objects
-		if (control instanceof jQuery)
-			control = control.get(0);
-
-		self._command_bar.appendChild(control);
+		self._command_bar.appendChild(self._unwrap_element(control));
 		return self;
 	};
 
@@ -295,17 +308,15 @@ Caracal.Dialog = function(config, constants) {
 	};
 
 	/**
-	 * Set dialog content from jQuery object or string
+	 * Set dialog content from DOM element, element collection or string
 	 *
 	 * @param mixed content
 	 * @return object
 	 */
 	self.set_content = function(content) {
-		if (content instanceof jQuery) {
-			content = content.get(0);
-			self._inner_content.appendChild(content);
+		content = self._unwrap_element(content);
 
-		} else if (content instanceof HTMLElement) {
+		if (content instanceof HTMLElement) {
 			self._inner_content.appendChild(content);
 
 		} else {
@@ -348,7 +359,7 @@ Caracal.Dialog = function(config, constants) {
 	self.__make_deprecated('setContentFromURL', 'set_content_from_url');
 
 	/**
-	 * Set dialog content from DOM element retrieved by jQuery selection
+	 * Set dialog content from DOM element matching specified selector
 	 *
 	 * @param string selection
 	 * @return object
