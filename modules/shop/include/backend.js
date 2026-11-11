@@ -223,9 +223,8 @@ Caracal.Shop.update_transaction_status = function(button) {
 	var transaction_id = backend_window.find('input[name=uid]').eq(0).val();
 	var update_button = $(button);
 
+	var csrf_meta = document.querySelector('meta[name="csrf-token"]');
 	var data = {
-		section: 'backend_module',
-		action: 'transfer_control',
 		module: 'shop',
 		backend_action: 'transactions',
 		sub_action: 'json_update_status',
@@ -238,19 +237,15 @@ Caracal.Shop.update_transaction_status = function(button) {
 	select.attr('disabled', 'disabled');
 
 	// send data to server
-	$.ajax({
-		url: $('meta[property=base-url]').attr('content') + '/index.php',
-		cache: false,
-		dataType: 'json',
-		method: 'POST',
-		data: data,
-		async: false,
-		success: function(result) {
+	new Communicator('backend_module')
+		.add_headers(csrf_meta ? {'X-CSRF-Token': csrf_meta.getAttribute('content')} : {})
+		.set_asynchronous(false)
+		.on_success(function(result) {
 			// enable button and select
 			update_button.removeAttr('disabled');
 			select.removeAttr('disabled');
-		}
-	});
+		})
+		.send('transfer_control', data);
 };
 
 /**
@@ -268,9 +263,8 @@ Caracal.Shop.update_total_amount = function(button) {
 	var handling_amount = handling.val() || 0;
 	var total_amount = total.val() || 0;
 
+	var csrf_meta = document.querySelector('meta[name="csrf-token"]');
 	var data = {
-		section: 'backend_module',
-		action: 'transfer_control',
 		module: 'shop',
 		backend_action: 'transactions',
 		sub_action: 'json_update_total',
@@ -283,18 +277,14 @@ Caracal.Shop.update_total_amount = function(button) {
 	update_button.attr('disabled', 'disabled');
 
 	// send data to server
-	$.ajax({
-		url: $('meta[property=base-url]').attr('content') + '/index.php',
-		cache: false,
-		dataType: 'json',
-		method: 'POST',
-		data: data,
-		async: false,
-		success: function(result) {
+	new Communicator('backend_module')
+		.add_headers(csrf_meta ? {'X-CSRF-Token': csrf_meta.getAttribute('content')} : {})
+		.set_asynchronous(false)
+		.on_success(function(result) {
 			// enable button and select
 			update_button.removeAttr('disabled');
-		}
-	});
+		})
+		.send('transfer_control', data);
 };
 
 /**
