@@ -254,8 +254,6 @@ class page_info extends Module {
 						));
 
 		// add default styles and script if they exists
-		$collection->includeScript(collection::JQUERY);
-
 		if (!$ignored_section) {
 			$styles = array();
 			$less_style = null;

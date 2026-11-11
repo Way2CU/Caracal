@@ -12,7 +12,7 @@ This tag accepts only one attribute (`include`) containing coma-separated values
 - `dynamic_page_content` - Dynamic and lazy-loader component which allows sites to load faster and only requested content;
 - `property_editor`      - Input control which allows arrays to be used as value;
 - `event_system`         - Standalone event connecting and handling system used in all backend services. It implements mechanism for event-driven communication between components;
-- `jquery`               - jQuery, currently at version 2.2.4;
+- `jquery`               - jQuery, currently at version 2.2.4. It is not included by default, scripts depending on it need to request it;
 - `less`                 - Real-time parser for LESS CSS. Automatically included if `head_tag` contains link tag to LESS file. When code optimization is turned off this script is no longer included as code optimization compiles LESS code on server side and serves it as CSS;
 - `showdown`             - Markdown support;
 - `prefix_free`          - Polyfill script which enables developers to skip using browser specific prefixes (`-moz`, `-webkit`, etc.) in CSS.

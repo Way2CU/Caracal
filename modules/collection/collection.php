@@ -51,7 +51,10 @@ class collection extends Module {
 	// scripts required by other scripts
 	private $script_dependencies = array(
 				collection::DIALOG               => array(collection::COMMUNICATOR),
-				collection::DYNAMIC_PAGE_CONTENT => array(collection::COMMUNICATOR)
+				collection::PAGE_CONTROL         => array(collection::JQUERY),
+				collection::MOBILE_MENU          => array(collection::JQUERY),
+				collection::DYNAMIC_PAGE_CONTENT => array(collection::JQUERY, collection::COMMUNICATOR),
+				collection::PROPERTY_EDITOR      => array(collection::JQUERY)
 			);
 
 	private $script_names = array(
@@ -86,7 +89,6 @@ class collection extends Module {
 			$this->head_tag = head_tag::get_instance();
 
 		// include scripts by default
-		$this->includeScriptById(collection::JQUERY);
 		$this->includeScriptById(collection::EVENT_SYSTEM);
 	}
 

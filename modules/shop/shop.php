@@ -876,6 +876,7 @@ class shop extends Module {
 		// include collection scripts
 		if (ModuleHandler::is_loaded('collection')) {
 			$collection = collection::get_instance();
+			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::PROPERTY_EDITOR);
 		}
 
@@ -1149,6 +1150,7 @@ class shop extends Module {
 		$collection = collection::get_instance();
 		$css_file = _DESKTOP_VERSION ? 'checkout.css' : 'checkout_mobile.css';
 
+		$collection->includeScript(collection::JQUERY);
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
 		$collection->includeScript(collection::COMMUNICATOR);
@@ -1176,6 +1178,7 @@ class shop extends Module {
 		$head_tag = head_tag::get_instance();
 		$collection = collection::get_instance();
 
+		$collection->includeScript(collection::JQUERY);
 		$collection->includeScript(collection::COMMUNICATOR);
 		$head_tag->add_tag('script', array('src' => URL::from_file_path($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}

@@ -430,6 +430,7 @@ class contact_form extends Module {
 		// include scripts from collection
 		if (ModuleHandler::is_loaded('collection')) {
 			$collection = collection::get_instance();
+			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::DIALOG);
 			$collection->includeScript(collection::COMMUNICATOR);
 		}
@@ -453,6 +454,10 @@ class contact_form extends Module {
 	 * Include tags needed for backend.
 	 */
 	public function add_backend_tags() {
+			// include scripts from collection
+			if (ModuleHandler::is_loaded('collection'))
+				collection::get_instance()->includeScript(collection::JQUERY);
+
 			$head_tag = head_tag::get_instance();
 			$head_tag->add_tag('script',
 						array(

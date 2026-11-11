@@ -293,6 +293,10 @@ class news extends Module {
 	 * Include scripts and styles.
 	 */
 	public function add_tags() {
+		// include scripts from collection
+		if (ModuleHandler::is_loaded('collection'))
+			collection::get_instance()->includeScript(collection::JQUERY);
+
 		$head_tag = head_tag::get_instance();
 		$head_tag->add_tag('script', array(
 			'src'  => URL::from_file_path($this->path.'include/news_system.js'),
