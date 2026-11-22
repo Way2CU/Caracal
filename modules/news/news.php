@@ -1408,6 +1408,9 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_Feed($tag_params, $children) {
+		global $section;
+
+		$build_date = 0;  // default build date, 1970
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 
 		if (is_null($id))
@@ -1425,11 +1428,15 @@ class news extends Module {
 			// create template parser
 			$template = new TemplateHandler('feed_base.xml', $this->path.'templates/');
 
+			// feed is the whole document when requested directly
+			if ($section == $this->name)
+				$template->set_top_level();
+
 			// get build date
 			$membership_manager = NewsMembershipManager::get_instance();
 			$membership_list = $membership_manager->get_items(array('news'), array('group' => $item->group));
 
-			// get guild date only if there are news items in group
+			// get build date only if there are news items in group
 			if (count($membership_list) > 0) {
 				$id_list = array();
 
@@ -1446,9 +1453,6 @@ class news extends Module {
 
 				if (is_object($news))
 					$build_date = strtotime($news->timestamp);
-			} else {
-				// drop to default build date, 1970 ^^
-				$build_date = 0;
 			}
 
 			// prepare params
