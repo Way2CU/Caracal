@@ -99,6 +99,9 @@ class Parser
         //Create the parser resource
         $this->parser = xml_parser_create();
 
+        //Keep names as written, case matters when the output is XML
+        xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
+
         //Set the handlers
         xml_set_object($this->parser, $this);
         xml_set_element_handler($this->parser, 'StartElement', 'EndElement');
@@ -155,6 +158,9 @@ class Parser
      */
     private function StartElement($parser, $name, $attrs = array())
     {
+        //Keep the name as written for the tag itself
+        $original_name = $name;
+
         //Make the name of the tag lower case
         $name = strtolower($name);
 
@@ -162,7 +168,7 @@ class Parser
         if (count($this->stack) == 0)
         {
             //If so, set the document as the current tag
-            $this->document = new XMLTag($name, $attrs);
+            $this->document = new XMLTag($original_name, $attrs);
 
             //And start out the stack with the document tag
             $this->stack = array($this->document);
@@ -173,7 +179,7 @@ class Parser
             //Get the reference to the current direct parent
             $parent = $this->GetStackLocation();
 
-            $parent->AddChild($name, $attrs, count($this->stack), $this->cleanTagNames);
+            $parent->AddChild($original_name, $attrs, count($this->stack), $this->cleanTagNames);
 
             //If the cleanTagName feature is on, clean the tag names
             if($this->cleanTagNames)
@@ -252,6 +258,20 @@ class XMLTag
     public $tagName;
 
     /**
+     * The name of the tag as written in the document
+     *
+     * @var string
+     */
+    public $tagOriginalName;
+
+    /**
+     * Names of the attributes as written in the document, indexed by lower case name
+     *
+     * @var array
+     */
+    public $tagAttrNames;
+
+    /**
      * The data the tag contains
      *
      * So, if the tag doesn't contain child tags, and just contains a string, it would go here
@@ -289,8 +309,14 @@ class XMLTag
         //Make the keys of the attr array lower case, and store the value
         $this->tagAttrs = array_change_key_case($attrs, CASE_LOWER);
 
+        //Remember how attributes were written
+        $this->tagAttrNames = array();
+        foreach (array_keys($attrs) as $attr)
+            $this->tagAttrNames[strtolower($attr)] = $attr;
+
         //Make the name lower case and store the value
         $this->tagName = strtolower($name);
+        $this->tagOriginalName = $name;
 
         //Set the number of parents
         $this->tagParents = $parents;
@@ -310,6 +336,10 @@ class XMLTag
      */
     public function AddChild($name, $attrs, $parents, $cleanTagName = true)
     {
+        //Members are named in lower case, tag itself keeps the name as written
+        $original_name = $name;
+        $name = strtolower($name);
+
         //If the tag is a reserved name, output an error
         if(in_array($name, array('tagChildren', 'tagAttrs', 'tagParents', 'tagData', 'tagName')))
         {
@@ -319,7 +349,7 @@ class XMLTag
         }
 
         //Create the child object itself
-        $child = new XMLTag($name, $attrs, $parents);
+        $child = new XMLTag($original_name, $attrs, $parents);
 
         //If the cleanTagName feature is on, replace colons and dashes with underscores
         if($cleanTagName)

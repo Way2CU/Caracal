@@ -105,6 +105,13 @@ class TemplateHandler {
 	private $close_all_tags = false;
 
 	/**
+	 * Whether document being generated is XML. Decided by the top level template
+	 * and shared with all the templates parsed as a part of the same document.
+	 * @var boolean
+	 */
+	private static $xml_output = false;
+
+	/**
 	 * List of session variables that we protect from setting
 	 * @var array
 	 */
@@ -307,6 +314,7 @@ class TemplateHandler {
 
 			// set headers and show document code
 			$document_type = $document_types[$this->document_type];
+			self::$xml_output = isset($document_type['xml']) && $document_type['xml'];
 			$this->set_headers($document_type['mime']);
 			echo $document_type['code'];
 		}
@@ -833,8 +841,9 @@ class TemplateHandler {
 							$obj->$function($attributes, $this->tag_children[$tag->tagName]);
 
 					} else {
-						// default tag handler
-						echo '<'.$tag->tagName.$this->get_tag_params($attributes).'>';
+						// default tag handler, names are case sensitive in XML
+						$tag_name = self::$xml_output ? $tag->tagOriginalName : $tag->tagName;
+						echo '<'.$tag_name.$this->get_tag_params($attributes, $tag).'>';
 
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
@@ -843,13 +852,13 @@ class TemplateHandler {
 							echo $tag->tagData;
 
 						// check if tag needs to be closed
-						if ($this->close_all_tags)
+						if ($this->close_all_tags || self::$xml_output)
 							$close_tag = true; else
 							$close_tag = !in_array($tag->tagName, $this->tags_without_end);
 
 						// close tag if needed
 						if ($close_tag)
-							echo '</'.$tag->tagName.'>';
+							echo '</'.$tag_name.'>';
 					}
 
 					if ($flush_data)
@@ -870,9 +879,13 @@ class TemplateHandler {
 	/**
 	 * Return formated parameter tags
 	 *
+	 * Tag can be provided to have attribute names printed the way they were
+	 * written in template when generating XML.
+	 *
 	 * @param resource $params
+	 * @param object $tag
 	 */
-	private function get_tag_params($params) {
+	private function get_tag_params($params, $tag=null) {
 		$result = "";
 
 		if (count($params) == 0)
@@ -881,8 +894,11 @@ class TemplateHandler {
 		foreach ($params as $param=>$value) {
 			$is_boolean =
 				$param == $value &&
-				$this->document_type !== 'xml' &&
+				!self::$xml_output &&
 				in_array(strtolower($param), $this->boolean_attributes);
+
+			if (self::$xml_output && !is_null($tag) && isset($tag->tagAttrNames[$param]))
+				$param = $tag->tagAttrNames[$param];
 
 			if (!$is_boolean)
 				$result .= ' '.$param.'="'.$value.'"'; else
