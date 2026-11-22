@@ -42,19 +42,24 @@ class Manager extends \ItemManager {
 	}
 
 	/**
-	 * Override function in order to remove required files along with database data
+	 * Override function in order to remove required files along with database
+	 * data. Files are left in place when `$remove_files` is `false`, used by
+	 * import when replacement files are not provided.
 	 *
 	 * @param array $conditionals
 	 * @param integer $limit
+	 * @param boolean $remove_files
 	 */
-	function delete_items($conditionals, $limit=null) {
-		$items = $this->get_items(array('filename'), $conditionals);
+	function delete_items($conditionals, $limit=null, $remove_files=true) {
+		if ($remove_files) {
+			$items = $this->get_items(array('filename'), $conditionals);
+			$path = \downloads::get_instance()->file_path;
 
-		$path = downloads::get_instance()->file_path;
-
-		if (count($items) > 0)
-			foreach ($items as $item)
-				unlink($path.$item->filename);
+			if (count($items) > 0)
+				foreach ($items as $item)
+					if (is_file($path.$item->filename))
+						unlink($path.$item->filename);
+		}
 
 		parent::delete_items($conditionals, $limit);
 	}

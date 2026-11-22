@@ -18,6 +18,9 @@ use Modules\Shop\Item\Manager as ItemManager;
 
 class Handler {
 	private static $_instance;
+	private $parent;
+	private $name;
+	private $path;
 
 	const SUB_ACTION = 'suppliers';
 

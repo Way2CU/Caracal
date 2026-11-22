@@ -4,22 +4,22 @@
  * Handler class for shop delivery addresses.
  */
 
-namespace Modules\Shop;
-
-use \ShopDeliveryAddressManager as DeliveryAddressManager;
+namespace Modules\Shop\DeliveryAddress;
 
 
-class DeliveryAddressHandler {
+class Handler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
+	private $name;
+	private $path;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -48,7 +48,7 @@ class DeliveryAddressHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryAddress($tag_params, $children) {
-		$manager = DeliveryAddressManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// get conditions
@@ -62,7 +62,7 @@ class DeliveryAddressHandler {
 		$address = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->load_template($tag_params, 'address.xml');
+		$template = $this->parent->load_template($tag_params, 'address.xml');
 		$template->set_template_params_from_array($children);
 
 		// parse template

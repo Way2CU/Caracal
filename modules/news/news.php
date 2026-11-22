@@ -171,6 +171,42 @@ class news extends Module {
 	}
 
 	/**
+	 * Prepare data for export.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		return $this->export_tables($this->get_export_managers());
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$this->import_tables($data, $this->get_export_managers());
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				'groups'     => NewsGroupManager::get_instance(),
+				'news'       => NewsManager::get_instance(),
+				'membership' => NewsMembershipManager::get_instance(),
+				'feeds'      => NewsFeedManager::get_instance()
+			);
+	}
+
+	/**
 	 * Event triggered upon module initialization
 	 */
 	public function initialize() {
@@ -254,14 +290,9 @@ class news extends Module {
 	}
 
 	/**
-	 * Include scripts and styles.
+	 * Include links to news feeds.
 	 */
 	public function add_tags() {
-		$head_tag = head_tag::get_instance();
-		$head_tag->add_tag('script', array(
-			'src'  => URL::from_file_path($this->path.'include/news_system.js'),
-			'type' => 'text/javascript'
-		));
 		$this->createFeedLinks();
 	}
 
@@ -1377,6 +1408,9 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_Feed($tag_params, $children) {
+		global $section;
+
+		$build_date = 0;  // default build date, 1970
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 
 		if (is_null($id))
@@ -1394,11 +1428,15 @@ class news extends Module {
 			// create template parser
 			$template = new TemplateHandler('feed_base.xml', $this->path.'templates/');
 
+			// feed is the whole document when requested directly
+			if ($section == $this->name)
+				$template->set_top_level();
+
 			// get build date
 			$membership_manager = NewsMembershipManager::get_instance();
 			$membership_list = $membership_manager->get_items(array('news'), array('group' => $item->group));
 
-			// get guild date only if there are news items in group
+			// get build date only if there are news items in group
 			if (count($membership_list) > 0) {
 				$id_list = array();
 
@@ -1415,9 +1453,6 @@ class news extends Module {
 
 				if (is_object($news))
 					$build_date = strtotime($news->timestamp);
-			} else {
-				// drop to default build date, 1970 ^^
-				$build_date = 0;
 			}
 
 			// prepare params

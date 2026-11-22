@@ -3,9 +3,10 @@
 <document type="xml1.0">
 	<rss version="2.0">
 		<channel>
-			<title><cms:var name="$params['title'][$language]"/></title>
-			<description><cms:var name="$params['description'][$language]"/></description>
-			<link><cms:var name="URL::make_query('', 'home')"/></link>
+			<title><cms:var name="htmlspecialchars($params['title'][$language], ENT_XML1)"/></title>
+			<description><cms:var name="htmlspecialchars($params['description'][$language], ENT_XML1)"/></description>
+			<link><cms:var name="htmlspecialchars(URL::make(), ENT_XML1)"/></link>
+			<language><cms:var name="$language"/></language>
 			<lastBuildDate><cms:var name="date('r', $params['build_date'])"/></lastBuildDate>
 
 			<_news_list

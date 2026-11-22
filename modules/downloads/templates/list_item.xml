@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 70px;">
+	<tr>
+		<td>
 			<cms:var name="$params['id']"/>
-		</span>
-		<span class="column" style="width: 150px;">
+		</td>
+		<td>
 			<cms:var name="$params['name'][$language]"/>
-		</span>
-		<span class="column" style="width: 70px;">
+		</td>
+		<td>
 			<cms:var name="$params['size']"/>
-		</span>
-		<span class="column" style="width: 70px;">
+		</td>
+		<td>
 			<cms:var name="$params['count']"/>
-		</span>
-		<span class="column">
+		</td>
+		<td class="options">
 			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

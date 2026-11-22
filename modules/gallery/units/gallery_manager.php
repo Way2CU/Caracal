@@ -23,22 +23,27 @@ class GalleryManager extends ItemManager {
 	}
 
 	/**
-	 * Override function in order to remove required files along with database data
+	 * Override function in order to remove required files along with database
+	 * data. Files are left in place when `$remove_files` is `false`, used by
+	 * import when replacement files are not provided.
 	 *
 	 * @param array $conditionals
 	 * @param integer $limit
+	 * @param boolean $remove_files
 	 */
-	function delete_items($conditionals, $limit=null) {
-		global $site_path;
-
+	function delete_items($conditionals, $limit=null, $remove_files=true) {
 		$gallery = gallery::get_instance();
-		$items = $this->get_items(array('filename'), $conditionals);
 
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				unlink($gallery->image_path.$item->filename);
-				array_map('unlink', glob($gallery->optimized_path.'*'.$item->filename));
-			}
+		if ($remove_files) {
+			$items = $this->get_items(array('filename'), $conditionals);
+
+			if (count($items) > 0)
+				foreach ($items as $item) {
+					if (is_file($gallery->image_path.$item->filename))
+						unlink($gallery->image_path.$item->filename);
+					array_map('unlink', glob($gallery->optimized_path.'*'.$item->filename));
+				}
+		}
 
 		parent::delete_items($conditionals, $limit);
 	}

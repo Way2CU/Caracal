@@ -286,7 +286,7 @@ class articles extends Module {
 
 			// insert groups from exports file
 			foreach ($data['groups'] as $group) {
-				$group_data = $group_manager->get_data_from_object($group);
+				$group_data = escape_chars($group_manager->get_data_from_object($group), false);
 				$group_manager->insert_item($group_data);
 			}
 		}
@@ -298,7 +298,7 @@ class articles extends Module {
 
 			// insert articles from exports file
 			foreach ($data['articles'] as $article) {
-				$article_data = $manager->get_data_from_object($article);
+				$article_data = escape_chars($manager->get_data_from_object($article), false);
 				$manager->insert_item($article_data);
 			}
 		}

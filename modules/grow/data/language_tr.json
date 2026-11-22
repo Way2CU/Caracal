@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Çevrimiçi alışveriş",
+    "invoice_handling": "İşlem",
+    "invoice_shipping": "Kargo",
+    "label_max_payments": "En fazla taksit sayısı (1-12):",
+    "label_page_code": "Sayfa kodu:",
+    "label_sandbox": "Test ortamı kullanılsın mı?",
+    "label_url_notify": "Bildirim adresi:",
+    "label_user_id": "Kullanıcı kimliği:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "Yeni ayarlar kaydedildi.",
+    "message_url_notify": "Grow ödeme onaylarını bu adrese gönderir. Site HTTPS üzerinden erişilebilir olmalıdır.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Adresler",
+    "title_settings": "Grow Ayarları"
+}

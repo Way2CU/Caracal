@@ -5,21 +5,24 @@
 		<cms:var name="$params['link_new']"/>
 	</nav>
 
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_id" module="youtube"/>
-			</span>
-			<span class="column" style="width: 300px">
-				<cms:text constant="column_title" module="youtube"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<_video_list/>
-		</div>
-	</div>
+	<!-- List -->
+	<table class="list" data-height="250">
+		<thead>
+			<tr>
+				<td style="width: 100px;">
+					<cms:text constant="column_id" module="youtube"/>
+				</td>
+				<td style="width: 300px;">
+					<cms:text constant="column_title" module="youtube"/>
+				</td>
+				<td class="options">
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
 
+		<tbody>
+			<_video_list/>
+		</tbody>
+	</table>
 </document>

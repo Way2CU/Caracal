@@ -399,7 +399,11 @@ abstract class ItemManager {
 
 			case Query::DELETE:
 				$this->expand_multilanguage_fields($conditionals);
-				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->get_delimited_data($conditionals, ' AND ');
+				$result = 'DELETE FROM `'.$this->table_name.'`';
+
+				// empty conditions remove all rows
+				if (!empty($conditionals))
+					$result .= ' WHERE '.$this->get_delimited_data($conditionals, ' AND ');
 
 				if (!is_null($limit))
 					$result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);

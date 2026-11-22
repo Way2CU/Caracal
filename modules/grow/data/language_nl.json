@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Online aankoop",
+    "invoice_handling": "Verwerking",
+    "invoice_shipping": "Verzending",
+    "label_max_payments": "Maximaal aantal termijnen (1-12):",
+    "label_page_code": "Paginacode:",
+    "label_sandbox": "Testomgeving gebruiken?",
+    "label_url_notify": "Notificatie-URL:",
+    "label_user_id": "Gebruikers-ID:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "Nieuwe instellingen zijn opgeslagen.",
+    "message_url_notify": "Grow stuurt betalingsbevestigingen naar dit adres. De site moet bereikbaar zijn via HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Adressen",
+    "title_settings": "Grow-instellingen"
+}

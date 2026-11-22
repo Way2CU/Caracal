@@ -6,24 +6,27 @@
 		<cms:var name="$params['link_new']"/>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 160px;">
-				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 90px;">
-				<cms:text constant="column_international" module="shop"/>
-			</span>
-			<span class="column" style="width: 90px;">
-				<cms:text constant="column_domestic" module="shop"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
+	<!-- List -->
+	<table class="list" data-height="250">
+		<thead>
+			<tr>
+				<td style="width: 160px;">
+					<cms:text constant="column_name" module="shop"/>
+				</td>
+				<td style="width: 90px;">
+					<cms:text constant="column_international" module="shop"/>
+				</td>
+				<td style="width: 90px;">
+					<cms:text constant="column_domestic" module="shop"/>
+				</td>
+				<td class="options">
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody>
 			<cms:delivery_methods/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

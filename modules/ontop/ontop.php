@@ -13,6 +13,7 @@ use Core\Events;
 use Core\Module;
 use Modules\OnTop\Manager;
 use Modules\OnTop\Handler;
+use Modules\Shop\Transaction;
 
 require_once('units/manager.php');
 require_once('units/handler.php');

@@ -296,6 +296,10 @@ class backend extends Module {
 					$this->export_commit();
 					break;
 
+				case 'export_download':
+					$this->export_download();
+					break;
+
 				// ---
 				case 'users':
 				case 'users_create':
@@ -455,8 +459,6 @@ class backend extends Module {
 
 		// include scripts from collection module
 		$collection->includeScript(collection::JQUERY);
-		$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-		$collection->includeScript(collection::JQUERY_EXTENSIONS);
 		$collection->includeScript(collection::SHOWDOWN);
 		$collection->includeScript(collection::COMMUNICATOR);
 
@@ -842,11 +844,34 @@ class backend extends Module {
 	 * Show configuration dialog
 	 */
 	private function import_options() {
-		// load information from the file
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
-		$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
-		$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
-		$file->close();
+
+		// load information from the file, anything can end up in backup directory
+		try {
+			$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
+			$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
+			$file->close();
+
+		} catch (Core\Exports\UnknownSectionException $error) {
+			$description = '';
+
+		} catch (Core\Exports\InvalidExportException $error) {
+			error_log("Invalid exports file '{$file_name}'. Unable to show import options!");
+
+			// show error message about invalid file
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+			$params = array(
+					'message' => $this->get_language_constant('message_import_error_file'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('system_import_data')
+				);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+			return;
+		}
 
 		// render user interface
 		$template = new TemplateHandler('import_options.xml', $this->path.'templates/');
@@ -868,7 +893,6 @@ class backend extends Module {
 	 * Perform data import.
 	 */
 	private function import_commit() {
-		$manager = SettingsManager::get_instance();
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
 		$encryption_key = $_REQUEST['key'];
 		$options = array (
@@ -894,83 +918,53 @@ class backend extends Module {
 				$module_settings []= substr($key, 9);
 		}
 
-		// load import file and log the whole process
+		// restore data and log the whole process
 		error_log("Loading export file for import '{$file_name}'...");
 		try {
-			$file = new Core\Exports\File($file_name, $encryption_key);
+			ModuleHandler::import_data($encryption_key, $file_name, $options, $module_data, $module_settings);
+			error_log('Import completed!');
+			$params['message'] = $this->get_language_constant('message_import_completed');
 
 		} catch (Core\Exports\InvalidKeyException $error) {
 			error_log('Invalid key specified. Unable to import!');
-
-			// show error message about invalid key
 			$params['message'] = $this->get_language_constant('message_import_error_key');
-			$template->restore_xml();
-			$template->set_local_params($params);
-			$template->parse();
-			return;
 
 		} catch (Core\Exports\InvalidExportException $error) {
 			error_log('Invalid exports file provided. Unable to import!');
-
-			// show error message about invalid key
 			$params['message'] = $this->get_language_constant('message_import_error_file');
-			$template->restore_xml();
-			$template->set_local_params($params);
-			$template->parse();
-			return;
 		}
 
-		// restore data
-		$key_list_data = $file->get_key_names(Core\Exports\Section::DATA);
-		$key_list_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
-		$module_list = array_unique(array_merge($key_list_data, $key_list_settings), SORT_REGULAR);
-
-		foreach ($module_list as $module_name) {
-			// make sure module is loaded
-			if (!ModuleHandler::is_loaded($module_name))
-				continue;
-
-			// get module instance
-			$module = call_user_func(array($module_name, 'get_instance'));
-
-			// import module data
-			if (in_array($module_name, $module_data)) {
-				$data = $file->read(Core\Exports\Section::DATA, $module_name);
-				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
-				$module->import_data($data, $options, $file);
-			}
-
-			// import module settings
-			if (in_array($module_name, $module_settings)) {
-				$data = $file->read(Core\Exports\Section::SETTINGS, $module_name);
-				$data = unserialize($data, array('allowed_classes' => array('stdClass')));
-
-				if ($data !== FALSE)
-					// Replace variable value instead of calling
-					// update. This way we ensure value is inserted.
-					foreach ($data as $row) {
-						$manager->delete_items(array(
-							'module'   => $module_name,
-							'variable' => $row->variable
-						));
-						$manager->insert_item(array(
-							'module'   => $module_name,
-							'variable' => $row->variable,
-							'value'    => $row->value
-						));
-					}
-			}
-		}
-
-		// complete import
-		$file->close();
-		error_log('Import completed!');
-
-		// show completed message
-		$params['message'] = $this->get_language_constant('message_import_completed');
+		// show message
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
+	}
+
+	/**
+	 * Send export file to the browser. Backup directory is not accessible
+	 * directly from the web so this is the only way to get the file.
+	 */
+	private function export_download() {
+		global $backup_path;
+
+		$file_name = basename(str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name'])));
+		$full_path = $backup_path.$file_name;
+		$suffix = Core\Exports\File::TEMPORARY_SUFFIX;
+
+		// only finished exports can be downloaded
+		$is_temporary = substr($file_name, -strlen($suffix)) == $suffix;
+		if (empty($file_name) || $is_temporary || !is_file($full_path)) {
+			SectionHandler::show_error_page(404);
+			return;
+		}
+
+		// send file and stop rendering so nothing gets appended
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.$file_name.'"');
+		header('Content-Length: '.filesize($full_path));
+		header('X-Content-Type-Options: nosniff');
+		readfile($full_path);
+		exit();
 	}
 
 	/**
@@ -993,6 +987,8 @@ class backend extends Module {
 	 * Create data export with specified configuration.
 	 */
 	private function export_commit() {
+		global $backup_path;
+
 		// collect data
 		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
 		$key = $_REQUEST['key'];
@@ -1012,9 +1008,15 @@ class backend extends Module {
 				);
 
 		// perform export
-		if (ModuleHandler::export_data($key, $file_name, $options))
-			$params['message'] = $this->get_language_constant('message_export_completed'); else
+		if (file_exists($backup_path.$file_name)) {
+			$params['message'] = $this->get_language_constant('message_export_error_exists');
+
+		} else if (ModuleHandler::export_data($key, $file_name, $options)) {
+			$params['message'] = $this->get_language_constant('message_export_completed');
+
+		} else {
 			$params['message'] = $this->get_language_constant('message_export_error');
+		}
 
 		// render message
 		$template->restore_xml();
@@ -1239,8 +1241,13 @@ class backend extends Module {
 		$template = $this->load_template($tag_params, 'exports_list_item.xml');
 
 		// render template if there are files for import
+		$suffix = Core\Exports\File::TEMPORARY_SUFFIX;
 		foreach(scandir($backup_path) as $file_name) {
 			if ($file_name == '.' || $file_name == '..')
+				continue;
+
+			// skip exports still being written
+			if (substr($file_name, -strlen($suffix)) == $suffix)
 				continue;
 
 			$params = array(
@@ -1263,7 +1270,14 @@ class backend extends Module {
 							)),
 					'item_download' => URL::make_hyperlink(
 							$this->get_language_constant('download'),
-							URL::from_file_path(_BASEPATH.'/'.$backup_path.$file_name)
+							URL::make_query(
+								'backend_module',
+								'transfer_control',
+								array('module', $this->name),
+								array('backend_action', 'export_download'),
+								array('file_name', $file_name),
+								array('csrf_token', \Core\Session\Manager::get_csrf_token())
+							)
 						)
 				);
 

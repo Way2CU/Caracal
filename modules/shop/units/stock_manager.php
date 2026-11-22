@@ -6,7 +6,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopStockManager extends ItemManager {
+namespace Modules\Shop\Stock;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

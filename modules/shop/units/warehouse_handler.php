@@ -4,12 +4,17 @@
  * Handle shop warehouses
  */
 
+namespace Modules\Shop\Warehouse;
+
 require_once('warehouse_manager.php');
 
+use URL;
+use TemplateHandler;
 
-class ShopWarehouseHandler {
+
+class Handler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -17,9 +22,9 @@ class ShopWarehouseHandler {
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -76,11 +81,11 @@ class ShopWarehouseHandler {
 
 		$params = array(
 					'warehouse_new' => URL::make_hyperlink(
-										$this->_parent->get_language_constant('add_warehouse'),
+										$this->parent->get_language_constant('add_warehouse'),
 										window_Open( // on click open window
 											'shop_warehouse_add',
 											300,
-											$this->_parent->get_language_constant('title_warehouse_add'),
+											$this->parent->get_language_constant('title_warehouse_add'),
 											true, true,
 											backend_UrlMake($this->name, 'warehouses', 'add')
 										)
@@ -115,7 +120,7 @@ class ShopWarehouseHandler {
 	 */
 	private function changeWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -166,7 +171,7 @@ class ShopWarehouseHandler {
 			);
 
 		// get instance of warehouse manager
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		if (is_null($id)) {
 			$manager->insert_item($data);
@@ -182,8 +187,8 @@ class ShopWarehouseHandler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant('message_warehouse_saved'),
-					'button'	=> $this->_parent->get_language_constant('close'),
+					'message'	=> $this->parent->get_language_constant('message_warehouse_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_warehouses')
 				);
 
@@ -197,18 +202,18 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->get_language_constant("message_warehouse_delete"),
+					'message'		=> $this->parent->get_language_constant("message_warehouse_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->_parent->get_language_constant("delete"),
-					'no_text'		=> $this->_parent->get_language_constant("cancel"),
+					'yes_text'		=> $this->parent->get_language_constant("delete"),
+					'no_text'		=> $this->parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_warehouse_delete',
 											URL::make_query(
@@ -233,17 +238,17 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->_parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->get_language_constant("message_warehouse_deleted"),
-					'button'	=> $this->_parent->get_language_constant("close"),
+					'message'	=> $this->parent->get_language_constant("message_warehouse_deleted"),
+					'button'	=> $this->parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_warehouse_delete').";".window_ReloadContent('shop_warehouses')
 				);
 
@@ -268,10 +273,10 @@ class ShopWarehouseHandler {
 	 * @param array $children
 	 */
 	public function tag_WarehouseList($tag_params, $children) {
-		$manager = ShopWarehouseManager::get_instance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
-		$template = $this->_parent->load_template($tag_params, 'warehouse_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'warehouse_list_item.xml');
 		$template->set_template_params_from_array($children);
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -287,11 +292,11 @@ class ShopWarehouseHandler {
 						'country'	=> $item->country,
 						'state'		=> $item->state,
 						'item_change'	=> URL::make_hyperlink(
-												$this->_parent->get_language_constant('change'),
+												$this->parent->get_language_constant('change'),
 												window_Open(
 													'shop_warehouse_change', 	// window id
 													300,				// width
-													$this->_parent->get_language_constant('title_warehouse_change'), // title
+													$this->parent->get_language_constant('title_warehouse_change'), // title
 													true, true,
 													URL::make_query(
 														'backend_module',
@@ -304,11 +309,11 @@ class ShopWarehouseHandler {
 												)
 											),
 						'item_delete'	=> URL::make_hyperlink(
-												$this->_parent->get_language_constant('delete'),
+												$this->parent->get_language_constant('delete'),
 												window_Open(
 													'shop_warehouse_delete', 	// window id
 													400,				// width
-													$this->_parent->get_language_constant('title_warehouse_delete'), // title
+													$this->parent->get_language_constant('title_warehouse_delete'), // title
 													false, false,
 													URL::make_query(
 														'backend_module',

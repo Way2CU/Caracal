@@ -1,6 +1,11 @@
 <?php
 
-class ShopItemSizesManager extends ItemManager {
+namespace Modules\Shop\Size;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

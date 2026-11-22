@@ -126,6 +126,7 @@
     "message_no_form_selected": "Please select form from the menu.",
     "message_saved": "Configuration was saved!",
     "message_sent": "Data was successfuly sent!",
+    "message_too_fast": "You have tried to submit data too fast. Please wait a few seconds and try again.",
     "message_smtp_password_warning": "Note: Password is stored in clear text format in database!",
     "message_template_delete": "You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?",
     "message_template_deleted": "Template was removed from the system!",

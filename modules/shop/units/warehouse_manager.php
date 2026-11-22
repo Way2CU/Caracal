@@ -4,7 +4,12 @@
  * Shop Warehouse Manager
  */
 
-class ShopWarehouseManager extends ItemManager {
+namespace Modules\Shop\Warehouse;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

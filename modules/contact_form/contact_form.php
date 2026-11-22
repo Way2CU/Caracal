@@ -93,7 +93,7 @@ class contact_form extends Module {
 		}
 
 		// register events
-		Events::register($this->name, 'email-sent', 4);  // params: mailer, recipient, subject, data
+		Events::register($this->name, 'email-sent', 4);  // params: mailer-name, recipient-string, subject, data
 		Events::register($this->name, 'submitted', 4);  // params: sender, recipients, template, data
 
 		// create mailer support
@@ -334,6 +334,50 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Prepare data for export. Form definitions, templates and submissions
+	 * are all included. Uploaded files are never stored, they are only
+	 * attached to emails, so there is nothing to export besides tables.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		return $this->export_tables($this->get_export_managers());
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$this->import_tables($data, $this->get_export_managers());
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				'forms'             => ContactForm_FormManager::get_instance(),
+				'fields'            => ContactForm_FormFieldManager::get_instance(),
+				'field_values'      => ContactForm_FieldValueManager::get_instance(),
+				'fieldsets'         => ContactForm_FieldsetManager::get_instance(),
+				'fieldset_fields'   => ContactForm_FieldsetFieldsManager::get_instance(),
+				'templates'         => ContactForm_TemplateManager::get_instance(),
+				'mailers'           => ContactForm_MailerManager::get_instance(),
+				'domains'           => ContactForm_DomainManager::get_instance(),
+				'submissions'       => ContactForm_SubmissionManager::get_instance(),
+				'submission_fields' => ContactForm_SubmissionFieldManager::get_instance()
+			);
+	}
+
+	/**
 	 * Event triggered upon module initialization
 	 */
 	public function initialize() {
@@ -386,6 +430,7 @@ class contact_form extends Module {
 		// include scripts from collection
 		if (ModuleHandler::is_loaded('collection')) {
 			$collection = collection::get_instance();
+			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::DIALOG);
 			$collection->includeScript(collection::COMMUNICATOR);
 		}
@@ -409,6 +454,10 @@ class contact_form extends Module {
 	 * Include tags needed for backend.
 	 */
 	public function add_backend_tags() {
+			// include scripts from collection
+			if (ModuleHandler::is_loaded('collection'))
+				collection::get_instance()->includeScript(collection::JQUERY);
+
 			$head_tag = head_tag::get_instance();
 			$head_tag->add_tag('script',
 						array(
@@ -604,12 +653,16 @@ class contact_form extends Module {
 		}
 
 		// render result and send to client when render time checks failed
-		if ($failed_render_time_check)
+		if ($failed_render_time_check) {
+			$message_too_fast = Language::get_text('message_too_fast');
+			if (empty($message_too_fast))
+				$message_too_fast = $this->get_language_constant('message_too_fast');
+
 			if (_AJAX_REQUEST) {
 				// return JSON object as response
 				$response = array(
 						'error'          => true,
-						'message'        => 'Failed time check.',
+						'message'        => $message_too_fast,
 						'messages'       => array(),
 						'missing_fields' => array()
 					);
@@ -624,7 +677,7 @@ class contact_form extends Module {
 
 				$params = array(
 						'error'          => true,
-						'message'        => 'Failed time check.',
+						'message'        => $message_too_fast,
 						'messages'       => array(),
 						'missing_fields' => array()
 					);
@@ -634,6 +687,7 @@ class contact_form extends Module {
 				$template->parse();
 				return false;
 			}
+		}
 
 		// collect data
 		$data = array();

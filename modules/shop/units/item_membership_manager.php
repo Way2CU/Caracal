@@ -6,7 +6,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopItemMembershipManager extends ItemManager {
+namespace Modules\Shop\Item;
+
+use ItemManager;
+
+
+class MembershipManager extends ItemManager {
 	private static $_instance;
 
 	/**

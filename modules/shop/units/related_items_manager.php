@@ -6,7 +6,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopRelatedItemsManager extends ItemManager {
+namespace Modules\Shop\Item;
+
+use ItemManager;
+
+
+class RelatedManager extends ItemManager {
 	private static $_instance;
 
 	/**

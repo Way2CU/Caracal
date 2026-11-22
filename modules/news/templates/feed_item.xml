@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<item>
-		<title><cms:var name="$params['title'][$language]"/></title>
-		<description><cms:var name="$params['content'][$language]"/></description>
-		<guid><cms:var name="$params['id']"/></guid>
+		<title><cms:var name="htmlspecialchars($params['title'][$language], ENT_XML1)"/></title>
+		<description><cms:var name="htmlspecialchars(\Core\Markdown::parse($params['content'][$language]), ENT_XML1)"/></description>
+		<guid isPermaLink="false"><cms:var name="'news-'.$params['id'].'@'._DOMAIN"/></guid>
 		<pubDate><cms:var name="date('r', $params['timestamp'])"/></pubDate>
 	</item>
 </document>

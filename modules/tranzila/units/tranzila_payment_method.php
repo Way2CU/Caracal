@@ -4,6 +4,7 @@ use Modules\Shop\Token;
 use Modules\Shop\Transaction;
 use Modules\Shop\UnknownTransactionError;
 use Modules\Shop\UnknownTokenError;
+use Modules\Shop\Currency\Manager as CurrencyManager;
 
 
 class Tranzila_PaymentMethod extends PaymentMethod {
@@ -355,7 +356,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$expiration_date = str_pad($expiration_month.$expiration_year, 4, '0', STR_PAD_LEFT);
 
 		// prepare currency
-		$currency_manager = ShopCurrenciesManager::get_instance();
+		$currency_manager = CurrencyManager::get_instance();
 		$currency = $currency_manager->get_single_item(
 			$currency_manager->get_field_names(),
 			array('id' => $transaction->currency)

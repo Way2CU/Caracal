@@ -155,6 +155,76 @@ class downloads extends Module {
 	}
 
 	/**
+	 * Prepare data for export. Stored files are included when
+	 * `include_files` option is set.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		$result = $this->export_tables($this->get_export_managers());
+
+		// export files, missing files are skipped
+		$include_files = isset($options['include_files']) && $options['include_files'];
+		if ($include_files)
+			foreach ($result['downloads'] as $item) {
+				$path = $this->file_path.$item->filename;
+				if (is_file($path))
+					$export_file->write_file($path);
+			}
+
+		return $result;
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced. Files on
+	 * disk are replaced only when `include_files` option is set, otherwise
+	 * they are left untouched for restored rows to reference.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$manager = DownloadsManager::get_instance();
+		$include_files = isset($options['include_files']) && $options['include_files'];
+
+		// restore categories
+		$this->import_tables($data, array('categories' => CategoryManager::get_instance()));
+
+		// restore downloads
+		if (isset($data['downloads']) && is_array($data['downloads'])) {
+			$manager->delete_items(array(), null, $include_files);
+
+			foreach ($data['downloads'] as $item) {
+				// file name is used to build path, never trust it blindly
+				if ($item->filename != basename($item->filename) || $item->filename == '')
+					continue;
+
+				$manager->insert_item(escape_chars($manager->get_data_from_object($item), false));
+
+				// restore file, entries without stored file are skipped
+				$path = $this->file_path.$item->filename;
+				if ($include_files && $export_file->has_file($path))
+					file_put_contents($path, $export_file->read_file($path));
+			}
+		}
+	}
+
+	/**
+	 * Get list of managers taking part in export and import.
+	 *
+	 * @return array
+	 */
+	private function get_export_managers() {
+		return array(
+				'categories' => CategoryManager::get_instance(),
+				'downloads'  => DownloadsManager::get_instance()
+			);
+	}
+
+	/**
 	 * Event triggered upon module initialization
 	 */
 	public function initialize() {

@@ -534,15 +534,11 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 		var csrf_meta = document.querySelector('meta[name="csrf-token"]');
 		var request_headers = csrf_meta ? {'X-CSRF-Token': csrf_meta.getAttribute('content')} : {};
 
-		$.ajax({
-			cache: false,
-			context: self,
-			dataType: 'html',
-			headers: request_headers,
-			success: self.handler.content_load,
-			error: self.handler.content_error,
-			url: self.url
-		});
+		new Communicator(new URL(self.url, document.baseURI).href)
+			.add_headers(request_headers)
+			.on_success(self.handler.content_load)
+			.on_error(self.handler.content_error)
+			.get(null, null, 'html');
 
 		return self;  // allow linking
 	};
@@ -645,16 +641,10 @@ Caracal.WindowSystem.Window = function(id, width, title, url, structure) {
 			data['csrf_token'] = csrf_meta.getAttribute('content');
 
 		// send data to server
-		$.ajax({
-			cache: false,
-			context: self,
-			dataType: 'html',
-			method: 'POST',
-			data: data,
-			success: self.handler.content_load,
-			error: self.handler.content_error,
-			url: form.getAttribute('action')
-		});
+		new Communicator(new URL(form.getAttribute('action') || '', document.baseURI).href)
+			.on_success(self.handler.content_load)
+			.on_error(self.handler.content_error)
+			.send(null, data, 'html');
 	};
 
 	/**

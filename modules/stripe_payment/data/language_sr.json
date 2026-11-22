@@ -1,13 +1,21 @@
 {
-    "column_name": "Име",
+    "column_interval": "Период",
+    "column_name": "Назив",
     "column_price": "Цена",
-    "column_text_id": "ID",
-    "label_public_key": "Јавни кључ:",
+    "column_text_id": "ID цене",
+    "invoice_default_description": "Куповина на мрежи",
+    "invoice_handling": "Обрада",
+    "invoice_shipping": "Достава",
     "label_secret_key": "Тајни кључ:",
+    "label_url_webhook": "Webhook адреса:",
+    "label_webhook_secret": "Тајна за потпис webhook-а:",
     "menu_stripe": "Stripe",
-    "message_missing_api_keys": "Нисте подесили API кључеве. Молимо вас да подесите приступ прво.",
-    "message_settings_saved": "Stripe кључеви су снимљени!",
+    "message_missing_api_keys": "API кључ није унет. Прво подесите приступ API-ју!",
+    "message_settings_saved": "Нова подешавања су снимљена.",
+    "message_url_webhook": "Додајте ову адресу као webhook у Stripe контролној табли са checkout.session, invoice и customer.subscription догађајима, затим унесите тајну за потпис изнад.",
     "payment_method_title": "Stripe",
-    "title_recurring_plans": "Stripe: Планови циклисних плаћања",
-    "title_settings": "Stripe Подешавања"
+    "tab_api": "API",
+    "tab_urls": "Адресе",
+    "title_recurring_plans": "Stripe: Планови поновљених плаћања",
+    "title_settings": "Stripe подешавања"
 }

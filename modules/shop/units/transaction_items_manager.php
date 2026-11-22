@@ -6,7 +6,10 @@
  * Author: Mladen Mijatov
  */
 
-class ShopTransactionItemsManager extends ItemManager {
+namespace Modules\Shop\Transaction;
+
+
+class ItemManager extends \ItemManager {
 	private static $_instance;
 
 	/**

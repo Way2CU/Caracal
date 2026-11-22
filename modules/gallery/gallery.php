@@ -2500,6 +2500,102 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Prepare data for export. Original image files are included when
+	 * `include_files` option is set. Optimized versions are never exported
+	 * as they are generated on demand.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		$result = array();
+		$manager = GalleryManager::get_instance();
+		$group_manager = GalleryGroupManager::get_instance();
+		$container_manager = GalleryContainerManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
+
+		// export data
+		$result['images'] = $manager->get_items($manager->get_field_names(), array());
+		$result['groups'] = $group_manager->get_items($group_manager->get_field_names(), array());
+		$result['containers'] = $container_manager->get_items($container_manager->get_field_names(), array());
+		$result['membership'] = $membership_manager->get_items($membership_manager->get_field_names(), array());
+
+		// export original files, missing files are skipped
+		$include_files = isset($options['include_files']) && $options['include_files'];
+		if ($include_files)
+			foreach ($result['images'] as $image) {
+				$path = $this->image_path.$image->filename;
+				if (is_file($path))
+					$export_file->write_file($path);
+			}
+
+		return $result;
+	}
+
+	/**
+	 * Import provided data to system. Existing data is replaced. Files on
+	 * disk are replaced only when `include_files` option is set, otherwise
+	 * they are left untouched for restored rows to reference. Exported
+	 * values are raw database content so they are escaped before insert.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$manager = GalleryManager::get_instance();
+		$group_manager = GalleryGroupManager::get_instance();
+		$container_manager = GalleryContainerManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
+		$include_files = isset($options['include_files']) && $options['include_files'];
+
+		// restore containers
+		if (isset($data['containers'])) {
+			$container_manager->delete_items(array());
+
+			foreach ($data['containers'] as $container)
+				$container_manager->insert_item(escape_chars($container_manager->get_data_from_object($container), false));
+		}
+
+		// restore groups
+		if (isset($data['groups'])) {
+			$group_manager->delete_items(array());
+
+			foreach ($data['groups'] as $group)
+				$group_manager->insert_item(escape_chars($group_manager->get_data_from_object($group), false));
+		}
+
+		// restore group membership
+		if (isset($data['membership'])) {
+			$membership_manager->delete_items(array());
+
+			foreach ($data['membership'] as $membership)
+				$membership_manager->insert_item(escape_chars($membership_manager->get_data_from_object($membership), false));
+		}
+
+		// restore images
+		if (isset($data['images'])) {
+			$manager->delete_items(array(), null, $include_files);
+
+			foreach ($data['images'] as $image) {
+				// file name is used to build path, never trust it blindly
+				if ($image->filename != basename($image->filename) || $image->filename == '')
+					continue;
+
+				$manager->insert_item(escape_chars($manager->get_data_from_object($image), false));
+
+				// restore file, images without stored file are skipped
+				$path = $this->image_path.$image->filename;
+				if ($include_files && $export_file->has_file($path)) {
+					file_put_contents($path, $export_file->read_file($path));
+					array_map('unlink', glob($this->optimized_path.'*'.$image->filename));
+				}
+			}
+		}
+	}
+
+	/**
 	 * Get URL to the resized and optimized image from specified object,
 	 * numerical or textual id.
 	 *

@@ -15,7 +15,6 @@ class collection extends Module {
 	private static $_instance;
 
 	// internal scripts
-	const ANIMATION_CHAIN = 3;
 	const DIALOG = 4;
 	const SCROLLBAR = 5;
 	const PAGE_CONTROL = 6;
@@ -25,12 +24,8 @@ class collection extends Module {
 	const PROPERTY_EDITOR = 10;
 	const EVENT_SYSTEM = 11;
 
-	// jQuery and its extensions
+	// jQuery
 	const JQUERY = 50;
-	const JQUERY_EVENT_DRAG = 51;
-	const JQUERY_EVENT_SCROLL = 52;
-	const JQUERY_EVENT_OUTSIDE = 54;
-	const JQUERY_EXTENSIONS = 53;
 
 	// other scripts
 	const LESS = 100;
@@ -39,7 +34,6 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::ANIMATION_CHAIN      => 'animation_chain.js',
 				collection::DIALOG               => array('dialog.js', 'dialog.css'),
 				collection::SCROLLBAR            => 'scrollbar.js',
 				collection::PAGE_CONTROL         => 'page_control.js',
@@ -49,17 +43,20 @@ class collection extends Module {
 				collection::PROPERTY_EDITOR      => 'property_editor.js',
 				collection::EVENT_SYSTEM         => 'event_system.js',
 				collection::JQUERY               => 'jquery.js',
-				collection::JQUERY_EVENT_DRAG    => 'jquery.event.drag.js',
-				collection::JQUERY_EVENT_SCROLL  => 'jquery.mousewheel.js',
-				collection::JQUERY_EVENT_OUTSIDE => 'jquery.event.outside.js',
-				collection::JQUERY_EXTENSIONS    => 'jquery.extensions.js',
 				collection::LESS                 => 'less.js',
 				collection::SHOWDOWN             => 'showdown.js',
 				collection::PREFIX_FREE          => 'prefixfree.js'
 			);
 
+	// scripts required by other scripts
+	private $script_dependencies = array(
+				collection::DIALOG               => array(collection::COMMUNICATOR),
+				collection::PAGE_CONTROL         => array(collection::JQUERY),
+				collection::DYNAMIC_PAGE_CONTENT => array(collection::JQUERY, collection::COMMUNICATOR),
+				collection::PROPERTY_EDITOR      => array(collection::JQUERY)
+			);
+
 	private $script_names = array(
-				'animation_chain'      => collection::ANIMATION_CHAIN,
 				'dialog'               => collection::DIALOG,
 				'scrollbar'            => collection::SCROLLBAR,
 				'page_control'         => collection::PAGE_CONTROL,
@@ -69,10 +66,6 @@ class collection extends Module {
 				'property_editor'      => collection::PROPERTY_EDITOR,
 				'event_system'         => collection::EVENT_SYSTEM,
 				'jquery'               => collection::JQUERY,
-				'jquery_event_drag'    => collection::JQUERY_EVENT_DRAG,
-				'jquery_event_scroll'  => collection::JQUERY_EVENT_SCROLL,
-				'jquery_event_outside' => collection::JQUERY_EVENT_OUTSIDE,
-				'jquery_extensions'    => collection::JQUERY_EXTENSIONS,
 				'less'                 => collection::LESS,
 				'showdown'             => collection::SHOWDOWN,
 				'prefix_free'          => collection::PREFIX_FREE
@@ -95,7 +88,6 @@ class collection extends Module {
 			$this->head_tag = head_tag::get_instance();
 
 		// include scripts by default
-		$this->includeScriptById(collection::JQUERY);
 		$this->includeScriptById(collection::EVENT_SYSTEM);
 	}
 
@@ -163,6 +155,11 @@ class collection extends Module {
 
 		// add script to the list of included
 		$this->included []= $script;
+
+		// include scripts this one depends on
+		if (array_key_exists($script, $this->script_dependencies))
+			foreach ($this->script_dependencies[$script] as $dependency)
+				$this->includeScriptById($dependency);
 
 		if (is_array($data)) {
 			// script requires more than one file

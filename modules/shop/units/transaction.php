@@ -9,9 +9,9 @@
 
 namespace Modules\Shop;
 
-use \ShopTransactionsManager as TransactionsManager;
-use \ShopDeliveryAddressManager as DeliveryAddressManager;
-use \ShopBuyersManager as BuyersManager;
+use Modules\Shop\Transaction\Manager as TransactionsManager;
+use Modules\Shop\DeliveryAddress\Manager as DeliveryAddressManager;
+use Modules\Shop\Buyer\Manager as BuyersManager;
 use Modules\Shop\Transaction\PromotionManager as PromotionManager;
 
 

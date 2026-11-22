@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "Acquisto online",
+    "invoice_handling": "Gestione",
+    "invoice_shipping": "Spedizione",
+    "label_max_payments": "Numero massimo di rate (1-12):",
+    "label_page_code": "Codice pagina:",
+    "label_sandbox": "Usare l'ambiente di prova?",
+    "label_url_notify": "URL di notifica:",
+    "label_user_id": "ID utente:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "Le nuove impostazioni sono state salvate.",
+    "message_url_notify": "Grow invia le conferme di pagamento a questo indirizzo. Il sito deve essere raggiungibile tramite HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "Indirizzi",
+    "title_settings": "Impostazioni Grow"
+}

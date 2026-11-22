@@ -12,19 +12,18 @@ var Site = Site || {};
  * Create popup window and configure tranzila checkout.
  */
 Site.configure_tranzila_checkout = function() {
-	var form = $('div#checkout form');
-	var iframe = $('<iframe>');
+	var form = document.querySelector('div#checkout form');
+	var iframe = document.createElement('iframe');
 	var dialog = new Caracal.Dialog();
 
 	// configure iframe
-	iframe
-		.attr('id', 'tranzila_checkout')
-		.attr('name', 'tranzila_checkout')
-		.attr('seamless', 'seamless')
-		.attr('scrolling', 'no');
+	iframe.setAttribute('id', 'tranzila_checkout');
+	iframe.setAttribute('name', 'tranzila_checkout');
+	iframe.setAttribute('seamless', 'seamless');
+	iframe.setAttribute('scrolling', 'no');
 
 	// make form submit to iframe
-	form.attr('target', 'tranzila_checkout');
+	form.setAttribute('target', 'tranzila_checkout');
 
 	// configure dialog
 	dialog
@@ -36,13 +35,20 @@ Site.configure_tranzila_checkout = function() {
 		dialog.set_size('90vw', 250);
 
 	// show dialog when form is submitted
-	form.on('submit', function(event) {
+	form.addEventListener('submit', function(event) {
 		// show tranzila page
 		dialog.open();
 	});
 };
 
-$(function() {
-	if ($('div#checkout form').data('method') == 'tranzila')
+/**
+ * Configure checkout if tranzila is selected payment method.
+ */
+Site.initialize_tranzila_checkout = function() {
+	var form = document.querySelector('div#checkout form');
+
+	if (form !== null && form.dataset.method == 'tranzila')
 		Site.configure_tranzila_checkout();
-});
+};
+
+window.addEventListener('load', Site.initialize_tranzila_checkout);

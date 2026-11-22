@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div
-		class="list_item"
+	<tr
 		data-id="$params['id']"
 		cms:eval="data-id"
 		>
-		<span class="column">
+		<td>
 			<cms:var param="title" multilanguage="yes"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>

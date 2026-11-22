@@ -819,29 +819,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 				field.removeClass('bad');
 		});
 
-		// if supported check data validity with method provided functions
-		if (self.billing_information_form.find('.bad').length == 0)
-			switch (self.method_field.val()) {
-				case 'stripe':
-					var card_number = fields.filter('input[name=billing_credit_card]');
-					var card_expire_month = fields.filter('input[name=billing_expire_month]');
-					var card_expire_year = fields.filter('input[name=billing_expire_year]');
-					var card_cvv = fields.filter('input[name=billing_cvv]');
-
-					if (!Stripe.card.validateCardNumber(card_number.val()))
-						card_number.addClass('bad');
-
-					if (!Stripe.card.validateExpiry(card_expire_month.val(), card_expire_year.val())) {
-						card_expire_month.addClass('bad');
-						card_expire_year.addClass('bad');
-					}
-
-					if (!Stripe.card.validateCVC(card_cvv.val()))
-						card_cvv.addClass('bad');
-
-					break;
-			}
-
 		return self.billing_information_form.find('.bad').length == 0;
 	};
 

@@ -8,7 +8,12 @@
  * Author: Mladen Mijatov
  */
 
-class ShopCurrenciesManager extends ItemManager {
+namespace Modules\Shop\Currency;
+
+use ItemManager;
+
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

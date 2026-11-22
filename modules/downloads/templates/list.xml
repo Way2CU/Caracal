@@ -6,28 +6,30 @@
 		<cms:var name="$params['link_new']"/>
 	</nav>
 
-	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_id" module="downloads"/>
-			</span>
-			<span class="column" style="width: 150px;">
-				<cms:text constant="column_name" module="downloads"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_size" module="downloads"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_downloads" module="downloads"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
+	<!-- List -->
+	<table class="list" data-height="250">
+		<thead>
+			<tr>
+				<td style="width: 70px;">
+					<cms:text constant="column_id" module="downloads"/>
+				</td>
+				<td style="width: 150px;">
+					<cms:text constant="column_name" module="downloads"/>
+				</td>
+				<td style="width: 70px;">
+					<cms:text constant="column_size" module="downloads"/>
+				</td>
+				<td style="width: 70px;">
+					<cms:text constant="column_downloads" module="downloads"/>
+				</td>
+				<td class="options">
+					<cms:text constant="column_options"/>
+				</td>
+			</tr>
+		</thead>
+
+		<tbody>
 			<cms:downloads_list show_invisible="1"/>
-		</div>
-	</div>
+		</tbody>
+	</table>
 </document>

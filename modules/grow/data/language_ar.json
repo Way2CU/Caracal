@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "شراء عبر الإنترنت",
+    "invoice_handling": "المعالجة",
+    "invoice_shipping": "الشحن",
+    "label_max_payments": "الحد الأقصى لعدد الأقساط (1-12):",
+    "label_page_code": "رمز الصفحة:",
+    "label_sandbox": "استخدام بيئة الاختبار؟",
+    "label_url_notify": "عنوان الإشعارات:",
+    "label_user_id": "معرّف المستخدم:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "تم حفظ الإعدادات الجديدة.",
+    "message_url_notify": "يرسل Grow تأكيدات الدفع إلى هذا العنوان. يجب أن يكون الموقع متاحًا عبر HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "العناوين",
+    "title_settings": "إعدادات Grow"
+}

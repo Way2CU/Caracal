@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<div class="notebook">
+			<!-- API page -->
+			<div class="page" data-title="tab_api" cms:constant="data-title">
+				<label>
+					<span><cms:text constant="label_user_id" module="grow"/></span>
+					<input
+						type="text"
+						class="code"
+						name="user_id"
+						value="$settings['user_id']"
+						cms:eval="value"
+						style="width: 260px;"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_page_code" module="grow"/></span>
+					<input
+						type="text"
+						class="code"
+						name="page_code"
+						value="$settings['page_code']"
+						cms:eval="value"
+						style="width: 260px;"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_max_payments" module="grow"/></span>
+					<input
+						type="number"
+						name="max_payments"
+						min="1"
+						max="12"
+						value="$settings['max_payments']"
+						cms:eval="value"
+						style="width: 60px;"
+						/>
+				</label>
+				<label class="checkbox">
+					<input
+						type="checkbox"
+						name="sandbox"
+						checked="$settings['sandbox'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
+					<span><cms:text constant="label_sandbox" module="grow"/></span>
+				</label>
+			</div>
+
+			<!-- URLs page -->
+			<div class="page" data-title="tab_urls" cms:constant="data-title">
+				<label>
+					<span><cms:text constant="label_url_notify" module="grow"/></span>
+					<input
+						type="text"
+						class="code"
+						name="notify_url"
+						value="$params['notify_url']"
+						cms:eval="value"
+						style="width: 350px;"
+						readonly="readonly"
+						/>
+				</label>
+				<p><cms:text constant="message_url_notify" module="grow"/></p>
+			</div>
+		</div>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+		</div>
+	</form>
+</document>

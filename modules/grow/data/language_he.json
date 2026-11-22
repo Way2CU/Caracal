@@ -1,0 +1,17 @@
+{
+    "invoice_default_description": "רכישה מקוונת",
+    "invoice_handling": "טיפול",
+    "invoice_shipping": "משלוח",
+    "label_max_payments": "מספר תשלומים מקסימלי (1-12):",
+    "label_page_code": "קוד דף:",
+    "label_sandbox": "להשתמש בסביבת בדיקות?",
+    "label_url_notify": "כתובת לעדכון שרת:",
+    "label_user_id": "מזהה משתמש:",
+    "menu_grow": "Grow",
+    "message_settings_saved": "ההגדרות החדשות נשמרו.",
+    "message_url_notify": "Grow שולח אישורי תשלום לכתובת זו. האתר חייב להיות נגיש ב-HTTPS.",
+    "payment_method_title": "Grow",
+    "tab_api": "API",
+    "tab_urls": "כתובות",
+    "title_settings": "הגדרות Grow"
+}

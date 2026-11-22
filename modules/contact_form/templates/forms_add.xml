@@ -50,18 +50,23 @@
 			</div>
 
 			<!-- Mailer selection -->
-			<div class="scrollable_list page" data-title="tab_mailers" cms:constant="data-title">
-				<div class="list_header">
-					<span class="column">
-						<cms:text constant="column_mailer" module="contact_form"/>
-					</span>
-				</div>
-				<div class="list_content" style="height: 250px">
-					<cms:mailer_list
-						template="mailer_list_item.xml"
-						local="1"
-						/>
-				</div>
+			<div class="page" data-title="tab_mailers" cms:constant="data-title">
+				<table class="list" data-height="250">
+					<thead>
+						<tr>
+							<td>
+								<cms:text constant="column_mailer" module="contact_form"/>
+							</td>
+						</tr>
+					</thead>
+
+					<tbody>
+						<cms:mailer_list
+							template="mailer_list_item.xml"
+							local="1"
+							/>
+					</tbody>
+				</table>
 			</div>
 
 			<!-- Appearance options -->
@@ -86,7 +91,7 @@
 			</div>
 
 			<!-- Accepted domains -->
-			<div class="scrollable_list page" data-title="tab_domains" cms:constant="data-title">
+			<div class="page" data-title="tab_domains" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_domain" module="contact_form"/></span>
 					<input name="domain" type="text"/>
@@ -95,17 +100,22 @@
 					</button>
 				</label>
 
-				<div class="list_header">
-					<span class="column" style="width: 250px;">
-						<cms:text constant="column_domain" module="contact_form"/>
-					</span>
-					<span class="column">
-						<cms:text constant="column_options"/>
-					</span>
-				</div>
+				<table class="list" data-height="150">
+					<thead>
+						<tr>
+							<td style="width: 250px;">
+								<cms:text constant="column_domain" module="contact_form"/>
+							</td>
+							<td class="options">
+								<cms:text constant="column_options"/>
+							</td>
+						</tr>
+					</thead>
 
-				<div class="list_content" style="height: 150px" id="contact_form_domain_list">
-				</div>
+					<tbody id="contact_form_domain_list">
+
+					</tbody>
+				</table>
 			</div>
 		</div>
 

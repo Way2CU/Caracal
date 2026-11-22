@@ -15,6 +15,9 @@
 	# (FilesMatch matches only the basename, so a path-anchored rule is required)
 	RewriteRule ^site/.*\.(php|php[3457]|phtml|phps|phar|pl|py|cgi|sh|asp|aspx|jsp)$ - [F,NC]
 
+	# deny direct access to data exports, backend serves them to authenticated users
+	RewriteRule ^site/backups/ - [F,NC]
+
 	# don't rewrite site content
 	RewriteRule ^/site/ - [NC,L]
 
@@ -28,6 +31,11 @@
 </IfModule>
 
 <FilesMatch "\.(xml|json)$">
+	Deny from all
+</FilesMatch>
+
+# deny access to editor and backup copies (config.php.old, config.php~, mailer.php.bak ...)
+<FilesMatch "(\.(bak|old|backup|orig|save|swp)|~)$">
 	Deny from all
 </FilesMatch>
 

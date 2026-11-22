@@ -60,14 +60,12 @@ function DynamicPageContent(container_id, link_selector, switch_delay, change_ur
 			.data('activated-url', url)
 			.data('activated-link', activated_link)
 			.animate({opacity: 0}, self._switch_delay, function() {
-				$.ajax({
-					url: url,
-					async: true,
-					dataType: 'html',
-					headers: {'X-Requested-With': 'DynamicContent'},
-					success: self._handle_content_load,
-					error: self._handle_content_load_error
-				});
+				new Communicator(new URL(url, document.baseURI).href)
+					.use_cache(true)
+					.add_headers({'X-Requested-With': 'DynamicContent'})
+					.on_success(self._handle_content_load)
+					.on_error(self._handle_content_load_error)
+					.get(null, null, 'html');
 			});
 	};
 
