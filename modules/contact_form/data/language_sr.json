@@ -39,6 +39,7 @@
     "field_values": "Вредности",
     "field_week": "Недеља и година",
     "field_captcha": "CAPTCHA verification",
+    "field_altcha": "ALTCHA verification",
     "fields": "Поља",
     "fieldsets": "Сет поља",
     "form_default": "Подразумевана поља",

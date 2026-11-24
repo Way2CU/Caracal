@@ -168,12 +168,30 @@ Caracal.ContactForm.Form = function(form_object) {
 			}
 		});
 
+		// include verification data widgets add to the form after initialization
+		var form_data = new FormData(self._form[0]);
+		self._form[0].querySelectorAll('altcha-widget').forEach(function(widget) {
+			var name = widget.getAttribute('name') || 'altcha';
+			if (form_data.has(name))
+				result[name] = form_data.get(name);
+		});
+
 		// convert array values to string
 		for (var index in result)
 			if (result[index] instanceof Array)
 				result[index] = result[index].join();
 
 		return result;
+	};
+
+	/**
+	 * Reset verification widgets as each verification can be submitted only once.
+	 */
+	self._reset_verification = function() {
+		self._form[0].querySelectorAll('altcha-widget').forEach(function(widget) {
+			if (typeof widget.reset == 'function')
+				widget.reset();
+		});
 	};
 
 	/**
@@ -235,7 +253,8 @@ Caracal.ContactForm.Form = function(form_object) {
 
 		// clear form on success
 		if (!data.error)
-			self._form[0].reset();
+			self._form[0].reset(); else
+			self._reset_verification();
 	};
 
 	/**
