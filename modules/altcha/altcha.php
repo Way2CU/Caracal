@@ -180,6 +180,21 @@ class altcha extends Module {
 	}
 
 	/**
+	 * Return the way widget is displayed. Only `standard` widget takes space
+	 * in the form, others are either shown on top of the page while form is
+	 * being submitted or not shown at all.
+	 *
+	 * @param array $tag_params
+	 * @return string
+	 */
+	public function get_display($tag_params=array()) {
+		// options specified in tag take priority over the ones set in backend
+		$sources = array($tag_params, $this->settings);
+
+		return $this->get_option('display', $this->display_options, $sources);
+	}
+
+	/**
 	 * Return URL widget is supposed to get challenges from.
 	 *
 	 * @return string
@@ -455,14 +470,19 @@ class altcha extends Module {
 		$template->set_template_params_from_array($children);
 
 		// options specified in tag take priority over the ones set in backend
-		$sources = array($tag_params, $this->settings);
+		$display = $this->get_display($tag_params);
+		$auto = $this->get_option('auto', $this->auto_options, array($tag_params, $this->settings));
+
+		// visitor can't start verification on widget which is not in the form
+		if ($display != 'standard' && $auto == 'off')
+			$auto = 'onsubmit';
 
 		$params = array(
 				'name'             => isset($tag_params['field_name']) ? fix_chars($tag_params['field_name']) : 'altcha',
 				'challenge_url'    => $this->get_challenge_url(),
 				'language'         => $language,
-				'auto'             => $this->get_option('auto', $this->auto_options, $sources),
-				'display'          => $this->get_option('display', $this->display_options, $sources),
+				'auto'             => $auto,
+				'display'          => $display,
 				'include_script'   => !$this->script_included,
 				'script_url'       => self::WIDGET_URL,
 				'script_integrity' => self::WIDGET_INTEGRITY

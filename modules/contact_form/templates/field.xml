@@ -28,8 +28,32 @@
 		</cms:choice>
 	</cms:if>
 
+	<!--
+		ALTCHA protection, widget has its own label so it can't be placed in one. Label
+		is shown only with widget which is part of the form and invisible one is hidden
+		completely.
+	-->
+	<cms:if condition="$params['type'] == 'altcha' and ModuleHandler::is_loaded('altcha')">
+		<div
+			class="altcha"
+			style="altcha::get_instance()->get_display() == 'invisible' ? 'display: none;' : false"
+			cms:optional="style"
+			>
+			<cms:if condition="!empty($params['label'][$language]) and altcha::get_instance()->get_display() == 'standard'">
+				<span><cms:var param="label" multilanguage="yes"/></span>
+			</cms:if>
+
+			<cms:module
+				name="altcha"
+				action="show"
+				field_name="$params['name']"
+				cms:eval="field_name"
+				/>
+		</div>
+	</cms:if>
+
 	<!-- Elements with label -->
-	<cms:if condition="!in_array($params['type'], array('button', 'hidden'))">
+	<cms:if condition="!in_array($params['type'], array('button', 'hidden', 'altcha'))">
 		<label
 			class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
 			style="$params['type'] == 'honey-pot' ? 'display: none;' : false"
@@ -328,18 +352,6 @@
 							maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 							cms:optional="maxlength"
 							cms:eval="name"
-							/>
-					</cms:if>
-				</option>
-
-				<!-- ALTCHA protection -->
-				<option value="altcha" default="0">
-					<cms:if condition="ModuleHandler::is_loaded('altcha')">
-						<cms:module
-							name="altcha"
-							action="show"
-							field_name="$params['name']"
-							cms:eval="field_name"
 							/>
 					</cms:if>
 				</option>
