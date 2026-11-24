@@ -257,6 +257,17 @@ class Manager {
 	}
 
 	/**
+	 * Stop capturing output and print it without storing it to the cache. Meant
+	 * for responses which have to be unique for every request.
+	 */
+	public function cancel_capture() {
+		if ($this->should_cache) {
+			$this->should_cache = false;
+			ob_end_flush();
+		}
+	}
+
+	/**
 	 * Clear all cache
 	 *
 	 * Please note that cached pages are automatically

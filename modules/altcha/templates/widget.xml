@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<cms:if condition="$params['include_script']">
+		<script
+			type="module"
+			async="async"
+			src="$params['script_url']"
+			integrity="$params['script_integrity']"
+			crossorigin="anonymous"
+			cms:eval="src,integrity"
+			/>
+	</cms:if>
+
+	<altcha-widget
+		name="$params['name']"
+		challenge="$params['challenge_url']"
+		language="$params['language']"
+		auto="$params['auto']"
+		display="$params['display']"
+		cms:eval="name,challenge,language,auto,display"
+		/>
+</document>

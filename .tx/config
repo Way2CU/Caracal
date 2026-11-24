@@ -7,6 +7,12 @@ source_file = modules/activity_tracker/data/language_en.json
 source_lang = en
 type        = KEYVALUEJSON
 
+[o:way2cu:p:caracal:r:altcha]
+file_filter = modules/altcha/data/language_<lang>.json
+source_file = modules/altcha/data/language_en.json
+source_lang = en
+type        = KEYVALUEJSON
+
 [o:way2cu:p:caracal:r:articles]
 file_filter = modules/articles/data/language_<lang>.json
 source_file = modules/articles/data/language_en.json

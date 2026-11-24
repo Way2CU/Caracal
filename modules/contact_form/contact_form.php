@@ -36,7 +36,7 @@ class contact_form extends Module {
 					'text', 'email', 'textarea', 'select', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
 					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'captcha',
-					'transfer-param', 'site-version', 'button'
+					'altcha', 'transfer-param', 'site-version', 'button'
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
 	private $virtual_fields = array('transfer-param', 'site-version');
@@ -747,6 +747,29 @@ class contact_form extends Module {
 						if (!in_array($message, $messages))
 							$messages[] = $message;
 						trigger_error('ContactForm: Failed CAPTCHA verification!', E_USER_NOTICE);
+					}
+					break;
+
+				case 'altcha':
+					if (!ModuleHandler::is_loaded('altcha')) {
+						trigger_error('ContactForm: ALTCHA field exists, but module is not loaded.', E_USER_WARNING);
+						return;
+					}
+
+					// payload is base64 encoded and validated by the module itself
+					$payload = isset($_REQUEST[$name]) ? $_REQUEST[$name] : '';
+					$altcha = altcha::get_instance();
+
+					if (!$altcha->is_valid($payload)) {
+						$missing_fields[$name] = array(
+												$field->label,
+												$field->placeholder
+											);
+
+						$message = $this->get_language_constant('message_missing_field');
+						if (!in_array($message, $messages))
+							$messages[] = $message;
+						trigger_error('ContactForm: Failed ALTCHA verification!', E_USER_NOTICE);
 					}
 					break;
 

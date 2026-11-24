@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_cost" module="altcha"/></span>
+			<input
+				type="number"
+				class="ltr"
+				name="cost"
+				min="1"
+				value="$params['cost']"
+				cms:eval="value"
+				style="width: 120px;"
+				/>
+		</label>
+		<label>
+			<span><cms:text constant="label_counter_minimum" module="altcha"/></span>
+			<input
+				type="number"
+				class="ltr"
+				name="counter_minimum"
+				min="1"
+				value="$params['counter_minimum']"
+				cms:eval="value"
+				style="width: 120px;"
+				/>
+		</label>
+		<label>
+			<span><cms:text constant="label_counter_maximum" module="altcha"/></span>
+			<input
+				type="number"
+				class="ltr"
+				name="counter_maximum"
+				min="1"
+				value="$params['counter_maximum']"
+				cms:eval="value"
+				style="width: 120px;"
+				/>
+		</label>
+		<label>
+			<span><cms:text constant="label_expiration" module="altcha"/></span>
+			<input
+				type="number"
+				class="ltr"
+				name="expiration"
+				min="1"
+				value="$params['expiration']"
+				cms:eval="value"
+				style="width: 120px;"
+				/>
+		</label>
+
+		<hr/>
+
+		<label>
+			<span><cms:text constant="label_auto" module="altcha"/></span>
+			<select name="auto" style="width: 270px;">
+				<option
+					value="off"
+					selected="$params['auto'] == 'off' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_auto_off" module="altcha"/>
+				</option>
+				<option
+					value="onfocus"
+					selected="$params['auto'] == 'onfocus' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_auto_onfocus" module="altcha"/>
+				</option>
+				<option
+					value="onload"
+					selected="$params['auto'] == 'onload' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_auto_onload" module="altcha"/>
+				</option>
+				<option
+					value="onsubmit"
+					selected="$params['auto'] == 'onsubmit' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_auto_onsubmit" module="altcha"/>
+				</option>
+			</select>
+		</label>
+		<label>
+			<span><cms:text constant="label_display" module="altcha"/></span>
+			<select name="display" style="width: 270px;">
+				<option
+					value="standard"
+					selected="$params['display'] == 'standard' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_display_standard" module="altcha"/>
+				</option>
+				<option
+					value="bar"
+					selected="$params['display'] == 'bar' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_display_bar" module="altcha"/>
+				</option>
+				<option
+					value="floating"
+					selected="$params['display'] == 'floating' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_display_floating" module="altcha"/>
+				</option>
+				<option
+					value="overlay"
+					selected="$params['display'] == 'overlay' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_display_overlay" module="altcha"/>
+				</option>
+				<option
+					value="invisible"
+					selected="$params['display'] == 'invisible' ? 'selected' : false"
+					cms:optional="selected"
+					>
+					<cms:text constant="option_display_invisible" module="altcha"/>
+				</option>
+			</select>
+		</label>
+
+		<hr/>
+
+		<label class="checkbox">
+			<input type="checkbox" name="new_key"/>
+			<span><cms:text constant="label_new_key" module="altcha"/></span>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+		</div>
+	</form>
+</document>
