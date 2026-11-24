@@ -19,6 +19,9 @@
  *   	If result is `false` it will prevent default dialog from
  *   	showing giving custom scripts opportunity to present error
  *   	message in a different way.
+ *
+ * Form element triggers `submit-rejected` DOM event when server doesn't accept
+ * submitted data, for scripts which need to prepare fields for another try.
  */
 var Caracal = Caracal || new Object();
 Caracal.ContactForm = Caracal.ContactForm || new Object();
@@ -131,6 +134,10 @@ Caracal.ContactForm.Form = function(form_object) {
 			var name = field.attr('name');
 			var type = field.attr('type');
 
+			// fields without name are not part of form data
+			if (!name)
+				return;
+
 			switch (type) {
 				case 'checkbox':
 					if (field.attr('value')) {
@@ -168,30 +175,12 @@ Caracal.ContactForm.Form = function(form_object) {
 			}
 		});
 
-		// include verification data widgets add to the form after initialization
-		var form_data = new FormData(self._form[0]);
-		self._form[0].querySelectorAll('altcha-widget').forEach(function(widget) {
-			var name = widget.getAttribute('name') || 'altcha';
-			if (form_data.has(name))
-				result[name] = form_data.get(name);
-		});
-
 		// convert array values to string
 		for (var index in result)
 			if (result[index] instanceof Array)
 				result[index] = result[index].join();
 
 		return result;
-	};
-
-	/**
-	 * Reset verification widgets as each verification can be submitted only once.
-	 */
-	self._reset_verification = function() {
-		self._form[0].querySelectorAll('altcha-widget').forEach(function(widget) {
-			if (typeof widget.reset == 'function')
-				widget.reset();
-		});
 	};
 
 	/**
@@ -254,7 +243,7 @@ Caracal.ContactForm.Form = function(form_object) {
 		// clear form on success
 		if (!data.error)
 			self._form[0].reset(); else
-			self._reset_verification();
+			self._form[0].dispatchEvent(new CustomEvent('submit-rejected'));
 	};
 
 	/**
