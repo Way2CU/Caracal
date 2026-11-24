@@ -21,7 +21,7 @@ Main storage table for articles.
 `content`     | `ml_text`         |                     | Multi-language article body (Markdown).
 `author`      | `int`             |                     | Id of the user (system access) who created the article.
 `gallery`     | `int`             |                     | Id of an associated gallery entry.
-`visible`     | `boolean`         | `0`                 | Whether the article is publicly visible.
+`visible`     | `boolean`         | `1`                 | Whether the article is publicly visible.
 `views`       | `int`             | `0`                 | View counter (reserved, currently not used).
 `votes_up`    | `int`             | `0`                 | Number of positive votes.
 `votes_down`  | `int`             | `0`                 | Number of negative votes.

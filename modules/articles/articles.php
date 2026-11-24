@@ -804,7 +804,7 @@ class articles extends Module {
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
-		$show_hidden = true;
+		$show_hidden = false;
 
 		// get parameters
 		if (isset($tag_params['id']))
@@ -850,7 +850,8 @@ class articles extends Module {
 		// get single item from the database
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
-		if (!$item->visible && !$show_hidden)
+		// respect visibility of article unless specified otherwise
+		if (is_object($item) && !$item->visible && !$show_hidden)
 			return;
 
 		// load template

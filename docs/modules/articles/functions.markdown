@@ -21,6 +21,7 @@ parameters are sanitized by the module. This function accepts the following inpu
 		order_asc="1"
 		random="0"
 		group="first,second"
+		show_hidden="0"
 		template="file.xml"
 		template_path="path/"
 		local="0"
@@ -34,6 +35,7 @@ parameters are sanitized by the module. This function accepts the following inpu
 `order_asc`     | `int`             |              | 1                       | Sort direction (0 - descending, 1 - ascending)
 `random`        | `int`             |              | 0                       | If article selection should be randomized. Can not be used with `order_by` or `id`.
 `group`         | `string` or `int` |              |                         | `text_id` or `id` of one or more groups to pick article from.
+`show_hidden`   | `int`             |              | 0                       | When 1, article is shown even if it's not marked as visible.
 `template`      | `string`          |              | 'article.xml'           | Template to be used for outputting data.
 `template_path` | `string`          |              | Defined in 'config.php' | Path where to look for template.
 `local`         | `int`             |              | 0                       |  | If `template` is located in module's default path. Overrides `template_path`.

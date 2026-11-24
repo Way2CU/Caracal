@@ -9,7 +9,7 @@ CREATE TABLE `articles` (
 	`content` ml_text NOT NULL ,
 	`author` int NOT NULL ,
 	`gallery` int NOT NULL ,
-	`visible` boolean NOT NULL DEFAULT '0',
+	`visible` boolean NOT NULL DEFAULT '1',
 	`views` int NOT NULL DEFAULT '0',
 	`votes_up` int NOT NULL DEFAULT '0',
 	`votes_down` int NOT NULL DEFAULT '0',
