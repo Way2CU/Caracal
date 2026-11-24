@@ -15,6 +15,11 @@
  * Forms which submit data through JavaScript should trigger `submit-rejected`
  * event on form element when server rejects submission, as each verification
  * can be used only once.
+ *
+ * Widget triggers following events on form element:
+ * - `submit-held` when submission is put on hold until form is verified. Form
+ *   is submitted again once verification is done;
+ * - `submit-dropped` when submission which was on hold will not continue.
  */
 
 var Caracal = Caracal || new Object();
@@ -99,11 +104,21 @@ Caracal.Altcha.Widget = function(container) {
 	};
 
 	/**
+	 * Give up on submission which was waiting for verification.
+	 */
+	self._drop_submission = function() {
+		if (self._submit_pending) {
+			self._submit_pending = false;
+			self._form.dispatchEvent(new CustomEvent('submit-dropped'));
+		}
+	};
+
+	/**
 	 * Stop verification and report failure.
 	 */
 	self._fail = function() {
 		self._stop();
-		self._submit_pending = false;
+		self._drop_submission();
 		self._set_state('error');
 	};
 
@@ -132,7 +147,7 @@ Caracal.Altcha.Widget = function(container) {
 	 */
 	self.reset = function() {
 		self._stop();
-		self._submit_pending = false;
+		self._drop_submission();
 		self._set_state('unverified');
 	};
 
@@ -213,7 +228,7 @@ Caracal.Altcha.Widget = function(container) {
 	 */
 	self.handler.expire = function() {
 		self._stop();
-		self._submit_pending = false;
+		self._drop_submission();
 		self._set_state('expired');
 	};
 
@@ -265,6 +280,7 @@ Caracal.Altcha.Widget = function(container) {
 			if (state == 'verifying' || self._auto != 'off') {
 				self._submit_pending = true;
 				self._submitter = event.submitter || null;
+				self._form.dispatchEvent(new CustomEvent('submit-held'));
 				self.verify();
 
 			} else {
