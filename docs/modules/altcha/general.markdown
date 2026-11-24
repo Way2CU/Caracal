@@ -29,7 +29,9 @@ Supported parameters:
 - `auto` - when to start verification: `off` (visitor clicks the widget),
   `onfocus`, `onload` or `onsubmit`;
 - `display` - widget presentation: `standard`, `bar`, `floating`, `overlay`
-  or `invisible`.
+  or `invisible`. Only `standard` widget takes space in the form. Others
+  are shown on top of the page while form is being submitted, or not at
+  all, and start verification on submit when `auto` is `off`.
 
 Script for the widget is included automatically with the first widget on
 the page. Widget language follows language of the page.
@@ -47,7 +49,35 @@ it was issued to. When form submitted through JavaScript is rejected for any
 reason, call `reset()` on `altcha-widget` element so visitor can verify again.
 
 Contact form module has dedicated field type for the widget and takes care
-of all of the above.
+of all of the above. Field is shown in `div` with class `altcha-field` instead of
+`label`, as widget contains label of its own. Field label is shown only with
+`standard` widget and whole field is hidden when widget is `invisible`.
+
+
+Styling
+-------
+
+Widget is part of the page, so site styles for form elements apply to it
+as well. Rules for `label` and `input` elements inside of a form are the
+usual cause of widget looking broken.
+
+Colors of the widget follow `color-scheme` property. On dark forms set it
+to `dark`, otherwise widget is shown with light background:
+
+```css
+form altcha-widget {
+	--altcha-max-width: 100%;
+
+	color-scheme: dark;
+}
+
+form altcha-widget label {
+	display: inline;
+}
+```
+
+Forms which use grid areas need one for `div.altcha-field` as well, otherwise
+field ends up after the last defined area.
 
 
 Settings

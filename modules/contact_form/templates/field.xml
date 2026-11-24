@@ -31,11 +31,11 @@
 	<!--
 		ALTCHA protection, widget has its own label so it can't be placed in one. Label
 		is shown only with widget which is part of the form and invisible one is hidden
-		completely.
+		completely. Class must not be `altcha`, widget hides everything with that class.
 	-->
 	<cms:if condition="$params['type'] == 'altcha' and ModuleHandler::is_loaded('altcha')">
 		<div
-			class="altcha"
+			class="altcha-field"
 			style="altcha::get_instance()->get_display() == 'invisible' ? 'display: none;' : false"
 			cms:optional="style"
 			>
