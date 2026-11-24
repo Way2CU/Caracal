@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:if condition="$params['include_script']">
-		<script
-			type="module"
-			async="async"
-			src="$params['script_url']"
-			integrity="$params['script_integrity']"
-			crossorigin="anonymous"
-			cms:eval="src,integrity"
+	<div
+		class="altcha-widget"
+		data-state="unverified"
+		data-auto="$params['auto']"
+		data-display="$params['display']"
+		data-challenge="$params['challenge_url']"
+		data-worker="$params['worker_url']"
+		cms:eval="data-auto,data-display,data-challenge,data-worker"
+		>
+		<input
+			type="hidden"
+			name="$params['name']"
+			value=""
+			cms:eval="name"
 			/>
-	</cms:if>
 
-	<altcha-widget
-		name="$params['name']"
-		challenge="$params['challenge_url']"
-		language="$params['language']"
-		auto="$params['auto']"
-		display="$params['display']"
-		cms:eval="name,challenge,language,auto,display"
-		/>
+		<div
+			class="control"
+			role="checkbox"
+			tabindex="0"
+			aria-checked="false"
+			aria-live="polite"
+			>
+			<span class="mark"/>
+			<span data-for="unverified"><cms:text constant="label_unverified" module="altcha"/></span>
+			<span data-for="verifying"><cms:text constant="label_verifying" module="altcha"/></span>
+			<span data-for="verified"><cms:text constant="label_verified" module="altcha"/></span>
+			<span data-for="error"><cms:text constant="label_error" module="altcha"/></span>
+			<span data-for="expired"><cms:text constant="label_expired" module="altcha"/></span>
+		</div>
+	</div>
 </document>

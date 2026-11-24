@@ -4,15 +4,14 @@
  * ALTCHA Support
  *
  * This module provides self-hosted ALTCHA proof-of-work protection for other
- * modules. It issues signed challenges for the official widget and verifies
- * solutions submitted with forms. No external service is contacted, only the
- * widget script is loaded from CDN.
+ * modules. It shows the widget, issues signed challenges for it and verifies
+ * solutions submitted with forms. Nothing is loaded from or sent to external
+ * services.
  *
  * Author: Mladen Mijatov
  */
 use Core\Events;
 use Core\Module;
-use Core\CSP\Policy as CSP;
 use Core\Cache\Manager as Cache;
 
 
@@ -21,10 +20,6 @@ class Altcha_VerificationError extends Exception {}
 
 
 class altcha extends Module {
-	const WIDGET_HOST = 'https://cdn.jsdelivr.net';
-	const WIDGET_URL = 'https://cdn.jsdelivr.net/npm/altcha@3.7.0/dist/main/altcha.i18n.min.js';
-	const WIDGET_INTEGRITY = 'sha384-HS7304y0OQTaIv/Az2uzzqLalTclMDfhBwZ3q3km7Xep6SrPnwIfQzCvR9Cy+RiG';
-
 	const ALGORITHM = 'PBKDF2/SHA-256';
 	const KEY_LENGTH = 32;
 	const KEY_PREFIX_LENGTH = 16;
@@ -33,7 +28,6 @@ class altcha extends Module {
 	const SESSION_KEY = 'altcha_challenges';
 
 	private static $_instance;
-	private $script_included = false;
 	private $default_settings = array(
 					'cost'            => 5000,
 					'counter_minimum' => 5000,
@@ -41,7 +35,7 @@ class altcha extends Module {
 					'expiration'      => 600
 				);
 	private $auto_options = array('off', 'onfocus', 'onload', 'onsubmit');
-	private $display_options = array('standard', 'bar', 'floating', 'overlay', 'invisible');
+	private $display_options = array('standard', 'invisible');
 
 	/**
 	 * Constructor
@@ -49,14 +43,8 @@ class altcha extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 
-		// allow widget script and workers it creates from bundled code
-		CSP::add_value('script-src', self::WIDGET_HOST);
-
-		if (is_null(CSP::get_values('worker-src')))
-			CSP::add_value('worker-src', "'self'");
-		CSP::add_value('worker-src', 'blob:');
-
 		// connect events
+		Events::connect('head-tag', 'before-print', 'add_tags', $this);
 		Events::connect('backend', 'add-menu-items', 'add_menu_items', $this);
 	}
 
@@ -128,6 +116,32 @@ class altcha extends Module {
 	}
 
 	/**
+	 * Add script and styles needed by the widget.
+	 */
+	public function add_tags() {
+		global $section;
+
+		if ($section != 'backend' && $section != 'backend_module') {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_tag(
+					'link',
+					array(
+						'href' => URL::from_file_path($this->path.'include/altcha.css'),
+						'rel'  => 'stylesheet',
+						'type' => 'text/css'
+					)
+				);
+			$head_tag->add_tag(
+					'script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/altcha.js'),
+						'type' => 'text/javascript'
+					)
+				);
+		}
+	}
+
+	/**
 	 * Add items to backend menu.
 	 */
 	public function add_menu_items() {
@@ -180,9 +194,8 @@ class altcha extends Module {
 	}
 
 	/**
-	 * Return the way widget is displayed. Only `standard` widget takes space
-	 * in the form, others are either shown on top of the page while form is
-	 * being submitted or not shown at all.
+	 * Return the way widget is displayed, either `standard` which is shown
+	 * in the form or `invisible` which works in the background.
 	 *
 	 * @param array $tag_params
 	 * @return string
@@ -457,15 +470,12 @@ class altcha extends Module {
 	}
 
 	/**
-	 * Print widget tag. Script for the widget is included with the first
-	 * widget shown on the page.
+	 * Print the widget.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	private function show_widget($tag_params, $children) {
-		global $language;
-
 		$template = $this->load_template($tag_params, 'widget.xml');
 		$template->set_template_params_from_array($children);
 
@@ -473,21 +483,17 @@ class altcha extends Module {
 		$display = $this->get_display($tag_params);
 		$auto = $this->get_option('auto', $this->auto_options, array($tag_params, $this->settings));
 
-		// visitor can't start verification on widget which is not in the form
+		// visitor can't start verification on widget which is not shown
 		if ($display != 'standard' && $auto == 'off')
 			$auto = 'onsubmit';
 
 		$params = array(
-				'name'             => isset($tag_params['field_name']) ? fix_chars($tag_params['field_name']) : 'altcha',
-				'challenge_url'    => $this->get_challenge_url(),
-				'language'         => $language,
-				'auto'             => $auto,
-				'display'          => $display,
-				'include_script'   => !$this->script_included,
-				'script_url'       => self::WIDGET_URL,
-				'script_integrity' => self::WIDGET_INTEGRITY
+				'name'          => isset($tag_params['field_name']) ? fix_chars($tag_params['field_name']) : 'altcha',
+				'challenge_url' => $this->get_challenge_url(),
+				'worker_url'    => URL::from_file_path($this->path.'include/worker.js'),
+				'auto'          => $auto,
+				'display'       => $display
 			);
-		$this->script_included = true;
 
 		$template->set_local_params($params);
 		$template->restore_xml();

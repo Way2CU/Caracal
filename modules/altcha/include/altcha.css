@@ -1,0 +1,104 @@
+/**
+ * ALTCHA Widget Styles
+ *
+ * Widget takes text color and font from the form it is in, so it fits
+ * light and dark sites alike without additional configuration.
+ */
+
+@-webkit-keyframes altcha-widget-spin {
+	to {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes altcha-widget-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+div.altcha-widget {
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 220px;
+
+	border: 1px solid rgba(128, 128, 128, 0.5);
+	border-radius: 6px;
+}
+
+div.altcha-widget[data-display=invisible] {
+	display: none;
+}
+
+div.altcha-widget[data-attention] {
+	border-color: currentColor;
+}
+
+div.altcha-widget div.control {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 14px;
+
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+div.altcha-widget[data-state=verifying] div.control,
+div.altcha-widget[data-state=verified] div.control {
+	cursor: default;
+}
+
+div.altcha-widget div.control span {
+	display: none;
+}
+
+div.altcha-widget div.control span.mark {
+	display: block;
+	position: relative;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: 20px;
+	height: 20px;
+
+	border: 2px solid currentColor;
+	border-radius: 4px;
+	opacity: 0.8;
+}
+
+div.altcha-widget[data-state=verified] div.control span.mark {
+	opacity: 1;
+}
+
+div.altcha-widget[data-state=verified] div.control span.mark::after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 4px;
+	box-sizing: border-box;
+	width: 7px;
+	height: 12px;
+
+	border: solid currentColor;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+div.altcha-widget[data-state=verifying] div.control span.mark {
+	border-top-color: transparent;
+	border-radius: 50%;
+	-webkit-animation: altcha-widget-spin 0.8s linear infinite;
+	animation: altcha-widget-spin 0.8s linear infinite;
+}
+
+div.altcha-widget[data-state=unverified] div.control span[data-for=unverified],
+div.altcha-widget[data-state=verifying] div.control span[data-for=verifying],
+div.altcha-widget[data-state=verified] div.control span[data-for=verified],
+div.altcha-widget[data-state=error] div.control span[data-for=error],
+div.altcha-widget[data-state=expired] div.control span[data-for=expired] {
+	display: inline;
+}

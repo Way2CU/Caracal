@@ -97,27 +97,6 @@
 					<cms:text constant="option_display_standard" module="altcha"/>
 				</option>
 				<option
-					value="bar"
-					selected="$params['display'] == 'bar' ? 'selected' : false"
-					cms:optional="selected"
-					>
-					<cms:text constant="option_display_bar" module="altcha"/>
-				</option>
-				<option
-					value="floating"
-					selected="$params['display'] == 'floating' ? 'selected' : false"
-					cms:optional="selected"
-					>
-					<cms:text constant="option_display_floating" module="altcha"/>
-				</option>
-				<option
-					value="overlay"
-					selected="$params['display'] == 'overlay' ? 'selected' : false"
-					cms:optional="selected"
-					>
-					<cms:text constant="option_display_overlay" module="altcha"/>
-				</option>
-				<option
 					value="invisible"
 					selected="$params['display'] == 'invisible' ? 'selected' : false"
 					cms:optional="selected"
