@@ -22,6 +22,11 @@
  *
  * Form element triggers `submit-rejected` DOM event when server doesn't accept
  * submitted data, for scripts which need to prepare fields for another try.
+ *
+ * Scripts which put submission on hold, to submit the form again later, are
+ * expected to trigger `submit-held` DOM event on form element, and
+ * `submit-dropped` if they give up on it. Form is covered with overlay in
+ * the meantime.
  */
 var Caracal = Caracal || new Object();
 Caracal.ContactForm = Caracal.ContactForm || new Object();
@@ -67,6 +72,10 @@ Caracal.ContactForm.Form = function(form_object) {
 				.on('submit', self.handler.target_submit)
 				.attr('target', target_id);
 		}
+
+		// keep form covered while other scripts hold submission
+		self._form[0].addEventListener('submit-held', self.handler.submit_held);
+		self._form[0].addEventListener('submit-dropped', self.handler.submit_dropped);
 
 		// get overlay
 		self._overlay = self._form.find('div.overlay');
@@ -201,6 +210,24 @@ Caracal.ContactForm.Form = function(form_object) {
 
 		// send data
 		self._communicator.send('submit', data)
+	};
+
+	/**
+	 * Handle submission being put on hold by another script.
+	 *
+	 * @param object event
+	 */
+	self.handler.submit_held = function(event) {
+		self._overlay.addClass('visible');
+	};
+
+	/**
+	 * Handle another script giving up on submission it was holding.
+	 *
+	 * @param object event
+	 */
+	self.handler.submit_dropped = function(event) {
+		self._overlay.removeClass('visible');
 	};
 
 	/**
