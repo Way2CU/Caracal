@@ -178,7 +178,10 @@ abstract class Module {
 
 		foreach($list as $lang) {
 			$param_name = "{$name}_{$lang}";
-			$result[$lang] = escape_chars($_REQUEST[$param_name], false);
+			// languages not visited in the editor are not submitted
+			if (isset($_REQUEST[$param_name]))
+				$result[$lang] = escape_chars($_REQUEST[$param_name], false); else
+				$result[$lang] = '';
 		}
 
 		return $result;
