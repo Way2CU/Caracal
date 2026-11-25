@@ -3,48 +3,77 @@
 /**
  * Page Switch
  *
+ * Widget for splitting long lists into pages. Each switch reads its current
+ * page from the request parameter it was created with, which allows multiple
+ * independent switches on a single page. Links are created through `URL::make`
+ * by changing value of that parameter only.
+ *
  * Author: Mladen Mijatov
  */
 
 class PageSwitch {
-	private $param_name = 'page';
+	private $param_name;
 	private $current_page = 1;
 	private $max_pages = 9;
 	private $per_page = 10;
 	private $total_items = 0;
 	private $url_params = array();
-	private $invalid_params = array('PHPSESSID');
+	private $url_file = null;
+	private $link_handler = null;
 
 	/**
-	 * Constructor
+	 * Create page switch controlled by specified request parameter.
 	 *
 	 * @param string $param_name
 	 */
-	public function __construct($param_name=null) {
-		if (!is_null($param_name))
-			$this->param_name = $param_name;
+	public function __construct($param_name) {
+		$this->param_name = $param_name;
 
 		if (isset($_REQUEST[$this->param_name]))
 			$this->current_page = fix_id($_REQUEST[$this->param_name]);
+
+		if ($this->current_page < 1)
+			$this->current_page = 1;
 	}
 
 	/**
-	 * Set base URL to be used in links. You can provide additional
-	 * parameters as array key pairs.
+	 * Set parameters and template file used for making links. Parameters need to
+	 * be in the same order as in the section pattern. Parameter controlling
+	 * this switch is added automatically.
 	 *
-	 * @param string $params
+	 * @param array $params
+	 * @param string $file
 	 */
-	public function setURL($params) {
+	public function set_url($params, $file=null) {
 		$this->url_params = $params;
-		$this->fixParams();
+		$this->url_file = $file;
 	}
 
 	/**
-	 * Set base URL from current
+	 * Make links point to currently matched section, keeping its parameters.
 	 */
-	public function setCurrentAsBaseURL() {
-		$this->url_params = $_REQUEST;
-		$this->fixParams();
+	public function set_current_url() {
+		$params = array();
+		$matched_params = SectionHandler::get_matched_params();
+
+		// collect values for parameters of matched pattern
+		if (!is_null($matched_params))
+			foreach ($matched_params[2] as $name)
+				if (isset($_REQUEST[$name]))
+					$params[$name] = fix_chars($_REQUEST[$name]);
+
+		$this->set_url($params, SectionHandler::get_matched_file());
+	}
+
+	/**
+	 * Set function used for making links instead of `URL::make`. Handler receives
+	 * page number and returns link. This is used in places where links are not
+	 * based on section patterns, such as backend windows.
+	 *
+	 * @param callable $handler
+	 */
+	public function set_link_handler($handler) {
+		$this->link_handler = $handler;
 	}
 
 	/**
@@ -54,7 +83,7 @@ class PageSwitch {
 	 *
 	 * @param integer $number
 	 */
-	public function setItemsPerPage($number) {
+	public function set_items_per_page($number) {
 		$number = intval($number);
 
 		if ($number > 0)
@@ -62,87 +91,113 @@ class PageSwitch {
 	}
 
 	/**
-	 * Set total number of items
-	 */
-	public function setTotalItems($number) {
-		$this->total_items = $number;
-	}
-
-	/**
-	 * Set maximum number of pages to be displayed
+	 * Set total number of items.
 	 *
 	 * @param integer $number
 	 */
-	public function setMaxPages($number) {
-		$this->max_pages = $number;
+	public function set_total_items($number) {
+		$this->total_items = intval($number);
 	}
 
 	/**
-	 * Return filter paramters for item manager
-	 * @return integer/array
+	 * Set maximum number of pages to be displayed.
+	 *
+	 * @param integer $number
 	 */
-	public function getFilterParams() {
-		if ($this->current_page == 1)
-			$result = $this->per_page; else
-			$result = array(
-						($this->current_page - 1) * $this->per_page,
-						$this->per_page
-					);
+	public function set_max_pages($number) {
+		$number = intval($number);
+
+		if ($number > 0)
+			$this->max_pages = $number;
+	}
+
+	/**
+	 * Return number of currently selected page.
+	 *
+	 * @return integer
+	 */
+	public function get_current_page() {
+		return $this->current_page;
+	}
+
+	/**
+	 * Return total number of pages. There is always at least one page.
+	 *
+	 * @return integer
+	 */
+	public function get_total_pages() {
+		$result = (int) ceil($this->total_items / $this->per_page);
+
+		if ($result < 1)
+			$result = 1;
 
 		return $result;
 	}
 
 	/**
-	 * Page switcher tag handler
+	 * Return limit for current page in format used by item manager.
+	 *
+	 * @return integer/array
+	 */
+	public function get_limit() {
+		if ($this->current_page == 1)
+			$result = $this->per_page; else
+			$result = array(
+					($this->current_page - 1) * $this->per_page,
+					$this->per_page
+				);
+
+		return $result;
+	}
+
+	/**
+	 * Return link to specified page.
+	 *
+	 * @param integer $page
+	 * @return string
+	 */
+	public function get_link($page) {
+		if (!is_null($this->link_handler)) {
+			$result = call_user_func($this->link_handler, $page);
+
+		} else {
+			// existing parameter keeps its position in the pattern
+			$params = $this->url_params;
+			$params[$this->param_name] = $page;
+
+			$result = URL::make($params, $this->url_file);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Handle drawing list of pages.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_Pages($tag_params, $children) {
-		$template = $this->load_template($tag_params, 'page_switch_page.xml');
+		$template = $this->load_template($tag_params, 'page_switch_page.xml', 'page_template');
 		$template->set_template_params_from_array($children);
 
-		// calculate number of total pages
-		$total_pages = ceil($this->total_items / $this->per_page);
+		$total_pages = $this->get_total_pages();
+		$start = 1;
+		$end = $total_pages;
 
-		if ($total_pages == 0)
-			$total_pages = 1;
-
-		// determine start and ending, we never want
-		// to show more than 10 pages at a time
+		// keep current page in the middle when there are too many pages to show
 		if ($total_pages > $this->max_pages) {
-			if ($this->current_page - $this->max_pages < 1) {
-				// we are at the beginning of page list
-				$start = 1;
-
-			} else if ($this->current_page + $this->max_pages > $total_pages) {
-				// we are at the end of page list
-				$start = $total_pages - $this->max_pages;
-
-			} else {
-				// we are in the middle
-				$start = $this->current_page - floor($this->max_pages / 2);
-			}
-
-			$end = $start + $this->max_pages;
-
-		} else {
-			// we only have a handful of pages, no need for calculation
-			$start = 1;
-			$end = $total_pages;
+			$start = $this->current_page - (int) floor($this->max_pages / 2);
+			$start = max(1, min($start, $total_pages - $this->max_pages + 1));
+			$end = $start + $this->max_pages - 1;
 		}
 
 		// parse template
 		for ($page = $start; $page <= $end; $page++) {
-			$url_params = array_merge(
-							$this->url_params,
-							array($this->param_name => $page)
-						);
-
 			$params = array(
-					'number'	=> $page,
-					'link'		=> url_MakeFromArray($url_params),
-					'class'		=> $page == $this->current_page ? 'active' : 'normal'
+					'number' => $page,
+					'link'   => $this->get_link($page),
+					'class'  => $page == $this->current_page ? 'active' : 'normal'
 				);
 
 			$template->set_local_params($params);
@@ -152,70 +207,43 @@ class PageSwitch {
 	}
 
 	/**
-	 * Page switcher tag handler
+	 * Handle drawing page switch.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_PageSwitch($tag_params, $children) {
-		// create template handler
 		$template = $this->load_template($tag_params, 'page_switch.xml');
 		$template->set_template_params_from_array($children);
 		$template->register_tag_handler('_pages', $this, 'tag_Pages');
 
-		// calculate number of total pages
-		$total_pages = ceil($this->total_items / $this->per_page);
-
-		if ($total_pages == 0)
-			$total_pages = 1;
-
-		// prepare param arrays
-		$params_first = array_merge(
-							$this->url_params,
-							array($this->param_name => 1)
-						);
-		$params_last = array_merge(
-							$this->url_params,
-							array($this->param_name => $total_pages)
-						);
-		$params_next = array_merge(
-							$this->url_params,
-							array($this->param_name => $this->current_page + 1)
-						);
-		$params_previous = array_merge(
-							$this->url_params,
-							array($this->param_name => $this->current_page - 1)
-						);
+		$total_pages = $this->get_total_pages();
+		$link_first = 'javascript: void(0);';
+		$link_previous = 'javascript: void(0);';
+		$link_next = 'javascript: void(0);';
+		$link_last = 'javascript: void(0);';
 
 		// create links for pages
 		if ($this->current_page > 1) {
-			$link_first = url_MakeFromArray($params_first);
-			$link_previous = url_MakeFromArray($params_previous);
-
-		} else {
-			$link_first = 'javascript: void(0);';
-			$link_previous = 'javascript: void(0);';
+			$link_first = $this->get_link(1);
+			$link_previous = $this->get_link($this->current_page - 1);
 		}
 
 		if ($this->current_page < $total_pages) {
-			$link_last = url_MakeFromArray($params_last);
-			$link_next = url_MakeFromArray($params_next);
-
-		} else {
-			$link_last = 'javascript: void(0);';
-			$link_next = 'javascript: void(0);';
+			$link_next = $this->get_link($this->current_page + 1);
+			$link_last = $this->get_link($total_pages);
 		}
 
 		// prepare template params
 		$params = array(
-				'total_pages'		=> $total_pages,
-				'items_per_page'	=> $this->per_page,
-				'total_items'		=> $this->total_items,
-				'current_page'		=> $this->current_page,
-				'link_next'			=> $link_next,
-				'link_previous'		=> $link_previous,
-				'link_first'		=> $link_first,
-				'link_last'			=> $link_last
+				'total_pages'    => $total_pages,
+				'items_per_page' => $this->per_page,
+				'total_items'    => $this->total_items,
+				'current_page'   => $this->current_page,
+				'link_next'      => $link_next,
+				'link_previous'  => $link_previous,
+				'link_first'     => $link_first,
+				'link_last'      => $link_last
 			);
 
 		// parse template
@@ -225,20 +253,29 @@ class PageSwitch {
 	}
 
 	/**
-	 * Remove unneeded params
+	 * Load template specified in tag parameters or default one from the system.
+	 *
+	 * @param array $tag_params
+	 * @param string $default_file
+	 * @param string $param_name
+	 * @return TemplateHandler
 	 */
-	private function fixParams() {
-		// remove current page param from the list
-		if (array_key_exists($this->param_name, $this->url_params))
-			unset($this->url_params[$this->param_name]);
+	private function load_template($tag_params, $default_file, $param_name='template') {
+		global $system_template_path;
 
-		if (array_key_exists('_rewrite', $this->url_params))
-			unset($this->url_params['_rewrite']);
+		$path = $system_template_path;
+		$file_name = $default_file;
 
-		// go through the list of invalid params and remove them
-		foreach ($this->url_params as $key => $value) {
-			if (in_array($key, $this->invalid_params))
-				unset($this->url_params[$key]);
+		// specified template is loaded from site templates unless path is given
+		if (isset($tag_params[$param_name])) {
+			$file_name = $tag_params[$param_name];
+			$path = isset($tag_params['template_path']) ? $tag_params['template_path'] : '';
 		}
+
+		$result = new TemplateHandler($file_name, $path);
+
+		return $result;
 	}
 }
+
+?>

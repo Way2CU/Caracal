@@ -837,17 +837,17 @@ class Handler {
 			if ($per_page < 1)
 				$per_page = 10;
 
-			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : null;
+			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : 'page';
 
 			$item_count = $manager->get_item_value('COUNT(id)', $conditions);
 
 			$page_switch = new PageSwitch($param);
-			$page_switch->setCurrentAsBaseURL();
-			$page_switch->setItemsPerPage($per_page);
-			$page_switch->setTotalItems($item_count);
+			$page_switch->set_current_url();
+			$page_switch->set_items_per_page($per_page);
+			$page_switch->set_total_items($item_count);
 
 			// get filter params
-			$limit = $page_switch->getFilterParams();
+			$limit = $page_switch->get_limit();
 		}
 
 		if (isset($tag_params['order_by']))
