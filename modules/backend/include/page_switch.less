@@ -1,0 +1,39 @@
+/**
+ * Page Switch Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2026 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.backend-dialog,
+div.window {
+	div.page_switch {
+		.container-padding();
+
+		text-align: center;
+
+		a {
+			display: inline-block;
+			margin: 0;
+			margin-right: @options_spacing;
+			padding: @options_padding @padding_unit;
+
+			border-radius: @control_radius;
+			background-color: @color_options_regular_background;
+			cursor: default;
+
+			color: @color_options_regular_text;
+			font-size: 0.9rem;
+			text-decoration: none;
+
+			&:hover {
+				background-color: darken(@color_options_regular_background, 10);
+			}
+
+			&.active {
+				background-color: @color_active;
+			}
+		}
+	}
+}
