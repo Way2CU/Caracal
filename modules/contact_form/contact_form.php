@@ -29,8 +29,11 @@ require_once('units/smtp_mailer.php');
 
 
 class contact_form extends Module {
+	const SUBMISSIONS_PER_PAGE = 50;
+
 	private static $_instance;
 
+	private $submissions_page_switch = null;
 	private $mailers = array();
 	private $field_types = array(
 					'text', 'email', 'textarea', 'select', 'hidden', 'checkbox', 'radio',
@@ -1233,6 +1236,20 @@ class contact_form extends Module {
 		$params = array();
 		$form = isset($_REQUEST['form']) ? fix_id($_REQUEST['form']) : null;
 
+		// split submissions into pages
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$total_items = 0;
+		if (!is_null($form))
+			$total_items = $submission_manager->get_item_value('COUNT(id)', array('form' => $form));
+
+		$page_switch = new PageSwitch('page');
+		$page_switch->set_items_per_page(self::SUBMISSIONS_PER_PAGE);
+		$page_switch->set_total_items($total_items);
+		$page_switch->set_link_handler(array($this, 'get_submissions_page_link'));
+
+		$this->submissions_page_switch = $page_switch;
+		$template->register_tag_handler('cms:page_switch', $page_switch, 'tag_PageSwitch');
+
 		// export menu item
 		if (!is_null($form)) {
 			$export_url = URL::make_query(
@@ -1261,6 +1278,27 @@ class contact_form extends Module {
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
+	}
+
+	/**
+	 * Return link which loads specified page of submissions in backend window.
+	 *
+	 * @param integer $page
+	 * @return string
+	 */
+	public function get_submissions_page_link($page) {
+		$form = isset($_REQUEST['form']) ? fix_id($_REQUEST['form']) : 0;
+		$url = URL::make_query(
+				_BACKEND_SECTION_,
+				'transfer_control',
+				array('backend_action', 'submissions'),
+				array('module', $this->name),
+				array('form', $form),
+				array('page', $page)
+			);
+		$result = window_LoadContent('contact_form_submissions', $url);
+
+		return $result;
 	}
 
 	/**
@@ -3403,11 +3441,16 @@ class contact_form extends Module {
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = false;
+		$limit = null;
 
 		// get parameters
 		$conditions['form'] = -1;
 		if (isset($tag_params['form']))
 			$conditions['form'] = fix_id($tag_params['form']);
+
+		// show only current page when list is split into pages
+		if (!is_null($this->submissions_page_switch))
+			$limit = $this->submissions_page_switch->get_limit();
 
 		// load template
 		$template = $this->load_template($tag_params, 'submissions_list_item.xml');
@@ -3419,7 +3462,8 @@ class contact_form extends Module {
 				$submission_manager->get_field_names(),
 				$conditions,
 				$order_by,
-				$order_asc
+				$order_asc,
+				$limit
 			);
 
 		// load field definitions

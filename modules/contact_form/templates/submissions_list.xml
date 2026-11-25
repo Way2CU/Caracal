@@ -46,6 +46,8 @@
 				<cms:list form="$_REQUEST['form']" cms:eval="form"/>
 			</tbody>
 		</table>
+
+		<cms:page_switch/>
 	</cms:if>
 
 	<cms:if condition="!isset($_REQUEST['form']) or empty($_REQUEST['form'])">
